@@ -26,8 +26,9 @@ module.exports = (sequelize, DataTypes) => {
             // //Notification
             // User.hasMany(models.Notification, { foreignKey: 'userId', as: 'userData' })
             
-            //packagePost
-            User.belongsToMany(models.PackagePost,{through:'OrderPackage'})
+            //OrderPackage
+            User.hasMany(models.User,{foreignKey:'userId',as: 'userOrderData'})
+
 
             //Post
             User.hasMany(models.Post,{foreignKey: 'userId', as: 'userPostData' })

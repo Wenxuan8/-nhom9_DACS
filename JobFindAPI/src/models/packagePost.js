@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            //user
-            PackagePost.belongsToMany(models.User,{through: 'OrderPackage'})
+
+            //orderpackage
+            PackagePost.hasMany(models.OrderPackage,{foreignKey: 'packagePostId',targetKey:'id',as:'packageOrderData'})
         }
     };
     PackagePost.init({
