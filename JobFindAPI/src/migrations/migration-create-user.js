@@ -7,13 +7,7 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
-            },
-            phonenumber: {
-                type: Sequelize.STRING
-            },
-            password: {
-                type: Sequelize.STRING
+                type: Sequelize.INTEGER,
             },
             firstName: {
                 type: Sequelize.STRING
@@ -24,8 +18,15 @@ module.exports = {
             address: {
                 type: Sequelize.STRING
             },
-            genderId: {
-                type: Sequelize.STRING
+            genderCode: {
+                type: Sequelize.STRING,
+                references: {
+                    model: {
+                        tableName: 'Allcodes'
+                    },
+                    key: 'code',
+                },
+                onUpdate: 'CASCADE',                
             },
 
             image: {
@@ -34,22 +35,12 @@ module.exports = {
             dob: {
                 type: Sequelize.STRING
             },
-            roleId: {
-                type: Sequelize.STRING
+            companyId: {
+                type: Sequelize.INTEGER,
+                foreignKey: true
             },
-            statusId: {
-                type: Sequelize.STRING
-            },
-            company_id: {
-                type: Sequelize.INTEGER
-            },
-            createdAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            },
-            updatedAt: {
-                allowNull: false,
-                type: Sequelize.DATE
+            file: {
+                type: Sequelize.BLOB('long')
             }
         });
     },

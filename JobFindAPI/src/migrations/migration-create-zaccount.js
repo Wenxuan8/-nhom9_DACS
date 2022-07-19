@@ -2,12 +2,28 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Posts', {
+        await queryInterface.createTable('Accounts', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+            },
+            phonenumber:{
+                type: Sequelize.STRING
+            },
+            password:{
+                type: Sequelize.STRING
+            },
+            roleCode: {
+                type: Sequelize.STRING,
+                references: {
+                    model: {
+                        tableName: 'Allcodes'
+                    },
+                    key: 'code',
+                },
+                onUpdate: 'CASCADE',
             },
             statusCode: {
                 type: Sequelize.STRING,
@@ -19,20 +35,8 @@ module.exports = {
                 },
                 onUpdate: 'CASCADE',
             },
-            timeEnd: {
-                type: Sequelize.STRING
-            },
             userId: {
                 type: Sequelize.INTEGER
-            },
-            isHot: {
-                type: Sequelize.TINYINT
-            },
-            timePost: {
-                type: Sequelize.STRING
-            },
-            detailPostId: {
-                type: Sequelize.INTEGER,
             },
             createdAt: {
                 allowNull: false,
@@ -45,6 +49,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Posts');
+        await queryInterface.dropTable('Accounts');
     }
 };

@@ -35,7 +35,7 @@ let initWebRoutes = (app) => {
     router.get('/api/get-list-company', companyController.getListCompany)
     router.get('/api/get-detail-company-by-id', companyController.getDetailCompanyById)
     router.get('/api/get-detail-company-by-userId', companyController.getDetailCompanyByUserId)
-    router.get('/api/get-all-user-by-company_id', companyController.getAllUserByCompanyId)
+    router.get('/api/get-all-user-by-companyId', companyController.getAllUserByCompanyId)
     router.put('/api/quit-company', companyController.handleQuitCompany)
 
     //==================API CV==========================//

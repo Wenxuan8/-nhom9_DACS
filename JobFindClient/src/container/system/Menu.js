@@ -19,7 +19,7 @@ const Menu = () => {
                         <span className="menu-title">Trang chủ</span>
                     </Link>
                 </li>
-                {user && user.roleId === "ADMIN" &&
+                {user && user.roleCode === "ADMIN" &&
                     <>
                         <li className="nav-item">
                             <a className="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
@@ -101,7 +101,7 @@ const Menu = () => {
                         </li>
                     </>
                 }
-                {user && user.roleId === "EMPLOYER" &&
+                {user && user.roleCode === "EMPLOYER" &&
                     <>
                         <li className="nav-item">
                             <a className="nav-link" data-toggle="collapse" href="#company" aria-expanded="false" aria-controls="company">

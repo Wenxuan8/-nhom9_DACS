@@ -8,14 +8,14 @@ function SendCvModal(props) {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [isLoading, setIsLoading] = useState(false)
     const [inputValue, setInputValue] = useState({
-        user_id: '', post_id: '', file: '', description: '', linkFile: ''
+        userId: '', postId: '', file: '', description: '', linkFile: ''
     })
     useEffect(() => {
         if (userData)
             setInputValue({
                 ...inputValue,
-                ["user_id"]: userData.id,
-                ["post_id"]: props.postId
+                ["userId"]: userData.id,
+                ["postId"]: props.postId
             })
     }, [])
     const handleChange = (event) => {
@@ -41,9 +41,9 @@ function SendCvModal(props) {
     const handleSendCV = async () => {
         setIsLoading(true)
         let kq = await createNewCv({
-            user_id: inputValue.user_id,
+            userId: inputValue.userId,
             file: inputValue.file,
-            post_id: inputValue.post_id,
+            postId: inputValue.postId,
             description: inputValue.description
         })
         setTimeout(function () {
@@ -87,7 +87,7 @@ function SendCvModal(props) {
                     <Button onClick={() => {
                         setInputValue({
                             ...inputValue,
-                            ["user_id"]: '', ["post_id"]: '', ["file"]: '', ["description"]: '', ["linkFile"] : ''
+                            ["userId"]: '', ["postId"]: '', ["file"]: '', ["description"]: '', ["linkFile"] : ''
                         })
                         props.onHide()
                     }}>

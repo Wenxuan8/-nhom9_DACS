@@ -67,12 +67,12 @@ let handleCreateNewUser = (data) => {
                         firstName: data.firstName,
                         lastName: data.lastName,
                         address: data.address,
-                        roleId: data.roleId,
-                        genderId: data.genderId,
+                        roleCode: data.roleCode,
+                        genderCode: data.genderCode,
                         phonenumber: data.phonenumber,
                         image: imageUrl,
                         dob: data.dob,
-                        statusId: 'S1',
+                        statusCode: 'S1',
 
                     })
                     resolve({
@@ -139,8 +139,8 @@ let updateUserData = (data) => {
                     user.firstName = data.firstName
                     user.lastName = data.lastName
                     user.address = data.address
-                    user.roleId = data.roleId
-                    user.genderId = data.genderId
+                    user.roleCode = data.roleCode
+                    user.genderCode = data.genderCode
                     user.dob = data.dob
                     if (data.image) {
                         let imageUrl = ""
@@ -207,8 +207,8 @@ let handleLogin = (data) => {
 
                 if (isExist === true) {
                     let user = await db.User.findOne({
-                        attributes: ['phonenumber', 'roleId', 'password', 'firstName', 'lastName', 'id', 'image', 'company_id'],
-                        where: { phonenumber: data.phonenumber, statusId: 'S1' },
+                        attributes: ['phonenumber', 'roleCode', 'password', 'firstName', 'lastName', 'id', 'image', 'companyId'],
+                        where: { phonenumber: data.phonenumber, statusCode: 'S1' },
                         raw: true
                     })
                     if (user) {
@@ -287,7 +287,7 @@ let getAllUser = (data) => {
             } else {
 
                 let res = await db.User.findAndCountAll({
-                    where: { statusId: 'S1' },
+                    where: { statusCode: 'S1' },
                     limit: +data.limit,
                     offset: +data.offset,
                     attributes: {
@@ -323,7 +323,7 @@ let getDetailUserById = (userid) => {
                 })
             } else {
                 let res = await db.User.findOne({
-                    where: { id: userid, statusId: 'S1' },
+                    where: { id: userid, statusCode: 'S1' },
                     attributes: {
                         exclude: ['password']
                     },

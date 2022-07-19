@@ -60,7 +60,7 @@ function App() {
             <Footer />
           </Route>
           <Route path="/admin/" render={() => {
-            if (JSON.parse(localStorage.getItem("userData")) && (JSON.parse(localStorage.getItem("userData")).roleId === "ADMIN" || JSON.parse(localStorage.getItem("userData")).roleId === "EMPLOYER")) {
+            if (JSON.parse(localStorage.getItem("userData")) && (JSON.parse(localStorage.getItem("userData")).roleCode === "ADMIN" || JSON.parse(localStorage.getItem("userData")).roleCode === "EMPLOYER")) {
               return <HomeAdmin />
             } else {
               return <Redirect to={"/login"} />
@@ -69,7 +69,7 @@ function App() {
 
           </Route>
           <Route path="/candidate/" render={() => {
-            if (JSON.parse(localStorage.getItem("userData")) && (JSON.parse(localStorage.getItem("userData")).roleId === "CANDIDATE")) {
+            if (JSON.parse(localStorage.getItem("userData")) && (JSON.parse(localStorage.getItem("userData")).roleCode === "CANDIDATE")) {
               return <>
                 <Header />
                 < HomeCandidate />

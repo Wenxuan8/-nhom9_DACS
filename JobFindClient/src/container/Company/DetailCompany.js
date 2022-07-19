@@ -48,7 +48,7 @@ const DetailCompany = () => {
                                 </p>
                                 <p className="company-size">
                                     <i className="far fa-building"></i>
-                                    {dataCompany.amountemployer}+ nhân viên
+                                    {dataCompany.amountEmployer}+ nhân viên
                                 </p>
                             </div>
                         </div>
@@ -96,16 +96,16 @@ const DetailCompany = () => {
                                                             <div className="mr-auto text-right">
                                                                 <p className="deadline">
 
-                                                                    {CommonUtils.formatDate(item.time_end) <= 0 ?
-                                                                        <div>Hết hạn ứng tuyển</div> : <div>Còn <strong>{CommonUtils.formatDate(item.time_end)}</strong> ngày để ứng tuyển </div>
+                                                                    {CommonUtils.formatDate(item.timeEnd) <= 0 ?
+                                                                        <div>Hết hạn ứng tuyển</div> : <div>Còn <strong>{CommonUtils.formatDate(item.timeEnd)}</strong> ngày để ứng tuyển </div>
                                                                     }
                                                                 </p>
                                                             </div>
                                                         </div>
                                                         <div className="d-flex">
                                                             <div className="label-content ml-auto">
-                                                                <label className="salary">{item.salaryTypeData.value}</label>
-                                                                <label className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.provinceData.value}</label>
+                                                                <label className="salary">{item.salaryTypePostData.value}</label>
+                                                                <label className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.provincePostData.value}</label>
                                                                 <label className="time">{moment(item.createdAt).fromNow()}</label>
                                                             </div>
                                                             <div className="icon mr-auto">

@@ -4,8 +4,8 @@ const { Op, and } = require("sequelize");
 let handleCreateNewPost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.category_job_id || !data.address_id || !data.salary_job_id || !data.amount || !data.time_end || !data.category_joblevel_id || !data.companyId
-                || !data.category_worktype_id || !data.experience_job_id || !data.genderId || !data.descriptionHTML || !data.descriptionMarkdown
+            if (!data.name || !data.categoryJobCode || !data.addressCode || !data.salaryJobCode || !data.amount || !data.timeEnd || !data.categoryJoblevelCode || !data.companyId
+                || !data.categoryWorktypeCode || !data.experienceJobCode || !data.genderCode || !data.descriptionHTML || !data.descriptionMarkdown
             ) {
                 resolve({
                     errCode: 1,
@@ -16,17 +16,17 @@ let handleCreateNewPost = (data) => {
                     name: data.name,
                     descriptionHTML: data.descriptionHTML,
                     descriptionMarkdown: data.descriptionMarkdown,
-                    statusId: "S1",
-                    category_job_id: data.category_job_id,
-                    address_id: data.address_id,
-                    salary_job_id: data.salary_job_id,
+                    statusCode: "S1",
+                    categoryJobCode: data.categoryJobCode,
+                    addressCode: data.addressCode,
+                    salaryJobCode: data.salaryJobCode,
                     amount: data.amount,
-                    time_end: data.time_end,
-                    category_joblevel_id: data.category_joblevel_id,
-                    category_worktype_id: data.category_worktype_id,
-                    experience_job_id: data.experience_job_id,
-                    genderPostCode: data.genderId,
-                    company_id: data.companyId,
+                    timeEnd: data.timeEnd,
+                    categoryJoblevelCode: data.categoryJoblevelCode,
+                    categoryWorktypeCode: data.categoryWorktypeCode,
+                    experienceJobCode: data.experienceJobCode,
+                    genderPostCode: data.genderCode,
+                    companyId: data.companyId,
 
                 })
 
@@ -43,8 +43,8 @@ let handleCreateNewPost = (data) => {
 let handleUpdatePost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.category_job_id || !data.address_id || !data.salary_job_id || !data.amount || !data.time_end || !data.category_joblevel_id
-                || !data.category_worktype_id || !data.experience_job_id || !data.genderId || !data.descriptionHTML || !data.descriptionMarkdown || !data.id
+            if (!data.name || !data.categoryJobCode || !data.addressCode || !data.salaryJobCode || !data.amount || !data.timeEnd || !data.categoryJoblevelCode
+                || !data.categoryWorktypeCode || !data.experienceJobCode || !data.genderCode || !data.descriptionHTML || !data.descriptionMarkdown || !data.id
             ) {
                 resolve({
                     errCode: 1,
@@ -57,15 +57,15 @@ let handleUpdatePost = (data) => {
                 })
                 if (post) {
                     post.name = data.name
-                    post.category_job_id = data.category_job_id
-                    post.address_id = data.address_id
-                    post.salary_job_id = data.salary_job_id
+                    post.categoryJobCode = data.categoryJobCode
+                    post.addressCode = data.addressCode
+                    post.salaryJobCode = data.salaryJobCode
                     post.amount = data.amount
-                    post.time_end = data.time_end
-                    post.category_joblevel_id = data.category_joblevel_id
-                    post.category_worktype_id = data.category_worktype_id
-                    post.experience_job_id = data.experience_job_id
-                    post.genderPostCode = data.genderId
+                    post.timeEnd = data.timeEnd
+                    post.categoryJoblevelCode = data.categoryJoblevelCode
+                    post.categoryWorktypeCode = data.categoryWorktypeCode
+                    post.experienceJobCode = data.experienceJobCode
+                    post.genderPostCode = data.genderCode
                     post.descriptionHTML = data.descriptionHTML
                     post.descriptionMarkdown = data.descriptionMarkdown
 
@@ -106,7 +106,7 @@ let handleBanPost = (postId) => {
                     raw: false
                 })
                 if (foundPost) {
-                    foundPost.statusId = 'S2'
+                    foundPost.statusCode = 'S2'
                     await foundPost.save()
                     resolve({
                         errCode: 0,
@@ -135,7 +135,7 @@ let handleActivePost = (data) => {
                     raw: false
                 })
                 if (foundPost) {
-                    foundPost.statusId = 'S1'
+                    foundPost.statusCode = 'S1'
                     await foundPost.save()
                     resolve({
                         errCode: 0,
@@ -162,16 +162,16 @@ let getListPostByAdmin = (data) => {
                 let post = await db.Post.findAndCountAll({
                     offset: +data.offset,
                     limit: +data.limit,
-                    where: { company_id: data.companyId },
+                    where: { companyId: data.companyId },
                     include: [
-                        { model: db.Allcode, as: 'jobTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'workTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'salaryTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'jobLevelData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'expTypeData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'provinceData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
                     ],
                     raw: true,
                     nest: true
@@ -200,22 +200,22 @@ let getDetailPostById = (id) => {
             } else {
 
                 let post = await db.Post.findOne({
-                    where: { id: id, statusId: 'S1' },
+                    where: { id: id, statusCode: 'S1' },
                     include: [
-                        { model: db.Allcode, as: 'jobTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'workTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'salaryTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'jobLevelData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'expTypeData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'provinceData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
                     ],
                     raw: true,
                     nest: true
                 })
                 let company = await db.Company.findOne({
-                    where: { id: post.company_id }
+                    where: { id: post.companyId }
                 })
                 post.companyData = company
                 resolve({
@@ -231,34 +231,34 @@ let getDetailPostById = (id) => {
 let getFilterPost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(typeof data.experience_job_id)
+            console.log(typeof data.experienceJobCode)
             let objectFilter = ''
-            if (data.salary_job_id !== '' || data.category_worktype_id !== '' || data.experience_job_id !== '' || data.category_joblevel_id !== '') {
+            if (data.salaryJobCode !== '' || data.categoryWorktypeCode !== '' || data.experienceJobCode !== '' || data.categoryJoblevelCode !== '') {
                 let querySalaryJob = ''
-                if (data.salary_job_id !== '')
-                    querySalaryJob = data.salary_job_id.split(',').map((data, index) => {
-                        return { salary_job_id: data }
+                if (data.salaryJobCode !== '')
+                    querySalaryJob = data.salaryJobCode.split(',').map((data, index) => {
+                        return { salaryJobCode: data }
                     })
 
                 let queryWorkType = ''
-                if (data.category_worktype_id !== '')
-                    queryWorkType = data.category_worktype_id.split(',').map((data, index) => {
-                        return { category_worktype_id: data }
+                if (data.categoryWorktypeCode !== '')
+                    queryWorkType = data.categoryWorktypeCode.split(',').map((data, index) => {
+                        return { categoryWorktypeCode: data }
                     })
 
                 let queryExpType = ''
-                if (data.experience_job_id !== '')
-                    queryExpType = data.experience_job_id.split(',').map((data, index) => {
-                        return { experience_job_id: data }
+                if (data.experienceJobCode !== '')
+                    queryExpType = data.experienceJobCode.split(',').map((data, index) => {
+                        return { experienceJobCode: data }
                     })
                 let queryJobLevel = ''
-                if (data.category_joblevel_id !== '')
-                    queryJobLevel = data.category_joblevel_id.split(',').map((data, index) => {
-                        return { category_joblevel_id: data }
+                if (data.categoryJoblevelCode !== '')
+                    queryJobLevel = data.categoryJoblevelCode.split(',').map((data, index) => {
+                        return { categoryJoblevelCode: data }
                     })
                 objectFilter = {
                     where: {
-                        statusId: 'S1',
+                        statusCode: 'S1',
                         [Op.and]: [
                             queryExpType && { [Op.or]: [...queryExpType] },
                             queryWorkType && { [Op.or]: [...queryWorkType] },
@@ -267,14 +267,14 @@ let getFilterPost = (data) => {
                         ]
                     },
                     include: [
-                        { model: db.Allcode, as: 'jobTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'workTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'salaryTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'jobLevelData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'expTypeData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'provinceData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
                     ],
                     order: [["createdAt", "DESC"]],
                     raw: true,
@@ -283,16 +283,16 @@ let getFilterPost = (data) => {
             }
             else {
                 objectFilter = {
-                    where: { statusId: 'S1' },
+                    where: { statusCode: 'S1' },
                     include: [
-                        { model: db.Allcode, as: 'jobTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'workTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'salaryTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'jobLevelData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'expTypeData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'provinceData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
                     ],
                     order: [["createdAt", "DESC"]],
                     raw: true,
@@ -303,19 +303,19 @@ let getFilterPost = (data) => {
                 objectFilter.limit = +data.limit
                 objectFilter.offset = +data.offset
             }
-            if (data.category_job_id && data.category_job_id !== '') objectFilter.where = { ...objectFilter.where, category_job_id: data.category_job_id }
-            if (data.address_id && data.address_id !== '') objectFilter.where = { ...objectFilter.where, address_id: data.address_id }
-            // if (data.salary_job_id && data.salary_job_id !== '') objectFilter.where = { ...objectFilter.where, salary_job_id: data.salary_job_id }
-            // if (data.category_joblevel_id && data.category_joblevel_id !== '') objectFilter.where = { ...objectFilter.where, category_joblevel_id: data.category_joblevel_id }
-            // if (data.category_worktype_id && data.category_worktype_id !== '') objectFilter.where = { ...objectFilter.where, category_worktype_id: data.category_worktype_id }
-            // if (data.experience_job_id && data.experience_job_id !== '') objectFilter.where = { ...objectFilter.where, experience_job_id: data.experience_job_id }
+            if (data.categoryJobCode && data.categoryJobCode !== '') objectFilter.where = { ...objectFilter.where, categoryJobCode: data.categoryJobCode }
+            if (data.addressCode && data.addressCode !== '') objectFilter.where = { ...objectFilter.where, addressCode: data.addressCode }
+            // if (data.salaryJobCode && data.salaryJobCode !== '') objectFilter.where = { ...objectFilter.where, salaryJobCode: data.salaryJobCode }
+            // if (data.categoryJoblevelCode && data.categoryJoblevelCode !== '') objectFilter.where = { ...objectFilter.where, categoryJoblevelCode: data.categoryJoblevelCode }
+            // if (data.categoryWorktypeCode && data.categoryWorktypeCode !== '') objectFilter.where = { ...objectFilter.where, categoryWorktypeCode: data.categoryWorktypeCode }
+            // if (data.experienceJobCode && data.experienceJobCode !== '') objectFilter.where = { ...objectFilter.where, experienceJobCode: data.experienceJobCode }
             if (data.sortName === "true") objectFilter.order = [["name", "DESC"]]
 
 
             let res = await db.Post.findAndCountAll(objectFilter)
 
             for (let i = 0; i < res.rows.length; i++) {
-                res.rows[i].company = await db.Company.findOne({ where: { id: res.rows[i].company_id } })
+                res.rows[i].company = await db.Company.findOne({ where: { id: res.rows[i].companyId } })
             }
 
             resolve({
@@ -336,13 +336,13 @@ let getStatisticalTypePost = (data) => {
         try {
             let res = await db.Post.findAll({
                 where: {
-                    statusId: 'S1'
+                    statusCode: 'S1'
                 },
                 include: [
-                    { model: db.Allcode, as: 'jobTypeData', attributes: ['value'] },
+                    { model: db.Allcode, as: 'jobTypePostData', attributes: ['value'] },
                 ],
-                attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('category_job_id')), 'amount']],
-                group: ['category_job_id'],
+                attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('categoryJobCode')), 'amount']],
+                group: ['categoryJobCode'],
                 order: [["amount", "ASC"]],
                 limit: +data.limit,
                 raw: true,
@@ -351,7 +351,7 @@ let getStatisticalTypePost = (data) => {
 
             let totalPost = await db.Post.findAndCountAll({
                 where: {
-                    statusId: 'S1'
+                    statusCode: 'S1'
                 },
             })
             resolve({

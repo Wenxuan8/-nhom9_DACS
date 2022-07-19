@@ -10,17 +10,32 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Allcode.hasMany(models.User, { foreignKey: 'genderId', as: 'genderData' })
-            Allcode.hasMany(models.User, { foreignKey: 'roleId', as: 'roleData' })
-            Allcode.hasMany(models.User, { foreignKey: 'statusId', as: 'statusData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'category_job_id', as: 'jobTypeData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'category_worktype_id', as: 'workTypeData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'salary_job_id', as: 'salaryTypeData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'category_joblevel_id', as: 'jobLevelData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'experience_job_id', as: 'expTypeData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'genderPostCode', as: 'genderPostData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'statusId', as: 'statusPostData' })
-            Allcode.hasMany(models.Post, { foreignKey: 'address_id', as: 'provinceData' })
+            //detailpost
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'categoryJobCode', as: 'jobTypePostData' })
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'categoryWorktypeCode', as: 'workTypePostData' })
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'salaryJobCode', as: 'salaryTypePostData' })
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'categoryJoblevelCode', as: 'jobLevelPostData' })
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'experienceJobCode', as: 'expTypePostData' })
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'genderPostCode', as: 'genderPostData' })
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'addressCode', as: 'provincePostData' })
+    
+            //post
+            Allcode.hasMany(models.DetailPost, { foreignKey: 'statusCode', as: 'statusPostData' })
+
+            //account
+            Allcode.hasMany(models.Account, { foreignKey: 'roleCode', as: 'roleData' })
+            Allcode.hasMany(models.Account, { foreignKey: 'statusCode', as: 'statusAccountData' })
+
+            // //user
+            Allcode.hasMany(models.User, { foreignKey: 'genderCode', as: 'genderData' })
+
+            // //notification
+            // Allcode.hasMany(models.Notification, { foreignKey: 'typeCode', as: 'typeData' })
+
+            // //company
+            Allcode.hasMany(models.Company, { foreignKey: 'statusCode', as: 'statusCompanyData' })
+            Allcode.hasMany(models.Company, { foreignKey: 'censorCode', as: 'censorData' })
+
         }
     };
     Allcode.init({
@@ -28,7 +43,8 @@ module.exports = (sequelize, DataTypes) => {
         value: DataTypes.STRING,
         code: DataTypes.STRING,
         image: DataTypes.STRING
-    }, {
+    }, 
+    {
         sequelize,
         modelName: 'Allcode',
     });

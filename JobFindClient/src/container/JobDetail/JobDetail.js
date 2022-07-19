@@ -27,8 +27,8 @@ const JobDetail = () => {
 
 
     const handleOpenModal = () => {
-        console.log(CommonUtils.formatDate(dataPost.time_end))
-        if (dataPost.time_end && CommonUtils.formatDate(dataPost.time_end) > 0) {
+        console.log(CommonUtils.formatDate(dataPost.timeEnd))
+        if (dataPost.timeEnd && CommonUtils.formatDate(dataPost.timeEnd) > 0) {
             const userData = JSON.parse(localStorage.getItem('userData'));
             if (userData)
                 setAcitveModal(true)
@@ -88,9 +88,9 @@ const JobDetail = () => {
                                                 <h4>{dataPost.name}</h4>
 
                                                 <ul>
-                                                    <li>{dataPost.workTypeData.value}</li>
-                                                    <li><i className="fas fa-map-marker-alt"></i>{dataPost.provinceData.value}</li>
-                                                    <li>{dataPost.salaryTypeData.value}</li>
+                                                    <li>{dataPost.workTypePostData.value}</li>
+                                                    <li><i className="fas fa-map-marker-alt"></i>{dataPost.provincePostData.value}</li>
+                                                    <li>{dataPost.salaryTypePostData.value}</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -117,10 +117,10 @@ const JobDetail = () => {
                                             <h4>Thông tin công việc</h4>
                                         </div>
                                         <ul>
-                                            <li>Nơi làm việc : <span>{dataPost.provinceData.value}</span></li>
-                                            <li>Hình thức làm việc : <span>{dataPost.workTypeData.value}</span></li>
-                                            <li>Lương :  <span>{dataPost.salaryTypeData.value}</span></li>
-                                            <li>Hạn nộp : <span>{moment.unix(dataPost.time_end / 1000).format('DD/MM/YYYY')}</span></li>
+                                            <li>Nơi làm việc : <span>{dataPost.provincePostData.value}</span></li>
+                                            <li>Hình thức làm việc : <span>{dataPost.workTypePostData.value}</span></li>
+                                            <li>Lương :  <span>{dataPost.salaryTypePostData.value}</span></li>
+                                            <li>Hạn nộp : <span>{moment.unix(dataPost.timeEnd / 1000).format('DD/MM/YYYY')}</span></li>
                                         </ul>
                                         <div className="btn" onClick={() => handleOpenModal()}>Ứng tuyển ngay</div>
                                     </div>

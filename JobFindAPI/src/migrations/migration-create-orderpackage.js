@@ -2,25 +2,24 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('Notifications', {
+        await queryInterface.createTable('OrderPackages', {
             id: {
                 allowNull: false,
-                autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+            },
+            packagePostId: {
+                type: Sequelize.INTEGER,
             },
             userId: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
-            typeCode: {
-                type: Sequelize.STRING
-            },
-            isChecked: {
-                type: Sequelize.TINYINT
+            currentPrice: {
+                type: Sequelize.DOUBLE,
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
@@ -29,6 +28,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Notifications');
+        await queryInterface.dropTable('OrderPackages');
     }
 };

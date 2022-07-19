@@ -17,7 +17,7 @@ const UserInfo = () => {
     const [isActionADD, setisActionADD] = useState(true)
     const { id } = useParams();
     const [inputValues, setInputValues] = useState({
-        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderId: '', roleId: '', id: '', dob: '', image: '', imageReview: '', isOpen: false,
+        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: '', imageReview: '', isOpen: false,
     });
 
     let setStateUser = (data) => {
@@ -27,8 +27,8 @@ const UserInfo = () => {
             ["lastName"]: data.lastName,
             ["address"]: data.address,
             ["phonenumber"]: data.phonenumber,
-            ["genderId"]: data.genderId,
-            ["roleId"]: data.roleId,
+            ["genderCode"]: data.genderCode,
+            ["roleCode"]: data.roleCode,
             ["id"]: data.id,
             ["dob"]: data.dob,
             ["image"]: data.image,
@@ -54,9 +54,9 @@ const UserInfo = () => {
     const { data: dataRole } = useFetchAllcode('ROLE')
 
 
-    if (dataGender && dataGender.length > 0 && inputValues.genderId === '' && dataRole && dataRole.length > 0 && inputValues.roleId === '') {
+    if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
         console.log(dataRole)
-        setInputValues({ ...inputValues, ["genderId"]: dataGender[0].code, ["roleId"]: dataRole[0].code })
+        setInputValues({ ...inputValues, ["genderCode"]: dataGender[0].code, ["roleCode"]: dataRole[0].code })
     }
 
     const handleOnChange = event => {
@@ -93,8 +93,8 @@ const UserInfo = () => {
             firstName: inputValues.firstName,
             lastName: inputValues.lastName,
             address: inputValues.address,
-            roleId: inputValues.roleId,
-            genderId: inputValues.genderId,
+            roleCode: inputValues.roleCode,
+            genderCode: inputValues.genderCode,
             dob: isChangeDate === false ? inputValues.dob : new Date(birthday).getTime(),
             image: inputValues.image
         })
@@ -159,7 +159,7 @@ const UserInfo = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Giới tính</label>
                                         <div className="col-sm-9">
-                                            <select className="form-control" value={inputValues.genderId} name="genderId" onChange={(event) => handleOnChange(event)}>
+                                            <select className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                 {dataGender && dataGender.length > 0 &&
                                                     dataGender.map((item, index) => {
                                                         return (

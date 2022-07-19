@@ -21,8 +21,8 @@ const AddPost = () => {
     const { id } = useParams();
 
     const [inputValues, setInputValues] = useState({
-        name: '', category_job_id: '', address_id: '', salary_job_id: '', amount: '', time_end: '', category_joblevel_id: '', category_worktype_id: '', experience_job_id: '',
-        genderId: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
+        name: '', categoryJobCode: '', addressCode: '', salaryJobCode: '', amount: '', timeEnd: '', categoryJoblevelCode: '', categoryWorktypeCode: '', experienceJobCode: '',
+        genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
     });
 
     useEffect(() => {
@@ -42,22 +42,22 @@ const AddPost = () => {
         setInputValues({
             ...inputValues,
             ["name"]: data.name,
-            ["category_job_id"]: data.category_job_id,
-            ["address_id"]: data.address_id,
-            ["salary_job_id"]: data.salary_job_id,
+            ["categoryJobCode"]: data.categoryJobCode,
+            ["addressCode"]: data.addressCode,
+            ["salaryJobCode"]: data.salaryJobCode,
             ["amount"]: data.amount,
-            ["time_end"]: data.time_end,
-            ["category_joblevel_id"]: data.category_joblevel_id,
-            ["category_worktype_id"]: data.category_worktype_id,
-            ["experience_job_id"]: data.experience_job_id,
-            ["genderId"]: data.genderPostCode,
+            ["timeEnd"]: data.timeEnd,
+            ["categoryJoblevelCode"]: data.categoryJoblevelCode,
+            ["categoryWorktypeCode"]: data.categoryWorktypeCode,
+            ["experienceJobCode"]: data.experienceJobCode,
+            ["genderCode"]: data.genderPostCode,
             ["descriptionHTML"]: data.descriptionHTML,
             ["descriptionMarkdown"]: data.descriptionMarkdown,
             ["isActionADD"]: false,
             ["id"]: data.id
 
         })
-        settimeEnd(moment.unix(+data.time_end / 1000).locale('vi').format('DD/MM/YYYY'))
+        settimeEnd(moment.unix(+data.timeEnd / 1000).locale('vi').format('DD/MM/YYYY'))
     }
 
 
@@ -69,15 +69,15 @@ const AddPost = () => {
     const { data: dataWorkType } = useFetchAllcode('WORKTYPE');
     const { data: dataProvince } = useFetchAllcode('PROVINCE');
 
-    if (dataGenderPost && dataGenderPost.length > 0 && inputValues.genderId === '' && dataJobType && dataJobType.length > 0 && inputValues.category_job_id === '' && dataJobLevel && dataJobLevel.length > 0 && inputValues.category_joblevel_id === '' &&
-        dataSalaryType && dataSalaryType.length > 0 && inputValues.salary_job_id === '' && dataExpType && dataExpType.length > 0 && inputValues.experience_job_id === '' &&
-        dataWorkType && dataWorkType.length > 0 && inputValues.category_worktype_id === '' && dataProvince && dataProvince.length > 0 && inputValues.address_id === ''
+    if (dataGenderPost && dataGenderPost.length > 0 && inputValues.genderCode === '' && dataJobType && dataJobType.length > 0 && inputValues.categoryJobCode === '' && dataJobLevel && dataJobLevel.length > 0 && inputValues.categoryJoblevelCode === '' &&
+        dataSalaryType && dataSalaryType.length > 0 && inputValues.salaryJobCode === '' && dataExpType && dataExpType.length > 0 && inputValues.experienceJobCode === '' &&
+        dataWorkType && dataWorkType.length > 0 && inputValues.categoryWorktypeCode === '' && dataProvince && dataProvince.length > 0 && inputValues.addressCode === ''
     ) {
 
         setInputValues({
-            ...inputValues, ["genderId"]: dataGenderPost[0].code, ["category_job_id"]: dataJobType[0].code,
-            ["category_joblevel_id"]: dataJobLevel[0].code, ["salary_job_id"]: dataSalaryType[0].code, ["experience_job_id"]: dataExpType[0].code,
-            ["category_worktype_id"]: dataWorkType[0].code
+            ...inputValues, ["genderCode"]: dataGenderPost[0].code, ["categoryJobCode"]: dataJobType[0].code,
+            ["categoryJoblevelCode"]: dataJobLevel[0].code, ["salaryJobCode"]: dataSalaryType[0].code, ["experienceJobCode"]: dataExpType[0].code,
+            ["categoryWorktypeCode"]: dataWorkType[0].code
         })
     }
     const handleOnChange = event => {
@@ -106,16 +106,16 @@ const AddPost = () => {
                 name: inputValues.name,
                 descriptionHTML: inputValues.descriptionHTML,
                 descriptionMarkdown: inputValues.descriptionMarkdown,
-                category_job_id: inputValues.category_job_id,
-                address_id: inputValues.address_id,
-                salary_job_id: inputValues.salary_job_id,
+                categoryJobCode: inputValues.categoryJobCode,
+                addressCode: inputValues.addressCode,
+                salaryJobCode: inputValues.salaryJobCode,
                 amount: inputValues.amount,
-                time_end: new Date(timeEnd).getTime(),
-                category_joblevel_id: inputValues.category_joblevel_id,
-                category_worktype_id: inputValues.category_worktype_id,
-                experience_job_id: inputValues.experience_job_id,
-                genderId: inputValues.genderId,
-                companyId: user.company_id,
+                timeEnd: new Date(timeEnd).getTime(),
+                categoryJoblevelCode: inputValues.categoryJoblevelCode,
+                categoryWorktypeCode: inputValues.categoryWorktypeCode,
+                experienceJobCode: inputValues.experienceJobCode,
+                genderCode: inputValues.genderCode,
+                companyId: user.companyId,
 
             })
             setTimeout(() => {
@@ -127,15 +127,15 @@ const AddPost = () => {
                         ["name"]: '',
                         ["descriptionHTML"]: '',
                         ["descriptionMarkdown"]: '',
-                        ["category_job_id"]: '',
-                        ["address_id"]: '',
-                        ["salary_job_id"]: '',
+                        ["categoryJobCode"]: '',
+                        ["addressCode"]: '',
+                        ["salaryJobCode"]: '',
                         ["amount"]: '',
-                        ["time_end"]: '',
-                        ["category_joblevel_id"]: '',
-                        ["category_worktype_id"]: '',
-                        ["experience_job_id"]: '',
-                        ["genderId"]: '',
+                        ["timeEnd"]: '',
+                        ["categoryJoblevelCode"]: '',
+                        ["categoryWorktypeCode"]: '',
+                        ["experienceJobCode"]: '',
+                        ["genderCode"]: '',
 
                     })
                     settimeEnd('')
@@ -148,15 +148,15 @@ const AddPost = () => {
                 name: inputValues.name,
                 descriptionHTML: inputValues.descriptionHTML,
                 descriptionMarkdown: inputValues.descriptionMarkdown,
-                category_job_id: inputValues.category_job_id,
-                address_id: inputValues.address_id,
-                salary_job_id: inputValues.salary_job_id,
+                categoryJobCode: inputValues.categoryJobCode,
+                addressCode: inputValues.addressCode,
+                salaryJobCode: inputValues.salaryJobCode,
                 amount: inputValues.amount,
-                time_end: isChangeDate === false ? inputValues.time_end : new Date(timeEnd).getTime(),
-                category_joblevel_id: inputValues.category_joblevel_id,
-                category_worktype_id: inputValues.category_worktype_id,
-                experience_job_id: inputValues.experience_job_id,
-                genderId: inputValues.genderId,
+                timeEnd: isChangeDate === false ? inputValues.timeEnd : new Date(timeEnd).getTime(),
+                categoryJoblevelCode: inputValues.categoryJoblevelCode,
+                categoryWorktypeCode: inputValues.categoryWorktypeCode,
+                experienceJobCode: inputValues.experienceJobCode,
+                genderCode: inputValues.genderCode,
                 id: inputValues.id
             })
             setTimeout(() => {
@@ -193,7 +193,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Địa chỉ</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.address_id} name="address_id" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataProvince && dataProvince.length > 0 &&
                                                         dataProvince.map((item, index) => {
                                                             return (
@@ -232,7 +232,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Giới tính</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.genderId} name="genderId" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataGenderPost && dataGenderPost.length > 0 &&
                                                         dataGenderPost.map((item, index) => {
                                                             return (
@@ -248,7 +248,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Kinh nghiệm</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.experience_job_id} name="experience_job_id" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataExpType && dataExpType.length > 0 &&
                                                         dataExpType.map((item, index) => {
                                                             return (
@@ -266,7 +266,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ngành</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.category_job_id} name="category_job_id" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobType && dataJobType.length > 0 &&
                                                         dataJobType.map((item, index) => {
                                                             return (
@@ -282,7 +282,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Chức vụ</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.category_joblevel_id} name="category_joblevel_id" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobLevel && dataJobLevel.length > 0 &&
                                                         dataJobLevel.map((item, index) => {
                                                             return (
@@ -300,7 +300,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Lương</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.salary_job_id} name="salary_job_id" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataSalaryType && dataSalaryType.length > 0 &&
                                                         dataSalaryType.map((item, index) => {
                                                             return (
@@ -316,7 +316,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hình thức LV</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.category_worktype_id} name="category_worktype_id" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataWorkType && dataWorkType.length > 0 &&
                                                         dataWorkType.map((item, index) => {
                                                             return (

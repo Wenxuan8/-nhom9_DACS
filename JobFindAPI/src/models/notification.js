@@ -10,14 +10,19 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+        //     //Allcode
+        //    Notification.belongsTo(models.Allcode,{foreignKey:'typeCode',targetKey:'code',as:'typeData'})
 
+        //    //User
+        //    Notification.belongsTo(models.User,{foreignKey:'userId',targetKey:'id',as:'userData'})
         }
     };
     Notification.init({
-        user_id: DataTypes.INTEGER,
-        info: DataTypes.STRING,
-        isChecked: DataTypes.BOOLEAN
-    }, {
+        userId: DataTypes.INTEGER,
+        typeCode: DataTypes.STRING,
+        isChecked: DataTypes.TINYINT,
+    }, 
+    {
         sequelize,
         modelName: 'Notification',
     });

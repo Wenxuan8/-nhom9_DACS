@@ -73,7 +73,7 @@ const Otp = (props) => {
                     firstName: props.dataUser.firstName,
                     lastName: props.dataUser.lastName,
                     phonenumber: props.dataUser.phonenumber,
-                    roleId: props.dataUser.roleId,
+                    roleCode: props.dataUser.roleCode,
                     image: 'https://res.cloudinary.com/bingo2706/image/upload/v1642521841/dev_setups/l60Hf_blyqhb.png',
                 })
                 if (res && res.errCode === 0) {
@@ -108,7 +108,7 @@ const Otp = (props) => {
 
 
             localStorage.setItem("userData", JSON.stringify(res.user))
-            if (res.user.roleId === "ADMIN" || res.user.roleId === "EMPLOYER") {
+            if (res.user.roleCode === "ADMIN" || res.user.roleCode === "EMPLOYER") {
                 window.location.href = "/admin/"
 
             }

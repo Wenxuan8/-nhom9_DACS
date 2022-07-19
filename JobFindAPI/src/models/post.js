@@ -10,32 +10,24 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            Post.belongsTo(models.Allcode, { foreignKey: 'category_job_id', targetKey: 'code', as: 'jobTypeData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'category_worktype_id', targetKey: 'code', as: 'workTypeData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'salary_job_id', targetKey: 'code', as: 'salaryTypeData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'category_joblevel_id', targetKey: 'code', as: 'jobLevelData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'experience_job_id', targetKey: 'code', as: 'expTypeData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'genderPostCode', targetKey: 'code', as: 'genderPostData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'statusId', targetKey: 'code', as: 'statusPostData' })
-            Post.belongsTo(models.Allcode, { foreignKey: 'address_id', targetKey: 'code', as: 'provinceData' })
+            //Allcode
+            Post.belongsTo(models.Allcode, { foreignKey: 'statusCode', targetKey: 'code', as: 'statusPostData' })
+            
+            // User
+            Post.belongsTo(models.User,{foreignKey: 'userId', targetKey: 'id', as: 'userPostData' })
+
+            // //Cv
+            Post.hasMany(models.Cv,{foreignKey:'postId',as:'postCvData'})
         }
     };
     Post.init({
-        name: DataTypes.STRING,
-        descriptionHTML: DataTypes.TEXT('long'),
-        descriptionMarkdown: DataTypes.TEXT('long'),
-        statusId: DataTypes.STRING,
-        category_job_id: DataTypes.STRING,
-        address_id: DataTypes.STRING,
-        salary_job_id: DataTypes.STRING,
-        amount: DataTypes.INTEGER,
-        time_end: DataTypes.STRING,
-        category_joblevel_id: DataTypes.STRING,
-        category_worktype_id: DataTypes.STRING,
-        experience_job_id: DataTypes.STRING,
-        genderPostCode: DataTypes.STRING,
-        company_id: DataTypes.INTEGER
-    }, {
+        statusCode: DataTypes.STRING,
+        timeEnd: DataTypes.STRING,
+        timePost: DataTypes.STRING,
+        userId: DataTypes.INTEGER,
+        isHot: DataTypes.TINYINT
+    }, 
+    {
         sequelize,
         modelName: 'Post',
     });

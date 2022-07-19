@@ -22,7 +22,7 @@ const Recruitment = () => {
     let handleSubmit = async () => {
         let res = await RecruitmentService({
             phonenumber: inputValues.phonenumber,
-            companyId: user.company_id
+            companyId: user.companyId
         })
         if (res && res.errCode === 0) {
             toast.success("Tuyển dụng thành công !");

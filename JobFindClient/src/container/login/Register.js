@@ -11,14 +11,14 @@ const Register = () => {
         phonenumber: true, password: true, firstName: true, lastName: true
     })
     const [inputValues, setInputValues] = useState({
-        phonenumber: '', firstName: '', lastName: '', password: '', isOpen: false, dataUser: {}, roleId: ''
+        phonenumber: '', firstName: '', lastName: '', password: '', isOpen: false, dataUser: {}, roleCode: ''
     });
     const { data: dataRole } = useFetchAllcode('ROLE');
 
-    if (dataRole && dataRole.length > 0 && inputValues.roleId === '') {
+    if (dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
         let arr = dataRole.filter(item => item.code !== "ADMIN")
         setInputValues({
-            ...inputValues, ["roleId"]: arr[0].code
+            ...inputValues, ["roleCode"]: arr[0].code
 
         })
     }
@@ -51,7 +51,7 @@ const Register = () => {
                     firstName: inputValues.firstName,
                     lastName: inputValues.lastName,
                     password: inputValues.password,
-                    roleId: inputValues.roleId
+                    roleCode: inputValues.roleCode
                 }, ["isOpen"]: true
             })
         }
@@ -89,7 +89,7 @@ const Register = () => {
                                                 {inputValidates.password && <p style={{ color: 'red' }}>{inputValidates.password}</p>}
                                             </div>
                                             <div className="form-group">
-                                                <select className="form-control" value={inputValues.roleId} name="roleId" onChange={(event) => handleOnChange(event)}>
+                                                <select className="form-control" value={inputValues.roleCode} name="roleCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataRole && dataRole.length > 0 &&
                                                         dataRole.map((item, index) => {
                                                             if (item.code !== "ADMIN") {

@@ -103,7 +103,7 @@ const RecruitmentService = (data) => {
 
 }
 const getAllUserByCompanyIdService = (data) => {
-    return axios.get(`/api/get-all-user-by-company_id?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-all-user-by-companyId?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}`)
 
 }
 const QuitCompanyService = (data) => {
@@ -143,7 +143,7 @@ const getDetailPostByIdService = (id) => {
     return axios.get(`/api/get-detail-post-by-id?id=${id}`)
 }
 const getListPostService = (data) => {
-    return axios.get(`/api/get-filter-post?limit=${data.limit}&offset=${data.offset}&category_job_id=${data.category_job_id}&address_id=${data.address_id}&salary_job_id=${data.salary_job_id}&category_joblevel_id=${data.category_joblevel_id}&category_worktype_id=${data.category_worktype_id}&experience_job_id=${data.experience_job_id}&sortName=${data.sortName}`)
+    return axios.get(`/api/get-filter-post?limit=${data.limit}&offset=${data.offset}&categoryJobCode=${data.categoryJobCode}&addressCode=${data.addressCode}&salaryJobCode=${data.salaryJobCode}&categoryJoblevelCode=${data.categoryJoblevelCode}&categoryWorktypeCode=${data.categoryWorktypeCode}&experienceJobCode=${data.experienceJobCode}&sortName=${data.sortName}`)
 }
 
 const getStatisticalTypePost = (limit) => {

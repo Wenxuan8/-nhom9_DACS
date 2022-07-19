@@ -98,9 +98,9 @@ const ManageCvCandidate = (props) => {
                                                 <tr key={index}>
                                                     <td>{index + 1}</td>
                                                     <td>{item.postData.name}</td>
-                                                    <td>{item.postData.jobTypeData.value}</td>
-                                                    <td>{item.postData.jobLevelData.value}</td>
-                                                    <td>{item.postData.provinceData.value}</td>
+                                                    <td>{item.postData.jobTypePostData.value}</td>
+                                                    <td>{item.postData.jobLevelPostData.value}</td>
+                                                    <td>{item.postData.provincePostData.value}</td>
 
                                                     <td>{item.isChecked === 0 ? 'Chưa xem' : 'Đã xem'}</td>
                                                     <td>

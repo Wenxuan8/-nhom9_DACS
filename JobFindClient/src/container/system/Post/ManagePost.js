@@ -21,7 +21,7 @@ const ManagePost = () => {
                     let arrData = await getAllPostByAdminService({
                         limit: PAGINATION.pagerow,
                         offset: 0,
-                        companyId: userData.company_id
+                        companyId: userData.companyId
                     })
                     if (arrData && arrData.errCode === 0) {
                         setdataPost(arrData.data)
@@ -44,7 +44,7 @@ const ManagePost = () => {
 
             limit: PAGINATION.pagerow,
             offset: number.selected * PAGINATION.pagerow,
-            companyId: user.company_id
+            companyId: user.companyId
         })
         if (arrData && arrData.errCode === 0) {
             setdataPost(arrData.data)
@@ -58,7 +58,7 @@ const ManagePost = () => {
             let post = await getAllPostByAdminService({
                 limit: PAGINATION.pagerow,
                 offset: numberPage * PAGINATION.pagerow,
-                companyId: user.company_id
+                companyId: user.companyId
             })
             if (post && post.errCode === 0) {
 
@@ -78,7 +78,7 @@ const ManagePost = () => {
             let post = await getAllPostByAdminService({
                 limit: PAGINATION.pagerow,
                 offset: numberPage * PAGINATION.pagerow,
-                companyId: user.company_id
+                companyId: user.companyId
             })
             if (post && post.errCode === 0) {
 
@@ -129,14 +129,14 @@ const ManagePost = () => {
                                 <tbody>
                                     {dataPost && dataPost.length > 0 &&
                                         dataPost.map((item, index) => {
-                                            let date = moment.unix(item.time_end / 1000).format('DD/MM/YYYY')
+                                            let date = moment.unix(item.timeEnd / 1000).format('DD/MM/YYYY')
                                             return (
                                                 <tr key={index}>
                                                     <td>{index + 1}</td>
                                                     <td>{item.name}</td>
-                                                    <td>{item.jobTypeData.value}</td>
-                                                    <td>{item.jobLevelData.value}</td>
-                                                    <td>{item.workTypeData.value}</td>
+                                                    <td>{item.jobTypePostData.value}</td>
+                                                    <td>{item.jobLevelPostData.value}</td>
+                                                    <td>{item.workTypePostData.value}</td>
                                                     <td>{date}</td>
                                                     <td>{item.statusPostData.value}</td>
                                                     <td>
@@ -144,7 +144,7 @@ const ManagePost = () => {
                                                         &nbsp; &nbsp;
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Edit</Link>
                                                         &nbsp; &nbsp;
-                                                        {item.statusId === 'S1' ? <>
+                                                        {item.statusCode === 'S1' ? <>
                                                             <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleBanPost(item.id)}  >Ban</a>
                                                             &nbsp; &nbsp;
                                                         </>

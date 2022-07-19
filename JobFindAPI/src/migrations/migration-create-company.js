@@ -7,7 +7,7 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             name: {
                 type: Sequelize.STRING
@@ -33,11 +33,45 @@ module.exports = {
             phonenumber: {
                 type: Sequelize.STRING
             },
-            amountemployer: {
+            amountEmployer: {
                 type: Sequelize.INTEGER
             },
             taxnumber: {
                 type: Sequelize.STRING
+            },
+            statusCode: {
+                type: Sequelize.STRING,
+                references: {
+                    model: {
+                        tableName: 'Allcodes'
+                    },
+                    key: 'code',
+                },
+                onUpdate: 'CASCADE',
+            },
+            userId: {
+                type: Sequelize.INTEGER
+            },
+            censorCode: {
+                type: Sequelize.STRING,
+                references: {
+                    model: {
+                        tableName: 'Allcodes'
+                    },
+                    key: 'code',
+                },
+                onUpdate: 'CASCADE',
+            },
+            file: {
+                type: Sequelize.BLOB('long')
+            },
+            allowPost: {
+                type: Sequelize.INTEGER,
+                defaultValue: 5
+            },
+            allowHotPost: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0
             },
             createdAt: {
                 allowNull: false,

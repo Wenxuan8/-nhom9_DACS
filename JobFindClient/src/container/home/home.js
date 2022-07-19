@@ -10,12 +10,12 @@ const Home = () => {
         let arrData = await getListPostService({
             limit: limit,
             offset: offset,
-            category_job_id: '',
-            address_id: '',
-            salary_job_id: '',
-            category_joblevel_id: '',
-            category_worktype_id: '',
-            experience_job_id: '',
+            categoryJobCode: '',
+            addressCode: '',
+            salaryJobCode: '',
+            categoryJoblevelCode: '',
+            categoryWorktypeCode: '',
+            experienceJobCode: '',
             sortName: false
         })
         if (arrData && arrData.errCode === 0) {

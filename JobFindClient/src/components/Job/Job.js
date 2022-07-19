@@ -15,14 +15,14 @@ const Job = (props) => {
                         <h4>{props.data.name}</h4>
                     </a>
                     <ul>
-                        <li>{props.data.jobLevelData.value}</li>
-                        <li><i class="fas fa-map-marker-alt"></i>{props.data.provinceData.value}</li>
-                        <li>{props.data.salaryTypeData.value}</li>
+                        <li>{props.data.jobLevelPostData.value}</li>
+                        <li><i class="fas fa-map-marker-alt"></i>{props.data.provincePostData.value}</li>
+                        <li>{props.data.salaryTypePostData.value}</li>
                     </ul>
                 </div>
             </div>
             <div class="items-link items-link2 f-right">
-                <a href="job_details.html">{props.data.workTypeData.value}</a>
+                <a href="job_details.html">{props.data.workTypePostData.value}</a>
                 <span style={{ position: 'absolute', right: '70px' }}>{handleSplitTime(props.data.createdAt)}</span>
             </div>
 

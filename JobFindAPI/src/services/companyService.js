@@ -21,7 +21,7 @@ let checkUserPhone = (userPhone) => {
 let handleCreateNewCompany = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.phonenumber || !data.address || !data.thumbnail || !data.coverimage || !data.descriptionHTML || !data.descriptionMarkdown || !data.amountemployer || !data.userId) {
+            if (!data.name || !data.phonenumber || !data.address || !data.thumbnail || !data.coverimage || !data.descriptionHTML || !data.descriptionMarkdown || !data.amountEmployer || !data.userId) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
@@ -51,7 +51,7 @@ let handleCreateNewCompany = (data) => {
                     website: data.website,
                     address: data.address,
                     phonenumber: data.phonenumber,
-                    amountemployer: data.amountemployer,
+                    amountEmployer: data.amountEmployer,
                     taxnumber: data.taxnumber
                 })
                 let user = await db.User.findOne({
@@ -59,7 +59,7 @@ let handleCreateNewCompany = (data) => {
                     raw: false
                 })
                 if (user) {
-                    user.company_id = company.id
+                    user.companyId = company.id
                     await user.save()
                 }
                 resolve({
@@ -75,7 +75,7 @@ let handleCreateNewCompany = (data) => {
 let handleUpdateCompany = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id || !data.name || !data.phonenumber || !data.address || !data.thumbnail || !data.coverimage || !data.descriptionHTML || !data.descriptionMarkdown || !data.amountemployer) {
+            if (!data.id || !data.name || !data.phonenumber || !data.address || !data.thumbnail || !data.coverimage || !data.descriptionHTML || !data.descriptionMarkdown || !data.amountEmployer) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
@@ -110,7 +110,7 @@ let handleUpdateCompany = (data) => {
                     res.descriptionMarkdown = data.descriptionMarkdown
                     res.website = data.website
                     res.address = data.address
-                    res.amountemployer = data.amountemployer
+                    res.amountEmployer = data.amountEmployer
                     res.taxnumber = data.taxnumber
                     res.phonenumber = data.phonenumber
                     await res.save();
@@ -176,19 +176,19 @@ let handleAddUserCompany = (data) => {
                         },
                         raw: false
                     })
-                    if(user.roleId != 'EMPLOYER'){
+                    if(user.roleCode != 'EMPLOYER'){
                         resolve({
                             errCode: 1,
                             errMessage: 'Tài khoản không có quyền là nhà tuyển dụng'
                         })
-                    }else if(user.company_id >0){
+                    }else if(user.companyId >0){
                         resolve({
                             errCode: 3,
                             errMessage: 'Nhân viên đã có công ty'
                         })  
                     }
                     else {
-                        user.company_id = data.companyId
+                        user.companyId = data.companyId
                         await user.save()
                         resolve({
                             errCode: 0,
@@ -251,17 +251,17 @@ let getDetailCompanyById = (id) => {
 
 
                 company.postData = await db.Post.findAll({
-                    where: { company_id: company.id },
+                    where: { companyId: company.id },
                     order: [['createdAt', 'DESC']],
                     include: [
-                        { model: db.Allcode, as: 'jobTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'workTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'salaryTypeData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'jobLevelData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'expTypeData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                        { model: db.Allcode, as: 'provinceData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
                     ],
                     raw: true,
                     nest: true
@@ -292,7 +292,7 @@ let getDetailCompanyByUserId = (userId) => {
                     }
                 })
                 let company = await db.Company.findOne({
-                    where: { id: user.company_id }
+                    where: { id: user.companyId }
                 })
                 resolve({
                     errCode: 0,
@@ -316,7 +316,7 @@ let getAllUserByCompanyId = (data) => {
             } else {
 
                 let res = await db.User.findAndCountAll({
-                    where: { statusId: 'S1', company_id: data.companyId },
+                    where: { statusCode: 'S1', companyId: data.companyId },
                     limit: +data.limit,
                     offset: +data.offset,
                     attributes: {
@@ -360,7 +360,7 @@ let handleQuitCompany = (data) => {
                     raw: false
                 })
                 if (user) {
-                    user.company_id = null
+                    user.companyId = null
                     await user.save()
                 }
                 resolve({

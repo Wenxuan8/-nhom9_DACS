@@ -10,7 +10,16 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+            //Allcode
+            Company.belongsTo(models.Allcode, { foreignKey: 'statusCode',targetKey:'code' ,as: 'statusCompanyData' })
+            Company.belongsTo(models.Allcode, { foreignKey: 'censorCode',targetKey:'code', as: 'censorData' })
 
+            //User
+            Company.hasMany(models.User,{foreignKey:'companyId',as: 'userCompanyData'})
+            Company.belongsTo(models.User,{foreignKey:'userId',targetKey:'id',as:'companyUserData'})
+            
+            //DetailPost
+            Post.belongsTo(models.DetailPost,{foreignKey: 'detailPostId', targetKey: 'id', as: 'userComapnyData' })
         }
     };
     Company.init({
@@ -22,9 +31,16 @@ module.exports = (sequelize, DataTypes) => {
         website: DataTypes.STRING,
         address: DataTypes.STRING,
         phonenumber: DataTypes.STRING,
-        amountemployer: DataTypes.INTEGER,
-        taxnumber: DataTypes.STRING
-    }, {
+        amountEmployer: DataTypes.INTEGER,
+        taxnumber: DataTypes.STRING,
+        statusCode: DataTypes.STRING,
+        userId: DataTypes.INTEGER,
+        censorCode: DataTypes.STRING,
+        file: DataTypes.BLOB('long'),
+        allowPost: DataTypes.INTEGER,
+        allowHotPost: DataTypes.INTEGER,
+    }, 
+    {
         sequelize,
         modelName: 'Company',
     });

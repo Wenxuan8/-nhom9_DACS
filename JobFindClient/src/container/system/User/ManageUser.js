@@ -110,7 +110,7 @@ const ManageUser = () => {
                                                     <td>{item.genderData.value}</td>
                                                     <td>{date}</td>
                                                     <td>{item.roleData.value}</td>
-                                                    <td><label className={item.statusId === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusData.value}</label></td>
+                                                    <td><label className={item.statusCode === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusData.value}</label></td>
                                                     <td>
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-user/${item.id}/`}>Edit</Link>
                                                         &nbsp; &nbsp;

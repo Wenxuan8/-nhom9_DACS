@@ -16,7 +16,7 @@ const AddCompany = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [inputValues, setInputValues] = useState({
         image: '', coverImage: '', imageReview: '', coverImageReview: '', isOpen: false, name: '', phonenumber: '', address: '', website: '',
-        amountemployer: '', taxnumber: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
+        amountEmployer: '', taxnumber: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
     });
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
@@ -39,7 +39,7 @@ const AddCompany = () => {
                 ["coverImage"]: res.data.coverimage,
                 ["descriptionHTML"]: res.data.descriptionHTML,
                 ["descriptionMarkdown"]: res.data.descriptionMarkdown,
-                ["amountemployer"]: res.data.amountemployer,
+                ["amountEmployer"]: res.data.amountEmployer,
                 ["taxnumber"]: res.data.taxnumber,
                 ["website"]: res.data.website,
                 ["imageReview"]: res.data.thumbnail,
@@ -83,7 +83,7 @@ const AddCompany = () => {
                 coverimage: inputValues.coverImage,
                 descriptionHTML: inputValues.descriptionHTML,
                 descriptionMarkdown: inputValues.descriptionMarkdown,
-                amountemployer: inputValues.amountemployer,
+                amountEmployer: inputValues.amountEmployer,
                 taxnumber: inputValues.taxnumber,
                 website: inputValues.website,
                 userId: user.id
@@ -107,7 +107,7 @@ const AddCompany = () => {
                 coverimage: inputValues.coverImage,
                 descriptionHTML: inputValues.descriptionHTML,
                 descriptionMarkdown: inputValues.descriptionMarkdown,
-                amountemployer: inputValues.amountemployer,
+                amountEmployer: inputValues.amountEmployer,
                 taxnumber: inputValues.taxnumber,
                 website: inputValues.website,
                 id: inputValues.id
@@ -170,7 +170,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Số nhân viên</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.amountemployer} name="amountemployer" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
+                                                <input value={inputValues.amountEmployer} name="amountEmployer" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
                                             </div>
                                         </div>
                                     </div>

@@ -10,16 +10,21 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+        //Post
+           Cv.belongsTo(models.Post,{foreignKey:'postId',targetKey:'id',as:'postCvData'})
 
+        //User
+           Cv.belongsTo(models.User,{foreignKey:'userId',targetKey:'id',as:'userCvData'})
         }
     };
     Cv.init({
-        user_id: DataTypes.INTEGER,
+        userId: DataTypes.INTEGER,
         file: DataTypes.BLOB('long'),
-        post_id: DataTypes.INTEGER,
-        isChecked: DataTypes.INTEGER,
+        postId: DataTypes.INTEGER,
+        isChecked: DataTypes.TINYINT,
         description: DataTypes.STRING
-    }, {
+    }, 
+    {
         sequelize,
         modelName: 'Cv',
     });

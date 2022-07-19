@@ -9,17 +9,17 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            user_id: {
-                type: Sequelize.INTEGER
+            userId: {
+                type: Sequelize.INTEGER,
             },
             file: {
                 type: Sequelize.BLOB('long')
             },
-            post_id: {
-                type: Sequelize.INTEGER
+            postId: {
+                type: Sequelize.INTEGER,
             },
             isChecked: {
-                type: Sequelize.INTEGER
+                type: Sequelize.TINYINT
             },
             description: {
                 type: Sequelize.STRING

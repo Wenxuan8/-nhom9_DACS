@@ -15,8 +15,8 @@ const ManageEmployer = () => {
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         setUser(userData)
-        if (userData && userData.company_id) {
-            fetchAllUser(userData.company_id)
+        if (userData && userData.companyId) {
+            fetchAllUser(userData.companyId)
         }
 
 
@@ -41,7 +41,7 @@ const ManageEmployer = () => {
 
             limit: PAGINATION.pagerow,
             offset: number.selected * PAGINATION.pagerow,
-            companyId: user.company_id
+            companyId: user.companyId
 
         })
         if (arrData && arrData.errCode === 0) {
@@ -58,7 +58,7 @@ const ManageEmployer = () => {
             let response = await getAllUserByCompanyIdService({
                 limit: PAGINATION.pagerow,
                 offset: numberPage * PAGINATION.pagerow,
-                companyId: user.company_id
+                companyId: user.companyId
             })
             if (response && response.errCode === 0) {
 
@@ -118,7 +118,7 @@ const ManageEmployer = () => {
                                                     <td>{item.genderData.value}</td>
                                                     <td>{date}</td>
                                                     <td>{item.roleData.value}</td>
-                                                    <td><label className={item.statusId === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusData.value}</label></td>
+                                                    <td><label className={item.statusCode === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusData.value}</label></td>
                                                     <td>
                                                        {user.id != item.id &&  <a onClick={() => handleQuitCompany(item.id)} style={{ color: '#4B49AC', cursor: 'pointer' }} >Thôi việc</a>}
                                                         &nbsp; &nbsp;

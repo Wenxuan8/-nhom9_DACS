@@ -23,12 +23,12 @@ const JobPage = () => {
         let arrData = await getListPostService({
             limit: limit,
             offset: offset,
-            category_job_id: jobType,
-            address_id: jobLocation,
-            salary_job_id: salary,
-            category_joblevel_id: jobLevel,
-            category_worktype_id: workType,
-            experience_job_id: exp,
+            categoryJobCode: jobType,
+            addressCode: jobLocation,
+            salaryJobCode: salary,
+            categoryJoblevelCode: jobLevel,
+            categoryWorktypeCode: workType,
+            experienceJobCode: exp,
             sortName: sortName
         })
         if (arrData && arrData.errCode === 0) {
@@ -92,12 +92,12 @@ const JobPage = () => {
             let arrData = await getListPostService({
                 limit: limit,
                 offset: offset,
-                category_job_id: jobType,
-                address_id: jobLocation,
-                salary_job_id: salary,
-                category_joblevel_id: jobLevel,
-                category_worktype_id: workType,
-                experience_job_id: exp,
+                categoryJobCode: jobType,
+                addressCode: jobLocation,
+                salaryJobCode: salary,
+                categoryJoblevelCode: jobLevel,
+                categoryWorktypeCode: workType,
+                experienceJobCode: exp,
             })
             if (arrData && arrData.errCode === 0) {
                 setPost(arrData.data)

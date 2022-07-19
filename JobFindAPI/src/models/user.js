@@ -10,24 +10,41 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            User.belongsTo(models.Allcode, { foreignKey: 'genderId', targetKey: 'code', as: 'genderData' })
-            User.belongsTo(models.Allcode, { foreignKey: 'roleId', targetKey: 'code', as: 'roleData' })
-            User.belongsTo(models.Allcode, { foreignKey: 'statusId', targetKey: 'code', as: 'statusData' })
+            //Allcode
+            User.belongsTo(models.Allcode, { foreignKey: 'genderCode', targetKey: 'code', as: 'genderData' })
+            
+            // //Company
+            User.belongsTo(models.Company, { foreignKey: 'companyId', targetKey: 'id', as: 'userCompanyData' })
+            User.hasOne(models.Company, { foreignKey: 'userId', as: 'companyUserData' })
+
+            //User
+            User.hasOne(models.Account, { foreignKey: 'userId', as: 'userAccountData' })
+
+            // //Cv
+            User.hasMany(models.Cv, { foreignKey: 'userId', as: 'userCvData' })
+
+            // //Notification
+            // User.hasMany(models.Notification, { foreignKey: 'userId', as: 'userData' })
+            
+            //packagePost
+            User.belongsToMany(models.PackagePost,{through:'OrderPackage'})
+
+            //Post
+            User.hasMany(models.Post,{foreignKey: 'userId', as: 'userPostData' })
         }
     };
     User.init({
-        phonenumber: DataTypes.STRING,
-        password: DataTypes.STRING,
         firstName: DataTypes.STRING,
         lastName: DataTypes.STRING,
         address: DataTypes.STRING,
-        genderId: DataTypes.STRING,
+        genderCode: DataTypes.STRING,
         image: DataTypes.STRING,
         dob: DataTypes.STRING,
-        roleId: DataTypes.STRING,
-        statusId: DataTypes.STRING,
-        company_id: DataTypes.INTEGER
-    }, {
+        statusCode: DataTypes.STRING,
+        companyId: DataTypes.INTEGER,
+        file: DataTypes.BLOB('long'),
+    }, 
+    {
         sequelize,
         modelName: 'User',
     });

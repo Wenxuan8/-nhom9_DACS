@@ -195,13 +195,13 @@ let getListJobTypeAndCountPost = async (data) => {
 
             let res = await db.Post.findAll({
                 where: {
-                    statusId: 'S1'
+                    statusCode: 'S1'
                 },
                 include: [
-                    { model: db.Allcode, as: 'jobTypeData', attributes: ['value', 'code', 'image'] },
+                    { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code', 'image'] },
                 ],
-                attributes: ['category_job_id', [db.sequelize.fn('COUNT', db.sequelize.col('category_job_id')), 'amount']],
-                group: ['category_job_id'],
+                attributes: ['categoryJobCode', [db.sequelize.fn('COUNT', db.sequelize.col('categoryJobCode')), 'amount']],
+                group: ['categoryJobCode'],
                 order: [["amount", "DESC"]],
                 limit: +data.limit,
                 offset: +data.offset,
