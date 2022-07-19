@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
 
             //orderpackage
-            PackagePost.hasMany(models.OrderPackage,{foreignKey: 'packagePostId',targetKey:'id',as:'packageOrderData'})
+            PackagePost.hasMany(models.OrderPackage,{foreignKey: 'packagePostId',as:'packageOrderData'})
+
         }
     };
     PackagePost.init({

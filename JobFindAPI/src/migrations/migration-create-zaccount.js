@@ -36,7 +36,8 @@ module.exports = {
                 onUpdate: 'CASCADE',
             },
             userId: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                unique: true
             },
             createdAt: {
                 allowNull: false,

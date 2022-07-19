@@ -18,8 +18,6 @@ module.exports = (sequelize, DataTypes) => {
             Company.hasMany(models.User,{foreignKey:'companyId',as: 'userCompanyData'})
             Company.belongsTo(models.User,{foreignKey:'userId',targetKey:'id',as:'companyUserData'})
             
-            //DetailPost
-            Post.belongsTo(models.DetailPost,{foreignKey: 'detailPostId', targetKey: 'id', as: 'userComapnyData' })
         }
     };
     Company.init({
