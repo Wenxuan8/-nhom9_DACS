@@ -70,8 +70,8 @@ const createAllCodeService = (data) => {
 
 }
 
-const getDetailAllcodeById = (id) => {
-    return axios.get(`/api/get-detail-all-code-by-id?id=${id}`)
+const getDetailAllcodeByCode = (code) => {
+    return axios.get(`/api/get-detail-all-code-by-code?=${code}`)
 
 }
 const UpdateAllcodeService = (data) => {
@@ -154,7 +154,7 @@ const getStatisticalTypePost = (limit) => {
     return axios.get(`/api/get-statistical-post?limit=${limit}`)
 }
 export {
-    DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeById, createAllCodeService, getListAllCodeService, getAllCodeService,
+    DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeByCode, createAllCodeService, getListAllCodeService, getAllCodeService,
     getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
     createCompanyService, getDetailCompanyByUserId, updateCompanyService, RecruitmentService, getAllUserByCompanyIdService, QuitCompanyService,
     createPostService, updatePostService, banPostService, getAllPostByAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,

@@ -4,14 +4,23 @@ const cloudinary = require('../utils/cloudinary');
 let checkUserPhone = (userPhone) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let user = await db.User.findOne({
-                where: { phonenumber: userPhone }
-            })
-            if (user) {
-                resolve(true)
+            if (!userPhone) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters!'
+                })
             } else {
-                resolve(false)
+                let account = await db.Account.findOne({
+                    where: { phonenumber: userPhone }
+                })
+                if (account) {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
             }
+
+
         } catch (error) {
             reject(error)
         }

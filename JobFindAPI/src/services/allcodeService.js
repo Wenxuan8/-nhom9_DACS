@@ -72,7 +72,7 @@ let getAllCodeService = (typeInput) => {
 let handleUpdateAllCode = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.value || !data.code || !data.id) {
+            if (!data.value || !data.code) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
@@ -80,7 +80,7 @@ let handleUpdateAllCode = (data) => {
             } else {
                 let res = await db.Allcode.findOne({
                     where: {
-                        id: data.id
+                        code: data.code
                     },
                     raw: false
                 })
@@ -95,70 +95,99 @@ let handleUpdateAllCode = (data) => {
                     }
                     res.value = data.value
                     res.code = data.code
-                    await res.save();
+                    res = await res.save();
+                    if (res)
+                        resolve({
+                            errCode: 0,
+                            errMessage: 'Đã chỉnh sửa thành công'
+                        })
+                    else {
+                        resolve({
+                            errCode: 1,
+                            errMessage: 'Có lỗi trong quá trình chỉnh sửa'
+                        })
+                    }
                 }
-                resolve({
-                    errCode: 0,
-                    errMessage: 'ok'
-                })
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Không tồn tại code'
+                    })
+                }
             }
         } catch (error) {
             reject(error)
         }
     })
 }
-let getDetailAllCodeById = (id) => {
+let getDetailAllcodeByCode = (code) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!id) {
+            if (!code) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
                 })
             } else {
                 let data = await db.Allcode.findOne({
-                    where: { id: id }
+                    where: { code: code }
                 })
-                resolve({
-                    errCode: 0,
-                    data: data
-                })
+                if (data)
+                    resolve({
+                        errCode: 0,
+                        data: data
+                    })
+                else {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'Không tìm thấy code'
+                    })
+                }
             }
         } catch (error) {
             reject(error)
         }
     })
 }
-let handleDeleteAllCode = (allcodeId) => {
+let handleDeleteAllCode = (code) => {
     return new Promise(async (resolve, reject) => {
         try {
 
-            if (!allcodeId) {
+            if (!code) {
                 resolve({
                     errCode: 1,
                     errMessage: `Missing required parameters !`
                 })
             } else {
                 let foundAllCode = await db.Allcode.findOne({
-                    where: { id: allcodeId }
+                    where: { code: code }
                 })
                 if (!foundAllCode) {
                     resolve({
                         errCode: 2,
-                        errMessage: `The allCode isn't exist`
+                        errMessage: `Không tồn tại code`
                     })
                 }
-                await db.Allcode.destroy({
-                    where: { id: allcodeId }
-                })
-                resolve({
-                    errCode: 0,
-                    message: `The allCode is deleted`
-                })
+                else {
+                    await db.Allcode.destroy({
+                            where: { code: code}
+                    })
+                    resolve({
+                        errCode: 0,
+                        message: `Đã xóa thành công`
+                    })
+                }
             }
 
         } catch (error) {
-            reject(error)
+            if (error.message.includes('a foreign key constraint fails'))
+            {
+                resolve({
+                    errCode: 3,
+                    errMessage: `Bạn không thể xóa thông tin này`
+                })
+            }
+            reject(error.message)
         }
     })
 }
@@ -222,7 +251,7 @@ module.exports = {
     handleCreateNewAllCode: handleCreateNewAllCode,
     getAllCodeService: getAllCodeService,
     handleUpdateAllCode: handleUpdateAllCode,
-    getDetailAllCodeById: getDetailAllCodeById,
+    getDetailAllcodeByCode: getDetailAllcodeByCode,
     handleDeleteAllCode: handleDeleteAllCode,
     getListAllCodeService: getListAllCodeService,
     getListJobTypeAndCountPost: getListJobTypeAndCountPost

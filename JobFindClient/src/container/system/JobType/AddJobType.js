@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { createAllCodeService, getDetailAllcodeById, UpdateAllcodeService } from '../../../service/userService';
+import { createAllCodeService, getDetailAllcodeByCode, UpdateAllcodeService } from '../../../service/userService';
 import { useFetchAllcode } from '../../../util/fetch';
 import DatePicker from '../../../components/input/DatePicker';
 import { toast } from 'react-toastify';
@@ -29,7 +29,7 @@ const AddJobType = () => {
         if (id) {
             let fetchDetailJobType = async () => {
                 setisActionADD(false)
-                let allcode = await getDetailAllcodeById(id)
+                let allcode = await getDetailAllcodeByCode(id)
                 if (allcode && allcode.errCode === 0) {
                     setInputValues({ ...inputValues, ["value"]: allcode.data.value, ["code"]: allcode.data.code, ["image"]: allcode.data.image, ["imageReview"]: allcode.data.image })
                 }

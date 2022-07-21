@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { createAllCodeService, getDetailAllcodeById, UpdateAllcodeService } from '../../../service/userService';
+import { createAllCodeService, getDetailAllcodeByCode, UpdateAllcodeService } from '../../../service/userService';
 import { toast } from 'react-toastify';
 import { useParams } from "react-router-dom";
 import { Spinner, Modal } from 'reactstrap'
@@ -22,7 +22,7 @@ const AddSalaryType = () => {
         if (id) {
             let fetchDetailSalaryType = async () => {
                 setisActionADD(false)
-                let allcode = await getDetailAllcodeById(id)
+                let allcode = await getDetailAllcodeByCode(id)
                 if (allcode && allcode.errCode === 0) {
                     setInputValues({ ...inputValues, ["value"]: allcode.data.value, ["code"]: allcode.data.code })
                 }
