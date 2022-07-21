@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             User.belongsTo(models.Company, { foreignKey: 'companyId', targetKey: 'id', as: 'userCompanyData' })
             User.hasOne(models.Company, { foreignKey: 'userId', as: 'companyUserData' })
 
-            //User
+            //Account
             User.hasOne(models.Account, { foreignKey: 'userId', as: 'userAccountData' })
 
             // //Cv
@@ -41,13 +41,13 @@ module.exports = (sequelize, DataTypes) => {
         genderCode: DataTypes.STRING,
         image: DataTypes.STRING,
         dob: DataTypes.STRING,
-        statusCode: DataTypes.STRING,
         companyId: DataTypes.INTEGER,
         file: DataTypes.BLOB('long'),
     }, 
     {
         sequelize,
         modelName: 'User',
+        timestamps: false
     });
     return User;
 };

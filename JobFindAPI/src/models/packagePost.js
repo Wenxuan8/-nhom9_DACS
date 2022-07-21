@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     {
         sequelize,
         modelName: 'PackagePost',
+        timestamps: false
     });
     return PackagePost;
 };

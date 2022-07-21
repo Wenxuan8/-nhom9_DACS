@@ -25,9 +25,21 @@ let handleUpdateUser = async (req, res) => {
         })
     }
 }
-let handleDeleteUser = async (req, res) => {
+let handleBanUser = async (req, res) => {
     try {
-        let data = await userService.deleteUser(req.body.id);
+        let data = await userService.banUser(req.body.id);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let handleUnbanUser = async (req, res) => {
+    try {
+        let data = await userService.unbanUser(req.body.id);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error)
@@ -87,7 +99,7 @@ let getDetailUserById = async (req, res) => {
 }
 let checkUserPhone = async (req, res) => {
     try {
-        let data = await userService.checkUserPhone(req.body.phonenumber);
+        let data = await userService.checkUserPhone(req.query.phonenumber);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error)
@@ -114,7 +126,8 @@ let changePaswordByPhone = async (req, res) => {
 module.exports = {
     handleCreateNewUser: handleCreateNewUser,
     handleUpdateUser: handleUpdateUser,
-    handleDeleteUser: handleDeleteUser,
+    handleBanUser: handleBanUser,
+    handleUnbanUser: handleUnbanUser,
     handleLogin: handleLogin,
     handleChangePassword: handleChangePassword,
     getAllUser: getAllUser,

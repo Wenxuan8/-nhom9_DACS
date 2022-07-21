@@ -41,12 +41,17 @@ module.exports = (sequelize, DataTypes) => {
     Allcode.init({
         type: DataTypes.STRING,
         value: DataTypes.STRING,
-        code: DataTypes.STRING,
+        code: {
+            type: DataTypes.STRING,
+            primaryKey: true
+        },
         image: DataTypes.STRING
     }, 
     {
         sequelize,
         modelName: 'Allcode',
+        timestamps: false,
     });
+    Allcode.removeAttribute('id')
     return Allcode;
 };

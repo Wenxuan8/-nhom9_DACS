@@ -14,21 +14,25 @@ const UpdateUserService = (data) => {
     return axios.put(`/api/update-user`, data)
 
 }
-const DeleteUserService = (userId) => {
-    return axios.delete(`/api/delete-user`, {
+const BanUserService = (userId) => {
+    return axios.post(`/api/ban-user`, {
         data: {
             id: userId
         }
     })
 
 }
-const checkUserPhoneService = (userPhone) => {
-    return axios.delete(`/api/check-phonenumber-user`, {
+
+const UnbanUserService = (userId) => {
+    return axios.post(`/api/unban-user`, {
         data: {
-            phonenumber: userPhone
+            id: userId
         }
     })
 
+}
+const checkUserPhoneService = (phonenumber) => {
+    return axios.get(`/api/check-phonenumber-user?phonenumber=${phonenumber}`)
 }
 const changePasswordByphone = (data) => {
     return axios.post(`/api/changepasswordbyPhone`,data)
@@ -151,7 +155,7 @@ const getStatisticalTypePost = (limit) => {
 }
 export {
     DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeById, createAllCodeService, getListAllCodeService, getAllCodeService,
-    getAllUsers, createNewUser, UpdateUserService, DeleteUserService, getDetailUserById, handleChangePassword, handleLoginService,
+    getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
     createCompanyService, getDetailCompanyByUserId, updateCompanyService, RecruitmentService, getAllUserByCompanyIdService, QuitCompanyService,
     createPostService, updatePostService, banPostService, getAllPostByAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost

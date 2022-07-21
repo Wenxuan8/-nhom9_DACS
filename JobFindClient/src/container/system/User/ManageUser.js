@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { getAllUsers, DeleteUserService } from '../../../service/userService';
+import { getAllUsers, BanUserService } from '../../../service/userService';
 import moment from 'moment';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
@@ -42,10 +42,10 @@ const ManageUser = () => {
 
         }
     }
-    let handleDeleteUser = async (event, id) => {
+    let handlebanUser = async (event, id) => {
         event.preventDefault();
 
-        let res = await DeleteUserService(id)
+        let res = await BanUserService(id)
         if (res && res.errCode === 0) {
             toast.success("Xóa người dùng thành công")
             let user = await getAllUsers({
@@ -114,7 +114,7 @@ const ManageUser = () => {
                                                     <td>
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-user/${item.id}/`}>Edit</Link>
                                                         &nbsp; &nbsp;
-                                                       {user.id != item.id &&  <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteUser(event, item.id)} >Delete</a>}
+                                                       {user.id != item.id &&  <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handlebanUser(event, item.id)} >Delete</a>}
                                                     </td>
                                                 </tr>
                                             )

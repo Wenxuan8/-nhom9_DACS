@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { handleLoginService } from '../../service/userService';
 import { toast } from 'react-toastify';
 const Login = () => {
-
+    let history = useHistory()
     const [inputValues, setInputValues] = useState({
         password: '', phonenumber: ''
     });
@@ -26,11 +26,11 @@ const Login = () => {
 
             localStorage.setItem("userData", JSON.stringify(res.user))
             if (res.user.roleCode === "ADMIN" || res.user.roleCode === "EMPLOYER") {
-                window.location.href = "/admin/"
+                history.push("/admin")
 
             }
             else {
-                window.location.href = "/"
+                history.push("/")
             }
         }
         else {

@@ -11,12 +11,13 @@ let initWebRoutes = (app) => {
     //=====================API USER==========================//
     router.post('/api/create-new-user', userController.handleCreateNewUser)
     router.put('/api/update-user', userController.handleUpdateUser)
-    router.delete('/api/delete-user', userController.handleDeleteUser)
+    router.post('/api/ban-user', userController.handleBanUser)
+    router.post('/api/unban-user', userController.handleUnbanUser)
     router.post('/api/login', userController.handleLogin)
     router.post('/api/changepassword', userController.handleChangePassword)
     router.get('/api/get-all-user', userController.getAllUser)
     router.get('/api/get-detail-user-by-id', userController.getDetailUserById)
-    router.delete('/api/check-phonenumber-user', userController.checkUserPhone)
+    router.get('/api/check-phonenumber-user', userController.checkUserPhone)
     router.post('/api/changepasswordbyPhone', userController.changePaswordByPhone)
 
     //===================API ALLCODE========================//
