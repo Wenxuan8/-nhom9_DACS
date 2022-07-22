@@ -31,7 +31,8 @@ let initWebRoutes = (app) => {
     //==================API COMPANY=========================//
     router.post('/api/create-new-company', companyController.handleCreateNewCompany)
     router.put('/api/update-company', companyController.handleUpdateCompany)
-    router.delete('/api/delete-company', companyController.handleDeleteCompany)
+    router.put('/api/ban-company', companyController.handleBanCompany)
+    router.put('/api/unban-company', companyController.handleUnBanCompany)
     router.put('/api/add-user-company', companyController.handleAddUserCompany)
     router.get('/api/get-list-company', companyController.getListCompany)
     router.get('/api/get-detail-company-by-id', companyController.getDetailCompanyById)

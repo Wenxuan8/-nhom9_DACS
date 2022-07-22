@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         timeEnd: DataTypes.STRING,
         timePost: DataTypes.STRING,
         userId: DataTypes.INTEGER,
-        isHot: DataTypes.TINYINT
+        isHot: DataTypes.TINYINT,
+        detailPostId: DataTypes.INTEGER
     }, 
     {
         sequelize,

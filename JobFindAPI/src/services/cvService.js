@@ -9,17 +9,25 @@ let handleCreateCv = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                await db.Cv.create({
+                let cv = await db.Cv.create({
                     userId: data.userId,
                     file: data.file,
                     postId: data.postId,
                     isChecked: 0,
                     description: data.description
                 })
-                resolve({
-                    errCode: 0,
-                    errMessage: 'ok'
-                })
+                if (cv) {
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Đã gửi CV thành công'
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Đã gửi CV thất bại'
+                    })
+                }
             }
         } catch (error) {
             reject(error)
@@ -39,19 +47,17 @@ let getAllListCvByPost = (data) => {
                     where: { postId: data.postId },
                     limit: +data.limit,
                     offset: +data.offset,
+                    nest: true,
                     raw: true,
                     attributes: {
                         exclude: ['file']
                     },
+                    include: [
+                        {model: db.User, as:'userCvData',attributes: {
+                            exclude: ['userId','file','companyId']
+                        }}
+                    ]
                 })
-                for (let i = 0; i < cv.rows.length; i++) {
-                    cv.rows[i].userData = await db.User.findOne({
-                        where: { id: cv.rows[i].userId }
-                    })
-                    if (cv.rows[i].isChecked == 1) {
-                        cv.rows[i].isChecked == true
-                    } else cv.rows[i].isChecked == false
-                }
                 resolve({
                     errCode: 0,
                     data: cv.rows,
@@ -74,21 +80,26 @@ let getDetailCvById = (data) => {
             } else {
                 let cv = await db.Cv.findOne({
                     where: { id: data.cvId },
-                    raw: false
+                    raw: false,
+                    nest: true,
+                    include: [
+                        {model: db.User, as:'userCvData',
+                            attributes: {
+                                exclude: ['userId','file','companyId']
+                            }
+                        }
+                    ]
                 })
-                let userData = await db.User.findOne({ where: { id: cv.userId } })
                 cv.isChecked = 1
-
-                if (cv.file) {
-                    cv.file = new Buffer(cv.file, 'base64').toString('binary');
-                }
+                // if (cv.file) {
+                //     cv.file = new Buffer(cv.file, 'base64').toString('binary');
+                // }
 
                 await cv.save()
 
                 resolve({
                     errCode: 0,
                     data: cv,
-                    userData: userData
                 })
             }
         } catch (error) {
@@ -110,25 +121,25 @@ let getAllCvByUserId = (data) => {
                     limit: +data.limit,
                     offset: +data.offset,
                     raw: true,
+                    nest: true,
+                    include: [
+                        {model: db.Post, as:'postCvData',
+                            include: [
+                                {model: db.DetailPost,as:'userComapnyData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                                    include: [
+                                        {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
+                                        {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},
+                                        {model: db.Allcode, as:'salaryTypePostData' , attributes: ['value','code']},
+                                        {model: db.Allcode, as:'jobLevelPostData' , attributes: ['value','code']},
+                                        {model: db.Allcode, as:'genderPostData' , attributes: ['value','code']},
+                                        {model: db.Allcode, as:'provincePostData' , attributes: ['value','code']},
+                                        {model: db.Allcode, as:'expTypePostData' , attributes: ['value','code']}
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 })
-                for (let i = 0; i < cv.rows.length; i++) {
-                    cv.rows[i].postData = await db.Post.findOne({
-                        where: { id: cv.rows[i].postId },
-                        include: [
-                            { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                            { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
-                        ],
-
-                        raw: true,
-                        nest: true
-                    })
-                }
                 resolve({
                     errCode: 0,
                     data: cv.rows,
@@ -136,7 +147,7 @@ let getAllCvByUserId = (data) => {
                 })
             }
         } catch (error) {
-            reject(error)
+            reject(error.message)
         }
     })
 }

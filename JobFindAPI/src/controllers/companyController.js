@@ -24,9 +24,21 @@ let handleUpdateCompany = async (req, res) => {
         })
     }
 }
-let handleDeleteCompany = async (req, res) => {
+let handleBanCompany = async (req, res) => {
     try {
-        let data = await companyService.handleDeleteCompany(req.body.id);
+        let data = await companyService.handleBanCompany(req.body.id);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let handleUnBanCompany = async (req, res) => {
+    try {
+        let data = await companyService.handleUnBanCompany(req.body.id);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error)
@@ -110,7 +122,8 @@ let handleQuitCompany = async (req, res) => {
 }
 module.exports = {
     handleCreateNewCompany: handleCreateNewCompany,
-    handleDeleteCompany: handleDeleteCompany,
+    handleBanCompany: handleBanCompany,
+    handleUnBanCompany: handleUnBanCompany,
     handleUpdateCompany: handleUpdateCompany,
     handleAddUserCompany: handleAddUserCompany,
     getListCompany: getListCompany,
