@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             DetailPost.belongsTo(models.Allcode, { foreignKey: 'addressCode', targetKey: 'code', as: 'provincePostData' })
             
             // Post
-            DetailPost.hasMany(models.Post,{foreignKey: 'detailPostId', as: 'userComapnyData' })
+            DetailPost.hasMany(models.Post,{foreignKey: 'detailPostId', as: 'postDetailData' })
 
             // //Cv
             DetailPost.hasMany(models.Cv,{foreignKey:'postId',as:'postCvData'})

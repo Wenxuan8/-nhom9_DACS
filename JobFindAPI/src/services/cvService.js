@@ -125,7 +125,7 @@ let getAllCvByUserId = (data) => {
                     include: [
                         {model: db.Post, as:'postCvData',
                             include: [
-                                {model: db.DetailPost,as:'userComapnyData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                                {model: db.DetailPost,as:'postDetailData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
                                     include: [
                                         {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
                                         {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},

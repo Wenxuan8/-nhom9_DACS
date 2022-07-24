@@ -407,7 +407,7 @@ let getDetailCompanyById = (id) => {
                     })
                     company.postData = await db.Post.findAll({
                         where: {
-                            [Op.or]: listUserOfCompany
+                            [Op.and]: [{statusCode: 'PS1'},{[Op.or]: listUserOfCompany }]
                         },
                         order: [['createdAt', 'DESC']],
                         limit: 5,
@@ -418,7 +418,7 @@ let getDetailCompanyById = (id) => {
                         nest: true,
                         raw: true,
                         include: [
-                            {model: db.DetailPost,as:'userComapnyData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                            {model: db.DetailPost,as:'postDetailData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
                                 include: [
                                     {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
                                     {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},

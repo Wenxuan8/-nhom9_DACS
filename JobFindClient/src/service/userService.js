@@ -133,7 +133,7 @@ const activePostService = (data) => {
 
 }
 const banPostService = (postId) => {
-    return axios.delete(`/api/ban-post`, {
+    return axios.put(`/api/ban-post`, {
         data: {
             id: postId
         }
