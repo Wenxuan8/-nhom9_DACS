@@ -232,7 +232,7 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/list-job-type">
                                     <ManageJobType />
                                 </Route>
-                                <Route exact path="/admin/edit-job-type/:id">
+                                <Route exact path="/admin/edit-job-type/:code">
                                     <AddJobType />
                                 </Route>
                                 <Route exact path="/admin/add-job-level">

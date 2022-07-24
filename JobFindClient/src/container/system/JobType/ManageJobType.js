@@ -14,6 +14,7 @@ const ManageJobType = () => {
     const [numberPage, setnumberPage] = useState('')
     const [imgPreview, setimgPreview] = useState('')
     const [isOpen, setisOpen] = useState(false)
+    console.log(dataJobType)
     useEffect(() => {
         try {
             let fetchData = async () => {
@@ -43,7 +44,7 @@ const ManageJobType = () => {
         event.preventDefault();
         let res = await DeleteAllcodeService(id)
         if (res && res.errCode === 0) {
-            toast.success("Xóa loại công việc thành công")
+            toast.success(res.errMessage)
             let arrData = await getListAllCodeService({
 
                 type: 'JOBTYPE',
@@ -56,7 +57,7 @@ const ManageJobType = () => {
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
 
-        } else toast.error("Xóa loại công việc thất bại")
+        } else toast.error(res.errMessage)
     }
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
@@ -112,9 +113,9 @@ const ManageJobType = () => {
                                                     <td>{item.code}</td>
                                                     <td style={{ width: '30%' }} ><div onClick={() => openPreviewImage(item.image)} className="box-img-preview" style={{ backgroundImage: `url(${item.image})`, width: '100%' }}></div></td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-job-type/${item.id}/`}>Edit</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-job-type/${item.code}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteJobType(event, item.id)} >Delete</a>
+                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteJobType(event, item.code)} >Xóa</a>
                                                     </td>
                                                 </tr>
                                             )

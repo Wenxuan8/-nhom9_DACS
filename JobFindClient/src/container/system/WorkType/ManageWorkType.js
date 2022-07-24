@@ -33,11 +33,11 @@ const ManageWorkType = () => {
         }
 
     }, [])
-    let handleDeleteWorkType = async (event, id) => {
+    let handleDeleteWorkType = async (event, code) => {
         event.preventDefault();
-        let res = await DeleteAllcodeService(id)
+        let res = await DeleteAllcodeService(code)
         if (res && res.errCode === 0) {
-            toast.success("Xóa hình thức làm việc thành công")
+            toast.success(res.errMessage)
             let arrData = await getListAllCodeService({
 
                 type: 'WORKTYPE',
@@ -50,7 +50,7 @@ const ManageWorkType = () => {
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
 
-        } else toast.error("Xóa hình thức làm việc thất bại")
+        } else toast.error(res.errMessage)
     }
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
@@ -103,9 +103,9 @@ const ManageWorkType = () => {
                                                     <td>{item.value}</td>
                                                     <td>{item.code}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-work-type/${item.id}/`}>Edit</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-work-type/${item.code}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteWorkType(event, item.id)} >Delete</a>
+                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteWorkType(event, item.code)} >Xóa</a>
                                                     </td>
                                                 </tr>
                                             )

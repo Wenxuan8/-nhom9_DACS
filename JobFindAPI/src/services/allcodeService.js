@@ -174,7 +174,7 @@ let handleDeleteAllCode = (code) => {
                     })
                     resolve({
                         errCode: 0,
-                        message: `Đã xóa thành công`
+                        errMessage: `Đã xóa thành công`
                     })
                 }
             }
@@ -184,7 +184,7 @@ let handleDeleteAllCode = (code) => {
             {
                 resolve({
                     errCode: 3,
-                    errMessage: `Bạn không thể xóa thông tin này`
+                    errMessage: `Bạn không thể xóa thông tin này vì các dữ liệu khác liên quan`
                 })
             }
             reject(error.message)
@@ -224,14 +224,18 @@ let getListJobTypeAndCountPost = async (data) => {
 
             let res = await db.Post.findAll({
                 where: {
-                    statusCode: 'S1'
+                    statusCode: 'PS1'
                 },
                 include: [
-                    { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code', 'image'] },
+                    {model: db.DetailPost,as:'postDetailData',attributes: [],
+                        include: [
+                            {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code','image']}
+                        ],
+                    }
                 ],
-                attributes: ['categoryJobCode', [db.sequelize.fn('COUNT', db.sequelize.col('categoryJobCode')), 'amount']],
-                group: ['categoryJobCode'],
-                order: [["amount", "DESC"]],
+                attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('postDetailData.categoryJobCode')), 'amount']],
+                group: ['postDetailData.categoryJobCode'],
+                order: [[db.sequelize.literal('amount'), 'ASC']],
                 limit: +data.limit,
                 offset: +data.offset,
                 raw: true,

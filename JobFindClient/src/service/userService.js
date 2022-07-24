@@ -71,7 +71,7 @@ const createAllCodeService = (data) => {
 }
 
 const getDetailAllcodeByCode = (code) => {
-    return axios.get(`/api/get-detail-all-code-by-code?=${code}`)
+    return axios.get(`/api/get-detail-all-code-by-code?code=${code}`)
 
 }
 const UpdateAllcodeService = (data) => {
@@ -81,7 +81,7 @@ const UpdateAllcodeService = (data) => {
 const DeleteAllcodeService = (allcodeId) => {
     return axios.delete(`/api/delete-all-code`, {
         data: {
-            id: allcodeId
+            code: allcodeId
         }
     })
 }

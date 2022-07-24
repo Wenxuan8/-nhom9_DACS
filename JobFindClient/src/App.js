@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from './container/header/header'
 import Footer from './container/footer/Footer'
 import Home from './container/home/home'
@@ -16,7 +16,6 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
-
 import Otp from './container/login/Otp'
 import Login from './container/login/Login'
 import Register from './container/login/Register'
@@ -60,7 +59,7 @@ function App() {
             <Footer />
           </Route>
           <Route path="/admin/" render={() => {
-            if (JSON.parse(localStorage.getItem("userData")) && (JSON.parse(localStorage.getItem("userData")).roleCode === "ADMIN" || JSON.parse(localStorage.getItem("userData")).roleCode === "EMPLOYER")) {
+            if (JSON.parse(localStorage.getItem("userData")) && (JSON.parse(localStorage.getItem("userData")).roleCode === "ADMIN" || JSON.parse(localStorage.getItem("userData")).roleCode === "EMPLOYER" || JSON.parse(localStorage.getItem("userData")).roleCode === 'COMPANY')) {
               return <HomeAdmin />
             } else {
               return <Redirect to={"/login"} />

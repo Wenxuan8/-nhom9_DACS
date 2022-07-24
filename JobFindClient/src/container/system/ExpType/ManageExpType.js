@@ -33,11 +33,11 @@ const ManageExpType = () => {
         }
 
     }, [])
-    let handleDeleteExpType = async (event, id) => {
+    let handleDeleteExpType = async (event, code) => {
         event.preventDefault();
-        let res = await DeleteAllcodeService(id)
+        let res = await DeleteAllcodeService(code)
         if (res && res.errCode === 0) {
-            toast.success("Xóa khoảng kinh nghiệm thành công")
+            toast.success(res.errMessage)
             let arrData = await getListAllCodeService({
 
                 type: 'EXPTYPE',
@@ -50,7 +50,7 @@ const ManageExpType = () => {
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
 
-        } else toast.error("Xóa khoảng kinh nghiệm thất bại")
+        } else toast.error(res.errMessage)
     }
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
@@ -103,9 +103,9 @@ const ManageExpType = () => {
                                                     <td>{item.value}</td>
                                                     <td>{item.code}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-exp-type/${item.id}/`}>Edit</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-exp-type/${item.code}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteExpType(event, item.id)} >Delete</a>
+                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteExpType(event, item.code)} >Xóa</a>
                                                     </td>
                                                 </tr>
                                             )

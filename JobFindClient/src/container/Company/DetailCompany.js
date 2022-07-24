@@ -9,7 +9,7 @@ import moment from 'moment';
 const DetailCompany = () => {
     const [dataCompany, setdataCompany] = useState({})
     const { id } = useParams();
-
+    console.log(dataCompany)
     useEffect(() => {
         if (id) {
 
@@ -85,12 +85,12 @@ const DetailCompany = () => {
                                                             <div className="ml-auto">
                                                                 <h3 className="title-job">
                                                                     <Link className="underline-box-job" to={`/detail-job/${item.id}`}>
-                                                                        <span className="bold transform-job-title" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Nhân Viên Tuyển Dụng - Đào Tạo">{item.name}</span>
+                                                                        <span className="bold transform-job-title" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Nhân Viên Tuyển Dụng - Đào Tạo">{item.postDetailData.name}</span>
                                                                         <i className="fa-solid fa-circle-check" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Tin từ nhà tuyển dụng đã xác thực" />
                                                                     </Link>
                                                                 </h3>
                                                                 <p className="company underline-box-job">
-                                                                    <Link to={`/detail-job/${item.id}`} data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Công ty Cổ phần Tập đoàn Hoa Sen">{item.name}</Link>
+                                                                    <Link to={`/detail-job/${item.id}`} data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Công ty Cổ phần Tập đoàn Hoa Sen">{item.postDetailData.name}</Link>
                                                                 </p>
                                                             </div>
                                                             <div className="mr-auto text-right">
@@ -104,8 +104,8 @@ const DetailCompany = () => {
                                                         </div>
                                                         <div className="d-flex">
                                                             <div className="label-content ml-auto">
-                                                                <label className="salary">{item.salaryTypePostData.value}</label>
-                                                                <label className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.provincePostData.value}</label>
+                                                                <label className="salary">{item.postDetailData.salaryTypePostData.value}</label>
+                                                                <label className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.postDetailData.provincePostData.value}</label>
                                                                 <label className="time">{moment(item.createdAt).fromNow()}</label>
                                                             </div>
                                                             <div className="icon mr-auto">

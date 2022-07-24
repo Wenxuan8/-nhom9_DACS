@@ -195,7 +195,10 @@ let updateUserData = (data) => {
             } else {
                 let user = await db.User.findOne({
                     where: { id: data.id },
-                    raw: false
+                    raw: false,
+                    attributes: {
+                        exclude: ['userId']
+                    }
                 })
                 let account = await db.Account.findOne({
                     where: {userId: data.id},
@@ -218,6 +221,10 @@ let updateUserData = (data) => {
                     await user.save();
                     account.roleCode = data.roleCode
                     await account.save();
+                    resolve({
+                        errCode: 0,
+                        message: 'Đã chỉnh sửa thành công'
+                    })
                 } else {
                     resolve({
                         errCode: 1,
@@ -370,7 +377,6 @@ let getAllUser = (data) => {
                 let res = await db.Account.findAndCountAll({
                     limit: +data.limit,
                     offset: +data.offset,
-                    where: {statusCode: 'S1'},
                     attributes: {
                         exclude: ['password']
                     },

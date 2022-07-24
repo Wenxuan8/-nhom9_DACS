@@ -25,7 +25,7 @@ const Login = () => {
 
 
             localStorage.setItem("userData", JSON.stringify(res.user))
-            if (res.user.roleCode === "ADMIN" || res.user.roleCode === "EMPLOYER") {
+            if (res.user.roleCode === "ADMIN" || res.user.roleCode === "EMPLOYER" || res.user.roleCode === "COMPANY") {
                 history.push("/admin")
 
             }

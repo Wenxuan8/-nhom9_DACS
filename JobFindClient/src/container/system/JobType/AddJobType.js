@@ -18,7 +18,7 @@ const AddJobType = () => {
 
     const [isLoading, setIsLoading] = useState(false)
 
-    const { id } = useParams();
+    const { code } = useParams();
 
     const [inputValues, setInputValues] = useState({
         value: '', code: '', image: '', imageReview: '', isOpen: false,
@@ -26,10 +26,10 @@ const AddJobType = () => {
 
     useEffect(() => {
 
-        if (id) {
+        if (code) {
             let fetchDetailJobType = async () => {
                 setisActionADD(false)
-                let allcode = await getDetailAllcodeByCode(id)
+                let allcode = await getDetailAllcodeByCode(code)
                 if (allcode && allcode.errCode === 0) {
                     setInputValues({ ...inputValues, ["value"]: allcode.data.value, ["code"]: allcode.data.code, ["image"]: allcode.data.image, ["imageReview"]: allcode.data.image })
                 }
@@ -89,7 +89,6 @@ const AddJobType = () => {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
                 code: inputValues.code,
-                id: id,
                 image: inputValues.image
             })
             setTimeout(() => {
@@ -130,7 +129,7 @@ const AddJobType = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Mã code</label>
                                         <div className="col-sm-9">
-                                            <input type="text" value={inputValues.code} name="code" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                            <input type="text" disabled={inputValues.code ? true: false} value={inputValues.code} name="code" onChange={(event) => handleOnChange(event)} className="form-control" />
                                         </div>
                                     </div>
                                 </div>

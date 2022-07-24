@@ -33,11 +33,11 @@ const ManageJobLevel = () => {
         }
 
     }, [])
-    let handleDeleteJobLevel = async (event, id) => {
+    let handleDeleteJobLevel = async (event, code) => {
         event.preventDefault();
-        let res = await DeleteAllcodeService(id)
+        let res = await DeleteAllcodeService(code)
         if (res && res.errCode === 0) {
-            toast.success("Xóa cấp bậc thành công")
+            toast.success(res.errMessage)
             let arrData = await getListAllCodeService({
 
                 type: 'JOBLEVEL',
@@ -50,7 +50,7 @@ const ManageJobLevel = () => {
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
 
-        } else toast.error("Xóa cấp bậc thất bại")
+        } else toast.error(res.errMessage)
     }
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
@@ -103,9 +103,9 @@ const ManageJobLevel = () => {
                                                     <td>{item.value}</td>
                                                     <td>{item.code}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-job-level/${item.id}/`}>Edit</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-job-level/${item.code}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteJobLevel(event, item.id)} >Delete</a>
+                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteJobLevel(event, item.code)} >Xóa</a>
                                                     </td>
                                                 </tr>
                                             )

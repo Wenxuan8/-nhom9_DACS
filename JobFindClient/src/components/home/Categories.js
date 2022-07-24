@@ -8,7 +8,7 @@ const Categories = () => {
     useEffect(async () => {
         let res = await getListJobTypeAndCountPost(
             {
-                limit: 6,
+                limit: 4,
                 offset: 0
             }
         )
@@ -17,7 +17,6 @@ const Categories = () => {
         else
             toast.error(res.message)
     }, [])
-    console.log(allCategory)
     return (
         <>
             <div class="row d-flex justify-contnet-center">

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { useParams } from "react-router-dom";
 import localization from 'moment/locale/vi';
 import moment from 'moment';
-import { Spinner, Modal } from 'reactstrap'
+import { Spinner, Modal, ListGroupItemHeading } from 'reactstrap'
 import '../../../components/modal/modal.css'
 const AddUser = () => {
     const [birthday, setbirthday] = useState('');
@@ -22,17 +22,19 @@ const AddUser = () => {
     let setStateUser = (data) => {
         setInputValues({
             ...inputValues,
-            ["firstName"]: data.firstName,
-            ["lastName"]: data.lastName,
-            ["address"]: data.address,
+            ["firstName"]: data.userAccountData.firstName,
+            ["lastName"]: data.userAccountData.lastName,
+            ["address"]: data.userAccountData.address,
             ["phonenumber"]: data.phonenumber,
-            ["genderCode"]: data.genderCode,
-            ["roleCode"]: data.roleCode,
-            ["id"]: data.id,
-            ["dob"]: data.dob,
+            ["genderCode"]: data.userAccountData.genderCode,
+            ["roleCode"]: data.roleData.code,
+            ["id"]: data.userAccountData.id,
+            ["dob"]: data.userAccountData.dob,
 
         })
-        setbirthday(moment.unix(+data.dob / 1000).locale('vi').format('DD/MM/YYYY'))
+        document.querySelector('[name="genderCode"]').value = data.userAccountData.genderCode
+        document.querySelector('[name="roleCode"]').value = data.roleData.code
+        setbirthday(data.userAccountData.dob ? moment.unix(+data.userAccountData.dob / 1000).locale('vi').format('DD/MM/YYYY') : null)
     }
     useEffect(() => {
 
@@ -48,19 +50,20 @@ const AddUser = () => {
         }
     }, [])
 
-    const { data: dataGender } = useFetchAllcode('GENDER');
-    const { data: dataRole } = useFetchAllcode('ROLE')
+    let { data: dataGender } = useFetchAllcode('GENDER');
+    let { data: dataRole } = useFetchAllcode('ROLE')
+    // if (dataRole && dataRole.length > 0) {
+    //     dataRole = dataRole.filter(item => item.code !== "COMPANY")
+    // }
 
-
-    if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
-        console.log(dataRole)
+    if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '' && !isActionADD) {
         setInputValues({ ...inputValues, ["genderCode"]: dataGender[0].code, ["roleCode"]: dataRole[0].code })
     }
+    
 
     const handleOnChange = event => {
         const { name, value } = event.target;
         setInputValues({ ...inputValues, [name]: value });
-
     };
 
     let handleOnChangeDatePicker = (date) => {
@@ -68,7 +71,6 @@ const AddUser = () => {
         setisChangeDate(true)
 
     }
-
     let handleSaveUser = async () => {
         setIsLoading(true)
         if (isActionADD === true) {
@@ -128,7 +130,6 @@ const AddUser = () => {
         }
 
     }
-
     return (
         <div className=''>
             <div className="col-12 grid-margin">

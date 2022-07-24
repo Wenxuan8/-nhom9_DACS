@@ -106,7 +106,7 @@ const AddWorkType = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Mã code</label>
                                         <div className="col-sm-9">
-                                            <input type="text" value={inputValues.code} name="code" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                            <input type="text" disabled={inputValues.code ? true: false} value={inputValues.code} name="code" onChange={(event) => handleOnChange(event)} className="form-control" />
                                         </div>
                                     </div>
                                 </div>

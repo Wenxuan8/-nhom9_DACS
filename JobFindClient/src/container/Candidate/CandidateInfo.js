@@ -55,7 +55,6 @@ const CandidateInfo = () => {
 
 
     if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
-        console.log(dataRole)
         setInputValues({ ...inputValues, ["genderCode"]: dataGender[0].code, ["roleCode"]: dataRole[0].code })
     }
 

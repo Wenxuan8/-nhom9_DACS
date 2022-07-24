@@ -17,7 +17,7 @@ const Home = () => {
                 other -= item.amount
                 otherPercent -= Math.round((item.amount / res.totalPost * 100) * 100) / 100
                 return {
-                    title: item.jobTypePostData.value,
+                    title: item.postDetailData.jobTypePostData.value,
                     value: Math.round((item.amount / res.totalPost * 100) * 100) / 100,
                     color: color[index],
                     amount: item.amount

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { getAllUsers, BanUserService } from '../../../service/userService';
+import { getAllUsers, BanUserService, UnbanUserService } from '../../../service/userService';
 import moment from 'moment';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
@@ -39,27 +39,32 @@ const ManageUser = () => {
         })
         if (arrData && arrData.errCode === 0) {
             setdataUser(arrData.data)
-
         }
     }
-    let handlebanUser = async (event, id) => {
+    let handlebanUser = async (event, item) => {
         event.preventDefault();
-
-        let res = await BanUserService(id)
-        if (res && res.errCode === 0) {
-            toast.success("Xóa người dùng thành công")
-            let user = await getAllUsers({
-                limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow
-            })
-            if (user && user.errCode === 0) {
-
-                setdataUser(user.data);
-                setCount(Math.ceil(user.count / PAGINATION.pagerow))
+            let res = {}
+            if (item.statusCode== 'S1')
+            {
+                res = await BanUserService(item.userAccountData.id)
             }
-        } else {
-            toast.error("Xóa người dùng thất bại")
-        }
+            else {
+                res = await UnbanUserService(item.userAccountData.id)
+            }
+            if (res && res.errCode === 0) {
+                toast.success(res.errMessage)
+                let user = await getAllUsers({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow
+                })
+                if (user && user.errCode === 0) {
+    
+                    setdataUser(user.data);
+                    setCount(Math.ceil(user.count / PAGINATION.pagerow))
+                }
+            } else {
+                toast.error(res.errMessage)
+            }
     }
     return (
         <div>
@@ -101,20 +106,20 @@ const ManageUser = () => {
                                 <tbody>
                                     {dataUser && dataUser.length > 0 &&
                                         dataUser.map((item, index) => {
-                                            let date = moment.unix(item.dob / 1000).format('DD/MM/YYYY')
+                                            let date = item.userAccountData.dob ? moment.unix(item.userAccountData.dob / 1000).format('DD/MM/YYYY') : 'Không có thông tin'
                                             return (
                                                 <tr key={index}>
                                                     <td>{index + 1}</td>
-                                                    <td>{`${item.firstName} ${item.lastName}`}</td>
+                                                    <td>{`${item.userAccountData.firstName} ${item.userAccountData.lastName}`}</td>
                                                     <td>{item.phonenumber}</td>
-                                                    <td>{item.genderData.value}</td>
+                                                    <td>{item.userAccountData.genderData.value}</td>
                                                     <td>{date}</td>
                                                     <td>{item.roleData.value}</td>
-                                                    <td><label className={item.statusCode === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusData.value}</label></td>
+                                                    <td><label className={item.statusCode === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusAccountData.value}</label></td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-user/${item.id}/`}>Edit</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-user/${item.userAccountData.id}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                       {user.id != item.id &&  <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handlebanUser(event, item.id)} >Delete</a>}
+                                                       {user.id != item.id &&  <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handlebanUser(event, item)} >{item.statusCode === 'S1' ? 'Chặn' : 'Kích hoạt' }</a>}
                                                     </td>
                                                 </tr>
                                             )

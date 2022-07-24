@@ -27,7 +27,6 @@ const JobDetail = () => {
 
 
     const handleOpenModal = () => {
-        console.log(CommonUtils.formatDate(dataPost.timeEnd))
         if (dataPost.timeEnd && CommonUtils.formatDate(dataPost.timeEnd) > 0) {
             const userData = JSON.parse(localStorage.getItem('userData'));
             if (userData)
@@ -85,12 +84,12 @@ const JobDetail = () => {
                                             </div>
                                             <div className="job-tittle">
 
-                                                <h4>{dataPost.name}</h4>
+                                                <h4>{dataPost.postDetailData.name}</h4>
 
                                                 <ul>
-                                                    <li>{dataPost.workTypePostData.value}</li>
-                                                    <li><i className="fas fa-map-marker-alt"></i>{dataPost.provincePostData.value}</li>
-                                                    <li>{dataPost.salaryTypePostData.value}</li>
+                                                    <li>{dataPost.postDetailData.workTypePostData.value}</li>
+                                                    <li><i className="fas fa-map-marker-alt"></i>{dataPost.postDetailData.provincePostData.value}</li>
+                                                    <li>{dataPost.postDetailData.salaryTypePostData.value}</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -104,7 +103,7 @@ const JobDetail = () => {
                                                 <h4>Mô tả công việc</h4>
                                             </div>
                                         </div>
-                                        <div dangerouslySetInnerHTML={{ __html: dataPost.descriptionHTML }} />
+                                        <div dangerouslySetInnerHTML={{ __html: dataPost.postDetailData.descriptionHTML }} />
                                     </div>
 
                                 </div>
@@ -117,9 +116,9 @@ const JobDetail = () => {
                                             <h4>Thông tin công việc</h4>
                                         </div>
                                         <ul>
-                                            <li>Nơi làm việc : <span>{dataPost.provincePostData.value}</span></li>
-                                            <li>Hình thức làm việc : <span>{dataPost.workTypePostData.value}</span></li>
-                                            <li>Lương :  <span>{dataPost.salaryTypePostData.value}</span></li>
+                                            <li>Nơi làm việc : <span>{dataPost.postDetailData.provincePostData.value}</span></li>
+                                            <li>Hình thức làm việc : <span>{dataPost.postDetailData.workTypePostData.value}</span></li>
+                                            <li>Lương :  <span>{dataPost.postDetailData.salaryTypePostData.value}</span></li>
                                             <li>Hạn nộp : <span>{moment.unix(dataPost.timeEnd / 1000).format('DD/MM/YYYY')}</span></li>
                                         </ul>
                                         <div className="btn" onClick={() => handleOpenModal()}>Ứng tuyển ngay</div>
@@ -135,7 +134,7 @@ const JobDetail = () => {
                                             <li>Địa chỉ     : <span>{dataPost.companyData.address}</span></li>
                                             <li>Điện thoại  : <span>{dataPost.companyData.phonenumber}</span></li>
                                             <li>Mã số thuế  : <span>{dataPost.companyData.taxnumber}</span></li>
-                                            <li>Số nhân viên: <span>{dataPost.amount}</span></li>
+                                            <li>Số nhân viên: <span>{dataPost.companyData.amount}</span></li>
                                         </ul>
 
                                     </div>
