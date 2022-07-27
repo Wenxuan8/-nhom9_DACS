@@ -108,7 +108,7 @@ const ManageJobType = () => {
 
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.value}</td>
                                                     <td>{item.code}</td>
                                                     <td style={{ width: '30%' }} ><div onClick={() => openPreviewImage(item.image)} className="box-img-preview" style={{ backgroundImage: `url(${item.image})`, width: '100%' }}></div></td>

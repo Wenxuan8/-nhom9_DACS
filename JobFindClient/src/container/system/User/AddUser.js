@@ -180,7 +180,7 @@ const AddUser = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Giới tính</label>
                                         <div className="col-sm-9">
-                                            <select className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
+                                            <select style={{color: "black"}} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                 {dataGender && dataGender.length > 0 &&
                                                     dataGender.map((item, index) => {
                                                         return (
@@ -220,7 +220,7 @@ const AddUser = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Quyền</label>
                                         <div className="col-sm-9">
-                                            <select className="form-control" value={inputValues.roleCode} name="roleCode" onChange={(event) => handleOnChange(event)}>
+                                            <select style={{color: "black"}} className="form-control" value={inputValues.roleCode} name="roleCode" onChange={(event) => handleOnChange(event)}>
                                                 {dataRole && dataRole.length > 0 &&
                                                     dataRole.map((item, index) => {
                                                         return (

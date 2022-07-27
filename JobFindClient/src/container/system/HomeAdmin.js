@@ -274,6 +274,9 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/add-company">
                                     <AddCompany />
                                 </Route>
+                                <Route exact path="/admin/edit-company">
+                                    <AddCompany />
+                                </Route>
                                 <Route exact path="/admin/recruitment">
                                     <Recruitment />
                                 </Route>

@@ -10,8 +10,15 @@ import { useParams } from "react-router-dom";
 const UserCv = () => {
 
     const { id } = useParams();
-    const [dataCV, setdataCV] = useState({});
-    const [dataUser, setdataUser] = useState({});
+    const [dataCV, setdataCV] = useState({
+        userCvData: {
+            firstName: '',
+            lastName: ''
+        },
+        file: {
+            data: ''
+        }
+    });
     useEffect(() => {
         if (id) {
 
@@ -19,7 +26,6 @@ const UserCv = () => {
                 let res = await getDetailCvService(id)
                 if (res && res.errCode === 0) {
                     setdataCV(res.data)
-                    setdataUser(res.userData)
                 }
             }
             fetchCV()
@@ -41,13 +47,13 @@ const UserCv = () => {
                         <h4 className="card-title">Giới thiệu bản thân</h4>
                         <blockquote class="blockquote blockquote-primary">
                             <p>{dataCV.description}</p>
-                            <footer class="blockquote-footer"><cite title="Source Title">{dataUser.firstName + " " + dataUser.lastName}</cite></footer>
+                            <footer class="blockquote-footer"><cite title="Source Title">{dataCV.userCvData.firstName + " " + dataCV.userCvData.lastName}</cite></footer>
                         </blockquote>
 
                     </div>
                     <div className="card-body">
                         <h4 className="card-title">FILE CV</h4>
-                        <iframe width={'1100px'} height={'700px'} src={dataCV.file}></iframe>
+                        <iframe width={'100%'} height={'700px'} src={dataCV.file}></iframe>
 
                     </div>
                 </div>

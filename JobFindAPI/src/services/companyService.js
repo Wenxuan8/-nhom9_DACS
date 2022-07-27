@@ -3,8 +3,9 @@ import e from "express";
 import db from "../models/index";
 const cloudinary = require('../utils/cloudinary');
 
-let checkCompany = (name) => {
+let checkCompany = (name,id = null) => {
     return new Promise(async (resolve, reject) => {
+        console.log(id)
         try {
             if (!name) {
                 resolve({
@@ -12,9 +13,18 @@ let checkCompany = (name) => {
                     errMessage: 'Missing required parameters!'
                 })
             } else {
-                let company = await db.Company.findOne({
-                    where: { name: name }
-                })
+                let company = null 
+                if (id) {
+                    company = await db.Company.findOne({
+                        where: { name: name , id: {[Op.ne]: id}}
+                    })
+                    console.log(company)
+                }
+                else {
+                    company = await db.Company.findOne({
+                        where: { name: name }
+                    })
+                }
                 if (company) {
                     resolve(true)
                 } else {
@@ -66,7 +76,7 @@ let handleCreateNewCompany = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                if (checkCompany(data.name))
+                if (await checkCompany(data.name))
                 {
                     resolve({
                         errCode: 2,
@@ -150,7 +160,7 @@ let handleUpdateCompany = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                if (checkCompany(data.name))
+                if (await checkCompany(data.name,data.id))
                 {
                     resolve({
                         errCode: 2,
@@ -492,6 +502,13 @@ let getAllUserByCompanyId = (data) => {
                     },
                     include: [
                         { model: db.Allcode, as: 'genderData', attributes: ['value', 'code'] },
+                        { model: db.Account, as: 'userAccountData', attributes: {
+                            exclude: ['password']
+                        }, include: [
+                            {model: db.Allcode, as: 'roleData', attributes: ['value', 'code']},
+                            {model: db.Allcode, as: 'statusAccountData', attributes: ['value', 'code']}
+                        ]
+                        }
                     ],
                     raw: true,
                     nest: true
@@ -528,11 +545,12 @@ let handleQuitCompany = (data) => {
                 })
                 if (user) {
                     let account = await db.Account.findOne({
-                        where: {userId: user.id}
+                        where: {userId: user.id},
+                        raw: false
                     })
                     if (account.roleCode == 'COMPANY')
                     {
-                        account.roleCode == 'EMPLOYER'
+                        account.roleCode = 'EMPLOYER'
                         await account.save()
                     }
                     user.companyId = null

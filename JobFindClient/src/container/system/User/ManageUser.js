@@ -109,7 +109,7 @@ const ManageUser = () => {
                                             let date = item.userAccountData.dob ? moment.unix(item.userAccountData.dob / 1000).format('DD/MM/YYYY') : 'Không có thông tin'
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{`${item.userAccountData.firstName} ${item.userAccountData.lastName}`}</td>
                                                     <td>{item.phonenumber}</td>
                                                     <td>{item.userAccountData.genderData.value}</td>

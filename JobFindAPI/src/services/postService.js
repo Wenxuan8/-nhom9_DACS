@@ -250,7 +250,8 @@ let getListPostByAdmin = (data) => {
                                     {model: db.Allcode, as:'provincePostData' , attributes: ['value','code']},
                                     {model: db.Allcode, as:'expTypePostData' , attributes: ['value','code']}
                                 ]
-                            }
+                            },
+                            {model: db.Allcode, as:'statusPostData' , attributes: ['value','code']},
                         ]
                     })
                     resolve({

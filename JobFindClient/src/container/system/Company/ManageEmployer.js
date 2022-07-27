@@ -11,7 +11,6 @@ const ManageEmployer = () => {
     const [dataUser, setdataUser] = useState([]);
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
-
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         setUser(userData)
@@ -112,17 +111,16 @@ const ManageEmployer = () => {
                                             let date = moment.unix(item.dob / 1000).format('DD/MM/YYYY')
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{`${item.firstName} ${item.lastName}`}</td>
-                                                    <td>{item.phonenumber}</td>
+                                                    <td>{item.userAccountData.phonenumber}</td>
                                                     <td>{item.genderData.value}</td>
                                                     <td>{date}</td>
-                                                    <td>{item.roleData.value}</td>
-                                                    <td><label className={item.statusCode === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusData.value}</label></td>
+                                                    <td>{item.userAccountData.roleData.value}</td>
+                                                    <td><label className={item.userAccountData.statusCode === 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.userAccountData.statusAccountData.value}</label></td>
                                                     <td>
                                                        {user.id != item.id &&  <a onClick={() => handleQuitCompany(item.id)} style={{ color: '#4B49AC', cursor: 'pointer' }} >Thôi việc</a>}
                                                         &nbsp; &nbsp;
-
                                                     </td>
                                                 </tr>
                                             )

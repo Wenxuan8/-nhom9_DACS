@@ -96,7 +96,7 @@ const ManageCvCandidate = (props) => {
 
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.postData.name}</td>
                                                     <td>{item.postData.jobTypePostData.value}</td>
                                                     <td>{item.postData.jobLevelPostData.value}</td>

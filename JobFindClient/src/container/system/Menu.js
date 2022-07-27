@@ -111,7 +111,7 @@ const Menu = () => {
                             </a>
                             <div className="collapse" id="company">
                                 <ul className="nav flex-column sub-menu">
-                                    <li className="nav-item"> <Link className="nav-link" to="/admin/add-company/">Tạo mới công ty</Link ></li>
+                                    <li className="nav-item"> <Link className="nav-link" to="/admin/edit-company/">Quản lý công ty</Link ></li>
                                     <li className="nav-item"> <Link className="nav-link" to="/admin/recruitment/">Tuyển dụng vào công ty</Link ></li>
                                     <li className="nav-item"> <Link className="nav-link" to="/admin/list-employer/">Danh sách nhân viên</Link ></li>
                                 </ul>
@@ -135,6 +135,18 @@ const Menu = () => {
 
                 {user && (user.roleCode === "EMPLOYER") &&
                     <>
+                        <li className="nav-item">
+                            <a className="nav-link" data-toggle="collapse" href="#company" aria-expanded="false" aria-controls="company">
+                                <i className="far fa-clock menu-icon"></i>
+                                <span className="menu-title">Công ty</span>
+                                <i className="menu-arrow" />
+                            </a>
+                            <div className="collapse" id="company">
+                                <ul className="nav flex-column sub-menu">
+                                    <li className="nav-item"> <Link className="nav-link" to="/admin/add-company/">Tạo mới công ty</Link ></li>
+                                </ul>
+                            </div>
+                        </li>
                         <li className="nav-item">
                             <a className="nav-link" data-toggle="collapse" href="#post" aria-expanded="false" aria-controls="post">
                                 <i className="far fa-clock menu-icon"></i>

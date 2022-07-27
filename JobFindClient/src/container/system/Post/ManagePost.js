@@ -12,7 +12,6 @@ const ManagePost = () => {
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
-
     useEffect(() => {
         try {
             const userData = JSON.parse(localStorage.getItem('userData'));
@@ -132,26 +131,26 @@ const ManagePost = () => {
                                             let date = moment.unix(item.timeEnd / 1000).format('DD/MM/YYYY')
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{item.name}</td>
-                                                    <td>{item.jobTypePostData.value}</td>
-                                                    <td>{item.jobLevelPostData.value}</td>
-                                                    <td>{item.workTypePostData.value}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
+                                                    <td>{item.postDetailData.name}</td>
+                                                    <td>{item.postDetailData.jobTypePostData.value}</td>
+                                                    <td>{item.postDetailData.jobLevelPostData.value}</td>
+                                                    <td>{item.postDetailData.workTypePostData.value}</td>
                                                     <td>{date}</td>
                                                     <td>{item.statusPostData.value}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/list-cv/${item.id}/`}>View</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/list-cv/${item.id}/`}>Xem CV nộp</Link>
                                                         &nbsp; &nbsp;
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Edit</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        {item.statusCode === 'S1' ? <>
+                                                        {/* {item.statusCode === 'S1' ? <>
                                                             <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleBanPost(item.id)}  >Ban</a>
                                                             &nbsp; &nbsp;
                                                         </>
                                                             : <>
                                                                 <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleActivePost(item.id)}  >Active</a>
                                                             </>
-                                                        }
+                                                        } */}
 
 
                                                     </td>

@@ -55,7 +55,13 @@ let getAllListCvByPost = (data) => {
                     include: [
                         {model: db.User, as:'userCvData',attributes: {
                             exclude: ['userId','file','companyId']
-                        }}
+                            },
+                            include: [
+                                {model: db.Account, as:'userAccountData', attributes: {
+                                    exclude: ['password']
+                                } }
+                            ]
+                        }
                     ]
                 })
                 resolve({
@@ -91,9 +97,9 @@ let getDetailCvById = (data) => {
                     ]
                 })
                 cv.isChecked = 1
-                // if (cv.file) {
-                //     cv.file = new Buffer(cv.file, 'base64').toString('binary');
-                // }
+                if (cv.file) {
+                    cv.file = new Buffer(cv.file, 'base64').toString('binary');
+                }
 
                 await cv.save()
 

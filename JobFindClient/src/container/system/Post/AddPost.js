@@ -19,12 +19,10 @@ const AddPost = () => {
     const [isChangeDate, setisChangeDate] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const { id } = useParams();
-
     const [inputValues, setInputValues] = useState({
         name: '', categoryJobCode: '', addressCode: '', salaryJobCode: '', amount: '', timeEnd: '', categoryJoblevelCode: '', categoryWorktypeCode: '', experienceJobCode: '',
         genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
     });
-
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         if (id) {
@@ -41,22 +39,29 @@ const AddPost = () => {
     let setStatePost = (data) => {
         setInputValues({
             ...inputValues,
-            ["name"]: data.name,
-            ["categoryJobCode"]: data.categoryJobCode,
-            ["addressCode"]: data.addressCode,
-            ["salaryJobCode"]: data.salaryJobCode,
-            ["amount"]: data.amount,
+            ["name"]: data.postDetailData.name,
+            ["categoryJobCode"]: data.postDetailData.jobTypePostData.code,
+            ["addressCode"]: data.postDetailData.provincePostData.code,
+            ["salaryJobCode"]: data.postDetailData.salaryTypePostData.code,
+            ["amount"]: data.postDetailData.amount,
             ["timeEnd"]: data.timeEnd,
-            ["categoryJoblevelCode"]: data.categoryJoblevelCode,
-            ["categoryWorktypeCode"]: data.categoryWorktypeCode,
-            ["experienceJobCode"]: data.experienceJobCode,
-            ["genderCode"]: data.genderPostCode,
-            ["descriptionHTML"]: data.descriptionHTML,
-            ["descriptionMarkdown"]: data.descriptionMarkdown,
+            ["categoryJoblevelCode"]: data.postDetailData.jobLevelPostData.code,
+            ["categoryWorktypeCode"]: data.postDetailData.workTypePostData.code,
+            ["experienceJobCode"]: data.postDetailData.expTypePostData.code,
+            ["genderCode"]: data.postDetailData.genderPostData.code,
+            ["descriptionHTML"]: data.postDetailData.descriptionHTML,
+            ["descriptionMarkdown"]: data.postDetailData.descriptionMarkdown,
             ["isActionADD"]: false,
             ["id"]: data.id
 
         })
+        document.querySelector('[name="categoryJobCode"]').value = data.postDetailData.jobTypePostData.code
+        document.querySelector('[name="addressCode"]').value = data.postDetailData.provincePostData.code
+        document.querySelector('[name="salaryJobCode"]').value = data.postDetailData.salaryTypePostData.code
+        document.querySelector('[name="categoryJoblevelCode"]').value = data.postDetailData.jobLevelPostData.code
+        document.querySelector('[name="categoryWorktypeCode"]').value = data.postDetailData.workTypePostData.code
+        document.querySelector('[name="experienceJobCode"]').value = data.postDetailData.expTypePostData.code
+        document.querySelector('[name="genderCode"]').value = data.postDetailData.genderPostData.code
         settimeEnd(moment.unix(+data.timeEnd / 1000).locale('vi').format('DD/MM/YYYY'))
     }
 
@@ -156,8 +161,9 @@ const AddPost = () => {
                 categoryJoblevelCode: inputValues.categoryJoblevelCode,
                 categoryWorktypeCode: inputValues.categoryWorktypeCode,
                 experienceJobCode: inputValues.experienceJobCode,
-                genderCode: inputValues.genderCode,
-                id: inputValues.id
+                genderPostCode: inputValues.genderCode,
+                id: inputValues.id,
+                userId: JSON.parse(localStorage.getItem('userData')).id
             })
             setTimeout(() => {
                 setIsLoading(false)
@@ -193,7 +199,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Địa chỉ</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataProvince && dataProvince.length > 0 &&
                                                         dataProvince.map((item, index) => {
                                                             return (
@@ -221,7 +227,6 @@ const AddPost = () => {
                                             <div className="col-sm-9">
                                                 <DatePicker className="form-control" onChange={handleOnChangeDatePicker}
                                                     value={timeEnd}
-
                                                 />
                                             </div>
                                         </div>
@@ -232,7 +237,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Giới tính</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataGenderPost && dataGenderPost.length > 0 &&
                                                         dataGenderPost.map((item, index) => {
                                                             return (
@@ -248,7 +253,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Kinh nghiệm</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataExpType && dataExpType.length > 0 &&
                                                         dataExpType.map((item, index) => {
                                                             return (
@@ -266,7 +271,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ngành</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobType && dataJobType.length > 0 &&
                                                         dataJobType.map((item, index) => {
                                                             return (
@@ -282,7 +287,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Chức vụ</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobLevel && dataJobLevel.length > 0 &&
                                                         dataJobLevel.map((item, index) => {
                                                             return (
@@ -300,7 +305,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Lương</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataSalaryType && dataSalaryType.length > 0 &&
                                                         dataSalaryType.map((item, index) => {
                                                             return (
@@ -316,7 +321,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hình thức LV</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{color: "black"}} className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataWorkType && dataWorkType.length > 0 &&
                                                         dataWorkType.map((item, index) => {
                                                             return (

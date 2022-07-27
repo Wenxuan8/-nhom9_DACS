@@ -112,14 +112,13 @@ const AddCompany = () => {
                 website: inputValues.website,
                 id: inputValues.id
             })
-            setTimeout(() => {
-                setIsLoading(false)
-                if (res && res.errCode === 0) {
-                    toast.success("Cập nhật công ty thành công")
-                } else {
-                    toast.error(res.errMessage)
-                }
-            }, 1000);
+            setIsLoading(false)
+            if (res && res.errCode === 0) {
+                toast.success(res.errMessage)
+            } else {
+                toast.error(res.errMessage)
+            }
+
         }
     }
     let handleEditorChange = ({ html, text }) => {

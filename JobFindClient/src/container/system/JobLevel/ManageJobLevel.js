@@ -99,7 +99,7 @@ const ManageJobLevel = () => {
 
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.value}</td>
                                                     <td>{item.code}</td>
                                                     <td>

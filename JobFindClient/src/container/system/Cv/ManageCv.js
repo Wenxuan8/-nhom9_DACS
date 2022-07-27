@@ -91,10 +91,10 @@ const ManageCv = () => {
 
                                             return (
                                                 <tr key={index}>
-                                                    <td>{index + 1}</td>
-                                                    <td>{item.userData.firstName + " " + item.userData.lastName}</td>
-                                                    <td>{item.userData.phonenumber}</td>
-                                                    <td>{item.userData.address}</td>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
+                                                    <td>{item.userCvData.firstName + " " + item.userCvData.lastName}</td>
+                                                    <td>{item.userCvData.userAccountData.phonenumber}</td>
+                                                    <td>{item.userCvData.address}</td>
                                                     <td>{item.isChecked === 0 ? 'Chưa xem' : 'Đã xem'}</td>
                                                     <td>
                                                         <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/admin/user-cv/${item.id}/`}>Xem CV</Link>
