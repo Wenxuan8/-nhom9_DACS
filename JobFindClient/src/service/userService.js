@@ -139,8 +139,15 @@ const banPostService = (postId) => {
         }
     })
 }
+const acceptPostService = (data) => {
+    return axios.put(`/api/accept-post`, data)
+}
 const getAllPostByAdminService = (data) => {
     return axios.get(`/api/get-list-post-admin?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}`)
+
+}
+const getAllPostByRoleAdminService = (data) => {
+    return axios.get(`/api/get-all-post-admin?limit=${data.limit}&offset=${data.offset}`)
 
 }
 const getDetailPostByIdService = (id) => {
@@ -157,6 +164,6 @@ export {
     DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeByCode, createAllCodeService, getListAllCodeService, getAllCodeService,
     getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
     createCompanyService, getDetailCompanyByUserId, updateCompanyService, RecruitmentService, getAllUserByCompanyIdService, QuitCompanyService,
-    createPostService, updatePostService, banPostService, getAllPostByAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
+    createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost
 }

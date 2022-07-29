@@ -23,18 +23,18 @@ const UserInfo = () => {
     let setStateUser = (data) => {
         setInputValues({
             ...inputValues,
-            ["firstName"]: data.firstName,
-            ["lastName"]: data.lastName,
-            ["address"]: data.address,
+            ["firstName"]: data.userAccountData.firstName,
+            ["lastName"]: data.userAccountData.lastName,
+            ["address"]: data.userAccountData.address,
             ["phonenumber"]: data.phonenumber,
-            ["genderCode"]: data.genderCode,
-            ["roleCode"]: data.roleCode,
-            ["id"]: data.id,
-            ["dob"]: data.dob,
-            ["image"]: data.image,
-            ["imageReview"]: data.image
+            ["genderCode"]: data.userAccountData.genderCode,
+            ["roleCode"]: data.userAccountData.roleCode,
+            ["id"]: data.userAccountData.id,
+            ["dob"]: data.userAccountData.dob,
+            ["image"]: data.userAccountData.image,
+            ["imageReview"]: data.userAccountData.image
         })
-        setbirthday(moment.unix(+data.dob / 1000).locale('vi').format('DD/MM/YYYY'))
+        setbirthday(moment.unix(+data.userAccountData.dob / 1000).locale('vi').format('DD/MM/YYYY'))
     }
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
@@ -76,7 +76,6 @@ const UserInfo = () => {
         if (file) {
             let base64 = await CommonUtils.getBase64(file);
             let objectUrl = URL.createObjectURL(file)
-            console.log("base64 " + base64);
             setInputValues({ ...inputValues, ["image"]: base64, ["imageReview"]: objectUrl })
 
         }

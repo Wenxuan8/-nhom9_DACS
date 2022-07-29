@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { banPostService, getAllPostByAdminService, activePostService } from '../../../service/userService';
+import { banPostService, getAllPostByAdminService, activePostService, getAllPostByRoleAdminService, acceptPostService } from '../../../service/userService';
 import moment from 'moment';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
@@ -17,11 +17,20 @@ const ManagePost = () => {
             const userData = JSON.parse(localStorage.getItem('userData'));
             if (userData) {
                 let fetchData = async () => {
-                    let arrData = await getAllPostByAdminService({
-                        limit: PAGINATION.pagerow,
-                        offset: 0,
-                        companyId: userData.companyId
-                    })
+                    let arrData = []
+                    if (userData.roleCode == 'ADMIN') {
+                        arrData = await getAllPostByRoleAdminService({
+                            limit: PAGINATION.pagerow,
+                            offset: 0,
+                        })
+                    }
+                    else {
+                        arrData = await getAllPostByAdminService({
+                            limit: PAGINATION.pagerow,
+                            offset: 0,
+                            companyId: userData.companyId
+                        })
+                    }
                     if (arrData && arrData.errCode === 0) {
                         setdataPost(arrData.data)
                         setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
@@ -39,33 +48,47 @@ const ManagePost = () => {
 
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
-        let arrData = await getAllPostByAdminService({
-
-            limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow,
-            companyId: user.companyId
-        })
+        let arrData = []
+        if (user.roleCode == 'ADMIN') {
+            arrData = await getAllPostByRoleAdminService({
+                limit: PAGINATION.pagerow,
+                offset: number.selected * PAGINATION.pagerow,
+            })
+        }
+        else {
+            arrData = await getAllPostByAdminService({
+                limit: PAGINATION.pagerow,
+                offset: number.selected * PAGINATION.pagerow,
+                companyId: user.companyId
+            })
+        }
         if (arrData && arrData.errCode === 0) {
             setdataPost(arrData.data)
-
         }
     }
     let handleBanPost = async (id) => {
         let res = await banPostService(id)
         if (res && res.errCode === 0) {
-            toast.success("Ẩn bài đăng thành công")
-            let post = await getAllPostByAdminService({
-                limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow,
-                companyId: user.companyId
-            })
-            if (post && post.errCode === 0) {
-
-                setdataPost(post.data);
-                setCount(Math.ceil(post.count / PAGINATION.pagerow))
+            let arrData = []
+            if (user.roleCode == 'ADMIN') {
+                arrData = await getAllPostByRoleAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                })
             }
+            else {
+                arrData = await getAllPostByAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                    companyId: user.companyId
+                })
+            }
+            if (arrData && arrData.errCode === 0) {
+                setdataPost(arrData.data)
+            }
+            toast.success(res.errMessage)
         } else {
-            toast.error("Ẩn bài đăng thất bại")
+            toast.error(res.errMessage)
         }
     }
     let handleActivePost = async (id) => {
@@ -73,19 +96,54 @@ const ManagePost = () => {
             id: id
         })
         if (res && res.errCode === 0) {
-            toast.success("Hiện bài đăng thành công")
-            let post = await getAllPostByAdminService({
-                limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow,
-                companyId: user.companyId
-            })
-            if (post && post.errCode === 0) {
-
-                setdataPost(post.data);
-                setCount(Math.ceil(post.count / PAGINATION.pagerow))
+            let arrData = []
+            if (user.roleCode == 'ADMIN') {
+                arrData = await getAllPostByRoleAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                })
             }
+            else {
+                arrData = await getAllPostByAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                    companyId: user.companyId
+                })
+            }
+            if (arrData && arrData.errCode === 0) {
+                setdataPost(arrData.data)
+            }
+            toast.success(res.errMessage)
         } else {
-            toast.error("Hiện bài đăng thất bại")
+            toast.error(res.errMessage)
+        }
+    }
+    let handleAccecptPost = async (id,statusCode) => {
+        let res = await acceptPostService({
+            id: id,
+            statusCode: statusCode
+        })
+        if (res && res.errCode === 0) {
+            let arrData = []
+            if (user.roleCode == 'ADMIN') {
+                arrData = await getAllPostByRoleAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                })
+            }
+            else {
+                arrData = await getAllPostByAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                    companyId: user.companyId
+                })
+            }
+            if (arrData && arrData.errCode === 0) {
+                setdataPost(arrData.data)
+            }
+            toast.success(res.errMessage)
+        } else {
+            toast.error(res.errMessage)
         }
     }
     return (
@@ -139,18 +197,25 @@ const ManagePost = () => {
                                                     <td>{date}</td>
                                                     <td>{item.statusPostData.value}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/list-cv/${item.id}/`}>Xem CV nộp</Link>
-                                                        &nbsp; &nbsp;
+                                                        {user.roleCode == 'COMPANY' || user.roleCode == 'EMPLOYER' &&
+                                                            <>
+                                                                <Link style={{ color: '#4B49AC' }} to={`/admin/list-cv/${item.id}/`}>Xem CV nộp</Link>
+                                                                &nbsp; &nbsp;
+                                                            </>
+                                                        }
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        {/* {item.statusCode === 'S1' ? <>
-                                                            <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleBanPost(item.id)}  >Ban</a>
+                                                        {user.roleCode == 'ADMIN' ? (item.statusCode == 'PS1' ? <>
+                                                            <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleBanPost(item.id)}  >Chặn</a>
                                                             &nbsp; &nbsp;
                                                         </>
-                                                            : <>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleActivePost(item.id)}  >Active</a>
-                                                            </>
-                                                        } */}
+                                                            : item.statusCode == 'PS4' ? <>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleActivePost(item.id)}  >Mở lại</a>
+                                                            </> :  <>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleAccecptPost(item.id,'PS1')}  >Duyệt</a>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer', marginLeft:'10px' }} onClick={() => handleAccecptPost(item.id,'PS2')}  >Từ chối</a>
+                                                            </> ) : <></>
+                                                        }
 
 
                                                     </td>

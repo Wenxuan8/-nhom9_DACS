@@ -292,6 +292,9 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/list-post/">
                                     <ManagePost />
                                 </Route>
+                                <Route exact path="/admin/list-post-admin/">
+                                    <ManagePost />
+                                </Route>
                                 <Route exact path="/admin/list-cv/:id">
                                     <ManageCv />
                                 </Route>

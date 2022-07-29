@@ -13,17 +13,16 @@ let handleCreateNewPost = (data) => {
                 })
             } else {
                 let user = await db.User.findOne({
-                    where: {id: data.userId},
+                    where: { id: data.userId },
                     attributes: {
                         exclude: ['userId']
                     }
                 })
                 let company = await db.Company.findOne({
-                    where: {id: user.companyId},
+                    where: { id: user.companyId },
                     raw: false
                 })
-                if (!company)
-                {
+                if (!company) {
                     resolve({
                         errCode: 2,
                         errMessage: 'Người dùng không thuộc công ty'
@@ -32,8 +31,7 @@ let handleCreateNewPost = (data) => {
                 }
                 else {
                     if (data.isHot == '1') {
-                        if (company.allowHotPost > 0)
-                        {
+                        if (company.allowHotPost > 0) {
                             company.allowHotPost -= 1
                             await company.save()
                         }
@@ -46,8 +44,7 @@ let handleCreateNewPost = (data) => {
                         }
                     }
                     else {
-                        if (company.allowPost > 0)
-                        {
+                        if (company.allowPost > 0) {
                             company.allowPost -= 1
                             await company.save()
                         }
@@ -77,11 +74,11 @@ let handleCreateNewPost = (data) => {
                         timeEnd: data.timeEnd,
                         userId: data.userId,
                         isHot: data.isHot,
-                        detailPostId: detailPost.id 
+                        detailPostId: detailPost.id
                     })
                     resolve({
                         errCode: 0,
-                        errMessage: 'Tạo bài tuyển dụng thành công'
+                        errMessage: 'Tạo bài tuyển dụng thành công hãy chờ quản trị viên duyệt'
                     })
                 }
             }
@@ -94,8 +91,8 @@ let handleUpdatePost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.name || !data.categoryJobCode || !data.addressCode || !data.salaryJobCode || !data.amount || !data.timeEnd || !data.categoryJoblevelCode
-                || !data.categoryWorktypeCode || !data.experienceJobCode || !data.genderPostCode || !data.descriptionHTML 
-                || !data.descriptionMarkdown || !data.id || !data.userId 
+                || !data.categoryWorktypeCode || !data.experienceJobCode || !data.genderPostCode || !data.descriptionHTML
+                || !data.descriptionMarkdown || !data.id || !data.userId
             ) {
                 resolve({
                     errCode: 1,
@@ -126,7 +123,7 @@ let handleUpdatePost = (data) => {
                     await post.save()
                     resolve({
                         errCode: 0,
-                        errMessage: 'Đã chỉnh sửa bài viết thành công'
+                        errMessage: 'Đã chỉnh sửa bài viết thành công hãy chờ quản trị viên duyệt'
                     })
                 } else {
                     resolve({
@@ -162,6 +159,12 @@ let handleBanPost = (postId) => {
                         errMessage: 'Đã chặn bài viết thành công'
                     })
                 }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Không tồn tại bài viết'
+                    })
+                }
             }
 
         } catch (error) {
@@ -191,6 +194,50 @@ let handleActivePost = (data) => {
                         errMessage: 'Đã mở lại trạng thái chờ duyệt'
                     })
                 }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Không tồn tại bài viết'
+                    })
+                }
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let handleAcceptPost = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (!data.id || !data.statusCode) {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Missing required parameters !`
+                })
+            } else {
+                let foundPost = await db.Post.findOne({
+                    where: { id: data.id },
+                    raw: false
+                })
+                if (foundPost) {
+                    foundPost.statusCode = data.statusCode
+                    if (data.statusCode == "PS1") {
+                        foundPost.timePost = new Date().getTime()
+                    }
+                    await foundPost.save()
+                    resolve({
+                        errCode: 0,
+                        errMessage: data.statusCode == "PS1" ? 'Duyệt bài thành công' : 'Đã từ chối bài thành công'
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Không tồn tại bài viết'
+                    })
+                }
             }
 
         } catch (error) {
@@ -210,26 +257,25 @@ let getListPostByAdmin = (data) => {
                 let company = await db.Company.findOne({
                     where: { id: data.companyId }
                 })
-                if (!company)
-                {
+                if (!company) {
                     resolve({
                         errCode: 2,
                         errorMessage: 'Không tồn tại công ty',
                     })
-                } 
+                }
                 else {
                     let listUserOfCompany = await db.User.findAll({
-                        where: {companyId: company.id},
+                        where: { companyId: company.id },
                         attributes: ['id'],
                     })
-                    listUserOfCompany = listUserOfCompany.map(item=> {
+                    listUserOfCompany = listUserOfCompany.map(item => {
                         return {
                             userId: item.id
                         }
                     })
                     let post = await db.Post.findAndCountAll({
                         where: {
-                            [Op.and]: [{statusCode: 'PS1'},{[Op.or]: listUserOfCompany }]
+                            [Op.and]: [{ [Op.or]: listUserOfCompany }]
                         },
                         order: [['createdAt', 'DESC']],
                         limit: +data.limit,
@@ -240,18 +286,19 @@ let getListPostByAdmin = (data) => {
                         nest: true,
                         raw: true,
                         include: [
-                            {model: db.DetailPost,as:'postDetailData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                            {
+                                model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
                                 include: [
-                                    {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'salaryTypePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'jobLevelPostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'genderPostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'provincePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'expTypePostData' , attributes: ['value','code']}
+                                    { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
                                 ]
                             },
-                            {model: db.Allcode, as:'statusPostData' , attributes: ['value','code']},
+                            { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
                         ]
                     })
                     resolve({
@@ -260,6 +307,59 @@ let getListPostByAdmin = (data) => {
                         count: post.count
                     })
                 }
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+
+}
+
+let getAllPostByAdmin = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.limit || !data.offset) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let post = await db.Post.findAndCountAll({
+                    order: [['createdAt', 'DESC']],
+                    limit: +data.limit,
+                    offset: +data.offset,
+                    attributes: {
+                        exclude: ['detailPostId']
+                    },
+                    nest: true,
+                    raw: true,
+                    include: [
+                        {
+                            model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
+                            include: [
+                                { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
+                            ]
+                        },
+                        { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
+                        { model: db.User, as: 'userPostData' , attributes: { exclude: ['userId']},
+                            include: [
+                                {model: db.Company, as:'companyUserData'}
+                            ]
+                        }
+                    ]
+                })
+                resolve({
+                    errCode: 0,
+                    data: post.rows,
+                    count: post.count
+                })
             }
         } catch (error) {
             reject(error)
@@ -287,28 +387,29 @@ let getDetailPostById = (id) => {
                     nest: true,
                     raw: true,
                     include: [
-                        {model: db.DetailPost,as:'postDetailData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                        {
+                            model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
                             include: [
-                                {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
-                                {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},
-                                {model: db.Allcode, as:'salaryTypePostData' , attributes: ['value','code']},
-                                {model: db.Allcode, as:'jobLevelPostData' , attributes: ['value','code']},
-                                {model: db.Allcode, as:'genderPostData' , attributes: ['value','code']},
-                                {model: db.Allcode, as:'provincePostData' , attributes: ['value','code']},
-                                {model: db.Allcode, as:'expTypePostData' , attributes: ['value','code']}
+                                { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
                             ]
                         }
                     ]
                 })
                 if (post) {
                     let user = await db.User.findOne({
-                        where: {id: post.userId},
+                        where: { id: post.userId },
                         attributes: {
                             exclude: ['userId']
                         }
                     })
                     let company = await db.Company.findOne({
-                        where: { id: user.companyId}
+                        where: { id: user.companyId }
                     })
                     post.companyData = company
                     resolve({
@@ -386,35 +487,37 @@ let getFilterPost = (data) => {
 
 
             let listDetailPost = await db.DetailPost.findAll(objectFilter)
-            let listDetailPostId = listDetailPost.map(item=> {
+            let listDetailPostId = listDetailPost.map(item => {
                 return {
                     detailPostId: item.id
                 }
             })
 
             let postFilter = {
-                where: { 
+                where: {
                     statusCode: 'PS1',
                     [Op.or]: listDetailPostId
                 },
                 include: [
-                    {model: db.DetailPost,as:'postDetailData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                    {
+                        model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
                         include: [
-                        {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
-                        {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},
-                        {model: db.Allcode, as:'salaryTypePostData' , attributes: ['value','code']},
-                        {model: db.Allcode, as:'jobLevelPostData' , attributes: ['value','code']},
-                        {model: db.Allcode, as:'genderPostData' , attributes: ['value','code']},
-                        {model: db.Allcode, as:'provincePostData' , attributes: ['value','code']},
-                        {model: db.Allcode, as:'expTypePostData' , attributes: ['value','code']}
+                            { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                            { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                            { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                            { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                            { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                            { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                            { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
                         ]
                     },
-                    {model: db.User, as: 'userPostData',
+                    {
+                        model: db.User, as: 'userPostData',
                         attributes: {
                             exclude: ['userId']
                         },
                         include: [
-                            {model: db.Company, as:'userCompanyData'},
+                            { model: db.Company, as: 'userCompanyData' },
                         ]
                     }
                 ],
@@ -449,9 +552,10 @@ let getStatisticalTypePost = (data) => {
                     statusCode: 'PS1'
                 },
                 include: [
-                    {model: db.DetailPost,as:'postDetailData',attributes: [],
+                    {
+                        model: db.DetailPost, as: 'postDetailData', attributes: [],
                         include: [
-                            {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']}
+                            { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] }
                         ],
                     }
                 ],
@@ -484,7 +588,9 @@ module.exports = {
     handleCreateNewPost: handleCreateNewPost,
     handleUpdatePost: handleUpdatePost,
     handleBanPost: handleBanPost,
+    handleAcceptPost: handleAcceptPost,
     getListPostByAdmin: getListPostByAdmin,
+    getAllPostByAdmin : getAllPostByAdmin,
     getDetailPostById: getDetailPostById,
     handleActivePost: handleActivePost,
     getFilterPost: getFilterPost,

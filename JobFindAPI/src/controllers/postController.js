@@ -36,9 +36,35 @@ let handleBanPost = async (req, res) => {
         })
     }
 }
+
+let handleAcceptPost = async (req, res) => {
+    try {
+        let data = await postService.handleAcceptPost(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
 let getListPostByAdmin = async (req, res) => {
     try {
         let data = await postService.getListPostByAdmin(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getAllPostByAdmin = async (req, res) => {
+    try {
+        let data = await postService.getAllPostByAdmin(req.query);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error)
@@ -102,8 +128,10 @@ module.exports = {
     handleUpdatePost: handleUpdatePost,
     handleBanPost: handleBanPost,
     getListPostByAdmin: getListPostByAdmin,
+    getAllPostByAdmin: getAllPostByAdmin,
     getDetailPostById: getDetailPostById,
     handleActivePost: handleActivePost,
+    handleAcceptPost: handleAcceptPost,
     getFilterPost: getFilterPost,
     getStatisticalTypePost: getStatisticalTypePost,
 }
