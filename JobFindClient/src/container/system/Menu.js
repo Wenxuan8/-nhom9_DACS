@@ -139,6 +139,7 @@ const Menu = () => {
                                 <ul className="nav flex-column sub-menu">
                                     <li className="nav-item"> <Link className="nav-link" to="/admin/add-post/">Tạo mới bài đăng</Link ></li>
                                     <li className="nav-item"> <Link className="nav-link" to="/admin/list-post/">Danh sách bài đăng</Link ></li>
+                                    <li className="nav-item"> <Link className="nav-link" to="/admin/buy-post/">Mua thêm lượt đăng bài</Link ></li>
                                 </ul>
                             </div>
                         </li>

@@ -160,10 +160,24 @@ const getListPostService = (data) => {
 const getStatisticalTypePost = (limit) => {
     return axios.get(`/api/get-statistical-post?limit=${limit}`)
 }
+
+//======================== PACKAGE ====================================//
+const getPackageByType = (isHot) => {
+    return axios.get(`/api/get-package-by-type?isHot=${isHot}`)
+}
+
+const getPaymentLink = (id,amount) => {
+    return axios.get(`/api/get-payment-link?id=${id}&amount=${amount}`)
+}
+
+const paymentOrderSuccessService = (data) => {
+    return axios.post(`/api/payment-success`, data)
+}
+
 export {
     DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeByCode, createAllCodeService, getListAllCodeService, getAllCodeService,
     getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
     createCompanyService, getDetailCompanyByUserId, updateCompanyService, RecruitmentService, getAllUserByCompanyIdService, QuitCompanyService,
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
-    getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost
+    getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService
 }

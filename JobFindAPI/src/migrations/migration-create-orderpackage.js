@@ -7,6 +7,7 @@ module.exports = {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
+                autoIncrement: true,
             },
             packagePostId: {
                 type: Sequelize.INTEGER,
@@ -16,6 +17,9 @@ module.exports = {
             },
             currentPrice: {
                 type: Sequelize.DOUBLE,
+            },
+            amount: {
+                type: Sequelize.INTEGER
             },
             createdAt: {
                 allowNull: false,

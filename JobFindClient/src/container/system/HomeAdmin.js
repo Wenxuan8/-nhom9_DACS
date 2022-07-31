@@ -30,6 +30,8 @@ import ManageCv from './Cv/ManageCv';
 import UserCv from './Cv/UserCv';
 import ChangePassword from './User/ChangePassword';
 import UserInfo from './User/UserInfo';
+import BuyPost from './Post/BuyPost';
+import PaymentSuccess from './Post/BuySucces';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -291,6 +293,12 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/list-post/">
                                     <ManagePost />
+                                </Route>
+                                <Route exact path="/admin/buy-post/">
+                                    <BuyPost />
+                                </Route>
+                                <Route exact path="/admin/payment/success">
+                                    <PaymentSuccess />
                                 </Route>
                                 <Route exact path="/admin/list-post-admin/">
                                     <ManagePost />

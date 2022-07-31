@@ -4,6 +4,7 @@ import allcodeController from '../controllers/allcodeController';
 import companyController from '../controllers/companyController';
 import postController from '../controllers/postController';
 import cvController from '../controllers/cvController'
+import packageController from '../controllers/packagePostController'
 let router = express.Router();
 
 let initWebRoutes = (app) => {
@@ -56,6 +57,11 @@ let initWebRoutes = (app) => {
     router.get('/api/get-detail-post-by-id', postController.getDetailPostById)
     router.get('/api/get-filter-post', postController.getFilterPost)
     router.get('/api/get-statistical-post', postController.getStatisticalTypePost)
+
+    //==================API PACKAGE==========================//
+    router.get('/api/get-package-by-type', packageController.getPackageByType)
+    router.get('/api/get-payment-link', packageController.getPaymentLink)
+    router.post('/api/payment-success', packageController.paymentOrderSuccess)
     return app.use("/", router);
 
 }

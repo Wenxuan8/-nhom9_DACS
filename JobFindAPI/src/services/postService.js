@@ -5,7 +5,7 @@ let handleCreateNewPost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.name || !data.categoryJobCode || !data.addressCode || !data.salaryJobCode || !data.amount || !data.timeEnd || !data.categoryJoblevelCode || !data.userId
-                || !data.categoryWorktypeCode || !data.experienceJobCode || !data.genderPostCode || !data.descriptionHTML || !data.descriptionMarkdown || data.isHot == ''
+                || !data.categoryWorktypeCode || !data.experienceJobCode || !data.genderPostCode || !data.descriptionHTML || !data.descriptionMarkdown || data.isHot === ''
             ) {
                 resolve({
                     errCode: 1,
@@ -483,6 +483,8 @@ let getFilterPost = (data) => {
             }
             if (data.categoryJobCode && data.categoryJobCode !== '') objectFilter.where = { ...objectFilter.where, categoryJobCode: data.categoryJobCode }
             if (data.addressCode && data.addressCode !== '') objectFilter.where = { ...objectFilter.where, addressCode: data.addressCode }
+
+            objectFilter.where = {...objectFilter.where, statusCode : 'PS1'}
 
 
 

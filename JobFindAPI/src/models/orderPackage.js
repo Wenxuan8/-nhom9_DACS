@@ -19,9 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     OrderPackage.init({
-        packetPostId: DataTypes.INTEGER,
+        packagePostId: DataTypes.INTEGER,
         userId: DataTypes.INTEGER,
-        currentPrice: DataTypes.DOUBLE
+        currentPrice: DataTypes.DOUBLE,
+        amount: DataTypes.INTEGER
     }, 
     {
         sequelize,

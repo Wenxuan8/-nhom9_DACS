@@ -21,7 +21,7 @@ const AddPost = () => {
     const { id } = useParams();
     const [inputValues, setInputValues] = useState({
         name: '', categoryJobCode: '', addressCode: '', salaryJobCode: '', amount: '', timeEnd: '', categoryJoblevelCode: '', categoryWorktypeCode: '', experienceJobCode: '',
-        genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
+        genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '' , isHot: 0
     });
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
@@ -82,7 +82,7 @@ const AddPost = () => {
         setInputValues({
             ...inputValues, ["genderCode"]: dataGenderPost[0].code, ["categoryJobCode"]: dataJobType[0].code,
             ["categoryJoblevelCode"]: dataJobLevel[0].code, ["salaryJobCode"]: dataSalaryType[0].code, ["experienceJobCode"]: dataExpType[0].code,
-            ["categoryWorktypeCode"]: dataWorkType[0].code
+            ["categoryWorktypeCode"]: dataWorkType[0].code, ["addressCode"] : dataProvince[0].code
         })
     }
     const handleOnChange = event => {
@@ -90,8 +90,12 @@ const AddPost = () => {
         setInputValues({ ...inputValues, [name]: value });
 
     };
-
-
+    let handleIsHot = (e) => {
+        setInputValues({
+            ...inputValues,
+            isHot: e.target.checked ? 1 : 0
+        })
+    }
     let handleEditorChange = ({ html, text }) => {
         setInputValues({
             ...inputValues,
@@ -119,14 +123,14 @@ const AddPost = () => {
                 categoryJoblevelCode: inputValues.categoryJoblevelCode,
                 categoryWorktypeCode: inputValues.categoryWorktypeCode,
                 experienceJobCode: inputValues.experienceJobCode,
-                genderCode: inputValues.genderCode,
-                companyId: user.companyId,
-
+                genderPostCode: inputValues.genderCode,
+                userId: user.id,
+                isHot: inputValues.isHot
             })
             setTimeout(() => {
                 setIsLoading(false)
                 if (res && res.errCode === 0) {
-                    toast.success("Thêm mới bài đăng thành công")
+                    toast.success(res.errMessage)
                     setInputValues({
                         ...inputValues,
                         ["name"]: '',
@@ -141,7 +145,7 @@ const AddPost = () => {
                         ["categoryWorktypeCode"]: '',
                         ["experienceJobCode"]: '',
                         ["genderCode"]: '',
-
+                        ["isHot"] : 0
                     })
                     settimeEnd('')
                 } else {
@@ -163,12 +167,12 @@ const AddPost = () => {
                 experienceJobCode: inputValues.experienceJobCode,
                 genderPostCode: inputValues.genderCode,
                 id: inputValues.id,
-                userId: JSON.parse(localStorage.getItem('userData')).id
+                userId: user.id
             })
             setTimeout(() => {
                 setIsLoading(false)
                 if (res && res.errCode === 0) {
-                    toast.success("Cập nhật bài đăng thành công")
+                    toast.success(res.errMessage)
 
                 } else {
                     toast.error(res.errMessage)
@@ -199,7 +203,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Địa chỉ</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataProvince && dataProvince.length > 0 &&
                                                         dataProvince.map((item, index) => {
                                                             return (
@@ -237,7 +241,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Giới tính</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataGenderPost && dataGenderPost.length > 0 &&
                                                         dataGenderPost.map((item, index) => {
                                                             return (
@@ -253,7 +257,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Kinh nghiệm</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataExpType && dataExpType.length > 0 &&
                                                         dataExpType.map((item, index) => {
                                                             return (
@@ -271,7 +275,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ngành</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobType && dataJobType.length > 0 &&
                                                         dataJobType.map((item, index) => {
                                                             return (
@@ -287,7 +291,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Chức vụ</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobLevel && dataJobLevel.length > 0 &&
                                                         dataJobLevel.map((item, index) => {
                                                             return (
@@ -305,7 +309,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Lương</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataSalaryType && dataSalaryType.length > 0 &&
                                                         dataSalaryType.map((item, index) => {
                                                             return (
@@ -321,7 +325,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hình thức LV</label>
                                             <div className="col-sm-9">
-                                                <select style={{color: "black"}} className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
+                                                <select style={{ color: "black" }} className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataWorkType && dataWorkType.length > 0 &&
                                                         dataWorkType.map((item, index) => {
                                                             return (
@@ -334,6 +338,18 @@ const AddPost = () => {
                                         </div>
                                     </div>
                                 </div>
+                                { inputValues.isActionADD && (<>
+                                <div className='row'>
+                                    <div className="col-md-6">
+                                        <div className="form-group row">
+                                            <label className="col-sm-3 col-form-label">Bài viết nổi bật</label>
+                                            <div className="col-sm-9">
+                                                <input  onChange={handleIsHot} checked={inputValues.isHot} style={{marginTop:'20px'}} type={'checkbox'}></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </>)}
                                 <div className="row">
                                     <div className="col-md-12">
                                         <label className="form-label">Mô tả công việc</label>
