@@ -88,7 +88,7 @@ const AddJobType = () => {
         } else {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
-                code: inputValues.code,
+                code: code,
                 image: inputValues.image
             })
             setTimeout(() => {

@@ -11,6 +11,7 @@ module.exports = {
             },
             name: {
                 type: Sequelize.STRING,
+                unique: true
             },
             value: {
                 type: Sequelize.STRING
@@ -19,6 +20,9 @@ module.exports = {
                 type: Sequelize.DOUBLE
             },
             isHot: {
+                type: Sequelize.TINYINT
+            },
+            isActive: {
                 type: Sequelize.TINYINT
             }
         });

@@ -6,11 +6,38 @@ paypal.configure({
     'client_id': 'ARulk2xnPxfzBhbH4DrZsANY3Pm80t4Prbw4AfaEI1kgtCH3Nzz__h2Fa8FFph8DsD9ZPZpN8d6tdahJ',
     'client_secret': 'EAcDSFu6gZjU52EhjvIGUYQz0d2XlEGk4PiJfTj8y23uTrZtesIPElfNKY9AcndkmtdSDCZQP7TaqcEn'
 });
+
+let getAllPackage = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.limit || !data.offset) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+
+                let packagePosts = await db.PackagePost.findAndCountAll({
+                    offset: +data.offset,
+                    limit: +data.limit
+                })
+                resolve({
+                    errCode: 0,
+                    data: packagePosts.rows,
+                    count: packagePosts.count
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 let getPackageByType = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (data.isHot === '') {
-                resolve({   
+                resolve({
                     errCode: 1,
                     errMessage: `Missing required parameters !`
                 })
@@ -30,11 +57,43 @@ let getPackageByType = (data) => {
     })
 }
 
+let getPackageById = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Missing required parameters !`
+                })
+            } else {
+                let packagePost = await db.PackagePost.findOne({
+                    where: { id : data.id }
+                })
+                if (packagePost)
+                {
+                    resolve({
+                        errCode: 0,
+                        data: packagePost
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Không tìm thấy dữ liệu gói sản phẩm'
+                    })
+                }
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 let getPaymentLink = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id || !data.amount)
-            {
+            if (!data.id || !data.amount) {
                 resolve({
                     errCode: 1,
                     errMessage: `Missing required parameters !`
@@ -43,7 +102,7 @@ let getPaymentLink = (data) => {
             }
             else {
                 let infoItem = await db.PackagePost.findOne({
-                    where: { id: data.id}
+                    where: { id: data.id }
                 })
                 let item = [{
                     "name": `${infoItem.name}`,
@@ -52,7 +111,7 @@ let getPaymentLink = (data) => {
                     "currency": "USD",
                     "quantity": data.amount
                 }]
-    
+
                 let create_payment_json = {
                     "intent": "sale",
                     "payer": {
@@ -73,20 +132,20 @@ let getPaymentLink = (data) => {
                         "description": "This is the payment description."
                     }]
                 };
-    
+
                 paypal.payment.create(create_payment_json, function (error, payment) {
                     if (error) {
                         resolve({
                             errCode: -1,
                             errMessage: error,
                         })
-    
+
                     } else {
                         resolve({
                             errCode: 0,
                             link: payment.links[1].href
                         })
-    
+
                     }
                 });
             }
@@ -106,7 +165,7 @@ let paymentOrderSuccess = (data) => {
                 })
             } else {
                 let infoItem = await db.PackagePost.findOne({
-                    where: { id: data.packageId}
+                    where: { id: data.packageId }
                 })
                 let execute_payment_json = {
                     "payer_id": data.PayerID,
@@ -117,10 +176,10 @@ let paymentOrderSuccess = (data) => {
                         }
                     }]
                 };
-                
+
                 let paymentId = data.paymentId;
-                
-                paypal.payment.execute(paymentId, execute_payment_json,async function  (error, payment) {
+
+                paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
                     if (error) {
                         resolve({
                             errCode: 0,
@@ -135,17 +194,16 @@ let paymentOrderSuccess = (data) => {
                         })
                         if (orderPackage) {
                             let user = await db.User.findOne({
-                                where: {id : data.userId},
+                                where: { id: data.userId },
                                 attributes: {
                                     exclude: ['userId']
                                 }
                             })
                             let company = await db.Company.findOne({
-                                where: { id: user.companyId},
+                                where: { id: user.companyId },
                                 raw: false
                             })
-                            if (company)
-                            {
+                            if (company) {
                                 if (infoItem.isHot == 0) {
                                     company.allowPost += +infoItem.value
                                 }
@@ -169,6 +227,136 @@ let paymentOrderSuccess = (data) => {
     })
 }
 
+let setActiveTypePackage = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (!data.id || data.isActive === '') {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Missing required parameters !`
+                })
+            } else {
+                let packagePost = await db.PackagePost.findOne({
+                    where: { id: data.id },
+                    raw: false
+                })
+                if (!packagePost) {
+                    resolve({
+                        errCode: 2,
+                        errMessage: `Gói sản phẩm không tồn tại`
+                    })
+                }
+                else {
+                    packagePost.isActive = data.isActive
+                    await packagePost.save()
+                    resolve({
+                        errCode: 0,
+                        errMessage: data.isActive == 0 ?  `Gói sản phẩm đã ngừng kích hoạt` : `Gói sản phẩm đã hoạt động`
+                    })
+
+                }
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+let creatNewPackagePost = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.name || !data.price || !data.value || data.isHot === '') {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let packagePost = await db.PackagePost.create({
+                    name: data.name,
+                    value: data.value,
+                    isHot: data.isHot,
+                    price: data.price,
+                    isActive: 1
+                })
+                if (packagePost) {
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Tạo gói sản phẩm thành công'
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Tạo gói sản phẩm thất bại'
+                    })
+                }
+            }
+        } catch (error) {
+            if (error.message.includes('Validation error'))
+            {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'Tên gói sản phẩm đã tồn tại'
+                })
+            }
+            else {
+                reject(error)
+            }
+        }
+    })
+}
+
+let updatePackagePost = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.name || !data.price || !data.value || data.isHot === '' || !data.id) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let packagePost = await db.PackagePost.findOne({
+                    where: { id : data.id},
+                    raw: false
+                })
+                if (packagePost) {
+                    packagePost.name = data.name
+                    packagePost.price = data.price
+                    packagePost.value = data.value
+                    packagePost.isHot = data.isHot
+                    await packagePost.save()
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Cập nhật thành công'
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Cập nhật thất bại'
+                    })
+                }
+            }
+        } catch (error) {
+            console.log("Hello")
+            console.log(error.message)
+            if (error.message.includes('Validation error'))
+            {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'Tên gói sản phẩm đã tồn tại'
+                })
+            }
+            else {
+                reject(error)
+            }
+        }
+    })
+}
+
 module.exports = {
-    getPackageByType, getPaymentLink , paymentOrderSuccess
+    getPackageByType, getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
+    getPackageById , creatNewPackagePost , updatePackagePost
 }

@@ -64,8 +64,7 @@ const AddSalaryType = () => {
         } else {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
-                code: inputValues.code,
-                id: id,
+                code: id,
             })
             setTimeout(() => {
                 setIsLoading(false)

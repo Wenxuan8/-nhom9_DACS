@@ -20,14 +20,19 @@ function useQuery() {
 
 function PaymentSuccess(props) {
     let query = useQuery();
-    const {isDone, setIsDone} = useState(false)
+    const {message, setMessage} = useState(false)
     useEffect(() => {
+        setMessage("Đang xử lý")
         let orderData =  JSON.parse(localStorage.getItem("orderData"))
         if(orderData){
             orderData.paymentId = query.get("paymentId")
             orderData.token = query.get("token")
             orderData.PayerID = query.get("PayerID")
             createNewOrder(orderData)
+            setMessage("Chúc mừng bạn đã mua lượt đăng bài thành công")
+        }
+        else {
+            setMessage("Thông tin đơn hàng không hợp lệ")
         }
     }, [])
     let createNewOrder = async (data) =>{
@@ -38,13 +43,11 @@ function PaymentSuccess(props) {
         }else{
             toast.error(res.errMessage)
         }
-        console.log("Hello")
-        setIsDone(true)
     }
     return (
 
         <div style={{height:'50vh',textAlign:'center'}}> 
-            {isDone ? 'Bạn đã mua thành công' : 'Đang chờ xử lý'}
+           {message}
         </div>
 
     );

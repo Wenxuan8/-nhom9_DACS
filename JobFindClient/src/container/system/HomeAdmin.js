@@ -32,6 +32,8 @@ import ChangePassword from './User/ChangePassword';
 import UserInfo from './User/UserInfo';
 import BuyPost from './Post/BuyPost';
 import PaymentSuccess from './Post/BuySucces';
+import AddpackagePost from './PackagePost/AddPackagePost';
+import ManagePackagePost from './PackagePost/ManagePackagePost';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -272,6 +274,15 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/edit-exp-type/:id">
                                     <AddExpType />
+                                </Route>
+                                <Route exact path="/admin/add-package-post">
+                                    <AddpackagePost />
+                                </Route>
+                                <Route exact path="/admin/list-package-post">
+                                    <ManagePackagePost />
+                                </Route>
+                                <Route exact path="/admin/edit-package-post/:id">
+                                    <AddpackagePost />
                                 </Route>
                                 <Route exact path="/admin/add-company">
                                     <AddCompany />

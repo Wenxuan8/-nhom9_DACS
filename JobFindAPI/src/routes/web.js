@@ -60,10 +60,14 @@ let initWebRoutes = (app) => {
 
     //==================API PACKAGE==========================//
     router.get('/api/get-package-by-type', packageController.getPackageByType)
+    router.get('/api/get-package-by-id', packageController.getPackageById)
     router.get('/api/get-payment-link', packageController.getPaymentLink)
+    router.get('/api/get-all-package', packageController.getAllPackage)
     router.post('/api/payment-success', packageController.paymentOrderSuccess)
+    router.put('/api/set-active-package-post', packageController.setActiveTypePackage)
+    router.post('/api/create-package-post', packageController.creatNewPackagePost)
+    router.put('/api/update-package-post', packageController.updatePackagePost)
     return app.use("/", router);
-
 }
 
 module.exports = initWebRoutes;

@@ -166,6 +166,10 @@ const getPackageByType = (isHot) => {
     return axios.get(`/api/get-package-by-type?isHot=${isHot}`)
 }
 
+const getPackageById = (id) => {
+    return axios.get(`/api/get-package-by-id?id=${id}`)
+}
+
 const getPaymentLink = (id,amount) => {
     return axios.get(`/api/get-payment-link?id=${id}&amount=${amount}`)
 }
@@ -174,10 +178,27 @@ const paymentOrderSuccessService = (data) => {
     return axios.post(`/api/payment-success`, data)
 }
 
+const getAllPackage = (data) => {
+    return axios.get(`/api/get-all-package?limit=${data.limit}&offset=${data.offset}`)
+}
+
+const setActiveTypePackage= (data) => {
+    return axios.put(`/api/set-active-package-post`, data)
+}
+
+const createPackagePost= (data) => {
+    return axios.post(`/api/create-package-post`, data)
+}
+
+const updatePackagePost = (data) => {
+    return axios.put(`/api/update-package-post`, data)
+}
+
 export {
     DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeByCode, createAllCodeService, getListAllCodeService, getAllCodeService,
     getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
     createCompanyService, getDetailCompanyByUserId, updateCompanyService, RecruitmentService, getAllUserByCompanyIdService, QuitCompanyService,
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
-    getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService
+    getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
+    setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost
 }
