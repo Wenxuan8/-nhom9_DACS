@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
            OrderPackage.belongsTo(models.User,{foreignKey:'userId',targetKey:'id',as: 'userOrderData'})
 
            //PackagePost
-           OrderPackage.belongsTo(models.OrderPackage, {foreignKey: 'packagePostId',targetKey:'id',as:'packageOrderData'})
+           OrderPackage.belongsTo(models.PackagePost, {foreignKey: 'packagePostId',targetKey:'id',as:'packageOrderData'})
 
         }
     };

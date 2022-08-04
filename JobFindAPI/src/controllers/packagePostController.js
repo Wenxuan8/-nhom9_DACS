@@ -104,6 +104,19 @@ let updatePackagePost = async (req, res) => {
     }
 }
 
+let getStatisticalPackage = async (req, res) => {
+    try {
+        let data = await packageService.getStatisticalPackage(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
 module.exports = {
     getPackageByType : getPackageByType,
     getPaymentLink: getPaymentLink,
@@ -112,6 +125,6 @@ module.exports = {
     setActiveTypePackage: setActiveTypePackage,
     getPackageById: getPackageById,
     creatNewPackagePost: creatNewPackagePost,
-    updatePackagePost: updatePackagePost
-
+    updatePackagePost: updatePackagePost,
+    getStatisticalPackage: getStatisticalPackage
 }

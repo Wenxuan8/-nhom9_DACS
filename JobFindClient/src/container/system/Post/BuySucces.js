@@ -20,7 +20,7 @@ function useQuery() {
 
 function PaymentSuccess(props) {
     let query = useQuery();
-    const {message, setMessage} = useState(false)
+    const [message, setMessage] = useState(false)
     useEffect(() => {
         setMessage("Đang xử lý")
         let orderData =  JSON.parse(localStorage.getItem("orderData"))

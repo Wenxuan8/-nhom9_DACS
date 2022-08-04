@@ -134,9 +134,7 @@ const activePostService = (data) => {
 }
 const banPostService = (postId) => {
     return axios.put(`/api/ban-post`, {
-        data: {
-            id: postId
-        }
+        id: postId
     })
 }
 const acceptPostService = (data) => {

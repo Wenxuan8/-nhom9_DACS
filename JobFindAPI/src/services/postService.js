@@ -484,7 +484,7 @@ let getFilterPost = (data) => {
             if (data.categoryJobCode && data.categoryJobCode !== '') objectFilter.where = { ...objectFilter.where, categoryJobCode: data.categoryJobCode }
             if (data.addressCode && data.addressCode !== '') objectFilter.where = { ...objectFilter.where, addressCode: data.addressCode }
 
-            objectFilter.where = {...objectFilter.where, statusCode : 'PS1'}
+            objectFilter.where = {...objectFilter.where}
 
 
 

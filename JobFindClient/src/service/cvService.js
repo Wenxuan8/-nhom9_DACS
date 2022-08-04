@@ -14,6 +14,10 @@ const getDetailCvService = (id) => {
 const getAllListCvByUserIdService = (data) => {
     return axios.get(`/api/get-all-cv-by-userId?limit=${data.limit}&offset=${data.offset}&userId=${data.userId}`)
 }
+
+const getStatisticalCv = (data) => {
+    return axios.get(`/api/get-statistical-cv?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}&companyId=${data.companyId}`)
+}
 export {
-    createNewCv, getAllListCvByPostService, getDetailCvService, getAllListCvByUserIdService
+    createNewCv, getAllListCvByPostService, getDetailCvService, getAllListCvByUserIdService, getStatisticalCv
 }

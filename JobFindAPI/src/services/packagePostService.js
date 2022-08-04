@@ -67,10 +67,9 @@ let getPackageById = (data) => {
                 })
             } else {
                 let packagePost = await db.PackagePost.findOne({
-                    where: { id : data.id }
+                    where: { id: data.id }
                 })
-                if (packagePost)
-                {
+                if (packagePost) {
                     resolve({
                         errCode: 0,
                         data: packagePost
@@ -252,7 +251,7 @@ let setActiveTypePackage = (data) => {
                     await packagePost.save()
                     resolve({
                         errCode: 0,
-                        errMessage: data.isActive == 0 ?  `Gói sản phẩm đã ngừng kích hoạt` : `Gói sản phẩm đã hoạt động`
+                        errMessage: data.isActive == 0 ? `Gói sản phẩm đã ngừng kích hoạt` : `Gói sản phẩm đã hoạt động`
                     })
 
                 }
@@ -294,8 +293,7 @@ let creatNewPackagePost = (data) => {
                 }
             }
         } catch (error) {
-            if (error.message.includes('Validation error'))
-            {
+            if (error.message.includes('Validation error')) {
                 resolve({
                     errCode: 2,
                     errMessage: 'Tên gói sản phẩm đã tồn tại'
@@ -318,7 +316,7 @@ let updatePackagePost = (data) => {
                 })
             } else {
                 let packagePost = await db.PackagePost.findOne({
-                    where: { id : data.id},
+                    where: { id: data.id },
                     raw: false
                 })
                 if (packagePost) {
@@ -342,8 +340,7 @@ let updatePackagePost = (data) => {
         } catch (error) {
             console.log("Hello")
             console.log(error.message)
-            if (error.message.includes('Validation error'))
-            {
+            if (error.message.includes('Validation error')) {
                 resolve({
                     errCode: 2,
                     errMessage: 'Tên gói sản phẩm đã tồn tại'
@@ -356,7 +353,42 @@ let updatePackagePost = (data) => {
     })
 }
 
+let getStatisticalPackage = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.fromDate || !data.toDate) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            }
+            let res = await db.OrderPackage.findAll({
+                where: {
+                    createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
+                },
+                attributes: [[db.sequelize.fn('SUM', db.sequelize.col('currentPrice')), 'total']],
+                include: [
+                    {
+                        model: db.PackagePost, as: 'packageOrderData',
+                        order: [['id', 'ASC']],
+                    }
+                ],
+                group: ['packagePostId'],
+                nest: true,
+                raw: false,
+                logging: console.log
+            })
+            resolve({
+                errCode: 0,
+                data: res,
+            })
+        }
+        catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     getPackageByType, getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
-    getPackageById , creatNewPackagePost , updatePackagePost
+    getPackageById, creatNewPackagePost, updatePackagePost, getStatisticalPackage
 }

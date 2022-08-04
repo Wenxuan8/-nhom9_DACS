@@ -1,9 +1,9 @@
-const { Op, and } = require("sequelize");
+const { Op, and, where } = require("sequelize");
 import e from "express";
 import db from "../models/index";
 const cloudinary = require('../utils/cloudinary');
 
-let checkCompany = (name,id = null) => {
+let checkCompany = (name, id = null) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
         try {
@@ -13,10 +13,10 @@ let checkCompany = (name,id = null) => {
                     errMessage: 'Missing required parameters!'
                 })
             } else {
-                let company = null 
+                let company = null
                 if (id) {
                     company = await db.Company.findOne({
-                        where: { name: name , id: {[Op.ne]: id}}
+                        where: { name: name, id: { [Op.ne]: id } }
                     })
                     console.log(company)
                 }
@@ -68,26 +68,25 @@ let checkUserPhone = (userPhone) => {
 let handleCreateNewCompany = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.phonenumber || !data.address 
-                || !data.descriptionHTML || !data.descriptionMarkdown 
+            if (!data.name || !data.phonenumber || !data.address
+                || !data.descriptionHTML || !data.descriptionMarkdown
                 || !data.amountEmployer || !data.userId || data.censorCode) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                if (await checkCompany(data.name))
-                {
+                if (await checkCompany(data.name)) {
                     resolve({
                         errCode: 2,
                         errMessage: 'Tên công ty đã tồn tại'
                     })
                 }
-                else{
+                else {
                     let thumbnailUrl = ""
                     let coverimageUrl = ""
                     if (data.thumbnail && data.coverimage) {
-    
+
                         const uploadedThumbnailResponse = await cloudinary.uploader.upload(data.thumbnail, {
                             upload_preset: 'dev_setups'
                         })
@@ -97,8 +96,8 @@ let handleCreateNewCompany = (data) => {
                         thumbnailUrl = uploadedThumbnailResponse.url
                         coverimageUrl = uploadedCoverImageResponse.url
                     }
-    
-    
+
+
                     let company = await db.Company.create({
                         name: data.name,
                         thumbnail: thumbnailUrl,
@@ -122,12 +121,12 @@ let handleCreateNewCompany = (data) => {
                             exclude: ['userId']
                         }
                     })
-    
-                    let account= await db.Account.findOne({
-                        where: {userId: data.userId},
+
+                    let account = await db.Account.findOne({
+                        where: { userId: data.userId },
                         raw: false
                     })
-                    
+
                     if (user && account) {
                         user.companyId = company.id
                         await user.save()
@@ -160,8 +159,7 @@ let handleUpdateCompany = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                if (await checkCompany(data.name,data.id))
-                {
+                if (await checkCompany(data.name, data.id)) {
                     resolve({
                         errCode: 2,
                         errMessage: 'Tên công ty đã tồn tại'
@@ -192,7 +190,7 @@ let handleUpdateCompany = (data) => {
                             coverImageUrl = uploadedcoverImageResponse.url
                             res.coverimage = coverImageUrl
                         }
-    
+
                         res.name = data.name
                         res.descriptionHTML = data.descriptionHTML
                         res.descriptionMarkdown = data.descriptionMarkdown
@@ -275,7 +273,7 @@ let handleUnBanCompany = (companyId) => {
                         errMessage: `Công ty không tồn tại`
                     })
                 }
-                else{
+                else {
                     foundCompany.statusCode = 'S1'
                     await foundCompany.save()
                     resolve({
@@ -299,9 +297,8 @@ let handleAddUserCompany = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                let company = await db.Company.findOne({where: {id: data.companyId}})
-                if (company)
-                {
+                let company = await db.Company.findOne({ where: { id: data.companyId } })
+                if (company) {
                     let isExist = await checkUserPhone(data.phonenumber);
                     if (isExist) {
                         let account = await db.Account.findOne({
@@ -310,21 +307,20 @@ let handleAddUserCompany = (data) => {
                             },
                             raw: false
                         })
-                        if(account.roleCode != 'EMPLOYER'){
+                        if (account.roleCode != 'EMPLOYER') {
                             resolve({
                                 errCode: 1,
                                 errMessage: 'Tài khoản không phải là nhà tuyển dụng'
                             })
-                        }else {
+                        } else {
                             let user = await db.User.findOne({
-                                where: {id: account.userId},
+                                where: { id: account.userId },
                                 attributes: {
                                     exclude: ['userId']
                                 },
                                 raw: false
                             })
-                            if (user.companyId)
-                            {
+                            if (user.companyId) {
                                 resolve({
                                     errCode: 3,
                                     errMessage: 'Nhân viên đã có công ty'
@@ -339,8 +335,8 @@ let handleAddUserCompany = (data) => {
                                 })
                             }
                         }
-    
-                        
+
+
                     } else {
                         resolve({
                             errCode: 2,
@@ -398,26 +394,25 @@ let getDetailCompanyById = (id) => {
                 let company = await db.Company.findOne({
                     where: { id: id }
                 })
-                if (!company)
-                {
+                if (!company) {
                     resolve({
                         errCode: 0,
                         errorMessage: 'Không tồn tại công ty',
                     })
-                } 
+                }
                 else {
                     let listUserOfCompany = await db.User.findAll({
-                        where: {companyId: company.id},
+                        where: { companyId: company.id },
                         attributes: ['id'],
                     })
-                    listUserOfCompany = listUserOfCompany.map(item=> {
+                    listUserOfCompany = listUserOfCompany.map(item => {
                         return {
                             userId: item.id
                         }
                     })
                     company.postData = await db.Post.findAll({
                         where: {
-                            [Op.and]: [{statusCode: 'PS1'},{[Op.or]: listUserOfCompany }]
+                            [Op.and]: [{ statusCode: 'PS1' }, { [Op.or]: listUserOfCompany }]
                         },
                         order: [['createdAt', 'DESC']],
                         limit: 5,
@@ -428,15 +423,16 @@ let getDetailCompanyById = (id) => {
                         nest: true,
                         raw: true,
                         include: [
-                            {model: db.DetailPost,as:'postDetailData',attributes: ['id','name','descriptionHTML','descriptionMarkdown','amount'],
+                            {
+                                model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
                                 include: [
-                                    {model: db.Allcode, as:'jobTypePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'workTypePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'salaryTypePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'jobLevelPostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'genderPostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'provincePostData' , attributes: ['value','code']},
-                                    {model: db.Allcode, as:'expTypePostData' , attributes: ['value','code']}
+                                    { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
                                 ]
                             }
                         ]
@@ -464,11 +460,10 @@ let getDetailCompanyByUserId = (userId) => {
                 let company = await db.Company.findOne({
                     where: { userId: userId }
                 })
-                if (!company)
-                {
+                if (!company) {
                     resolve({
                         errCode: 2,
-                        errMessage: "Không tìm thấy công ty người dùng sở hữu"    
+                        errMessage: "Không tìm thấy công ty người dùng sở hữu"
                     })
                 }
                 else {
@@ -498,16 +493,17 @@ let getAllUserByCompanyId = (data) => {
                     limit: +data.limit,
                     offset: +data.offset,
                     attributes: {
-                        exclude: ['password','userId']
+                        exclude: ['password', 'userId']
                     },
                     include: [
                         { model: db.Allcode, as: 'genderData', attributes: ['value', 'code'] },
-                        { model: db.Account, as: 'userAccountData', attributes: {
-                            exclude: ['password']
-                        }, include: [
-                            {model: db.Allcode, as: 'roleData', attributes: ['value', 'code']},
-                            {model: db.Allcode, as: 'statusAccountData', attributes: ['value', 'code']}
-                        ]
+                        {
+                            model: db.Account, as: 'userAccountData', attributes: {
+                                exclude: ['password']
+                            }, include: [
+                                { model: db.Allcode, as: 'roleData', attributes: ['value', 'code'] },
+                                { model: db.Allcode, as: 'statusAccountData', attributes: ['value', 'code'] }
+                            ]
                         }
                     ],
                     raw: true,
@@ -545,14 +541,24 @@ let handleQuitCompany = (data) => {
                 })
                 if (user) {
                     let account = await db.Account.findOne({
-                        where: {userId: user.id},
+                        where: { userId: user.id },
                         raw: false
                     })
-                    if (account.roleCode == 'COMPANY')
-                    {
+                    if (account.roleCode == 'COMPANY') {
                         account.roleCode = 'EMPLOYER'
                         await account.save()
                     }
+                    let company = await db.Company.findOne({
+                        where: { id: user.companyId }
+                    })
+                    await db.Post.update(
+                        {
+                            userId: company.userId,
+                        },
+                        {
+                            where: { userId: user.id }
+                        }
+                    )
                     user.companyId = null
                     await user.save()
                     resolve({

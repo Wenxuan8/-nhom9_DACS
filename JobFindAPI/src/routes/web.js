@@ -46,6 +46,7 @@ let initWebRoutes = (app) => {
     router.get('/api/get-all-list-cv-by-post', cvController.getAllListCvByPost)
     router.get('/api/get-detail-cv-by-id', cvController.getDetailCvById)
     router.get('/api/get-all-cv-by-userId', cvController.getAllCvByUserId)
+    router.get('/api/get-statistical-cv', cvController.getStatisticalCv)    
     //==================API POST==========================//
     router.post('/api/create-new-post', postController.handleCreateNewPost)
     router.put('/api/update-post', postController.handleUpdatePost)
@@ -67,6 +68,7 @@ let initWebRoutes = (app) => {
     router.put('/api/set-active-package-post', packageController.setActiveTypePackage)
     router.post('/api/create-package-post', packageController.creatNewPackagePost)
     router.put('/api/update-package-post', packageController.updatePackagePost)
+    router.get('/api/get-statistical-package', packageController.getStatisticalPackage)
     return app.use("/", router);
 }
 
