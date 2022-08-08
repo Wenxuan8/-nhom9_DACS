@@ -338,8 +338,6 @@ let updatePackagePost = (data) => {
                 }
             }
         } catch (error) {
-            console.log("Hello")
-            console.log(error.message)
             if (error.message.includes('Validation error')) {
                 resolve({
                     errCode: 2,
@@ -362,26 +360,52 @@ let getStatisticalPackage = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             }
-            let res = await db.OrderPackage.findAll({
-                where: {
-                    createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
-                },
-                attributes: [[db.sequelize.fn('SUM', db.sequelize.col('currentPrice')), 'total']],
-                include: [
-                    {
-                        model: db.PackagePost, as: 'packageOrderData',
-                        order: [['id', 'ASC']],
+            else {
+                let listPackage = await db.PackagePost.findAndCountAll({
+                    limit: +data.limit,
+                    offset: +data.offset,
+                })
+                let listOrderPackage = await db.OrderPackage.findAll({
+                    where: {
+                        createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
+                    },
+                    attributes: ['packagePostId',[db.sequelize.fn('SUM', db.sequelize.col('currentPrice')), 'total']],
+                    order: [[db.Sequelize.literal('total'), 'DESC']],
+                    group: ['packagePostId'],
+                    nest: true,
+                })
+                listPackage.rows = listPackage.rows.map(packagePost => {
+                    let count = 1
+                    let length = listOrderPackage.length
+                    if (length == 0) {
+                        return {
+                            ...packagePost,
+                            total: 0
+                        }
                     }
-                ],
-                group: ['packagePostId'],
-                nest: true,
-                raw: false,
-                logging: console.log
-            })
-            resolve({
-                errCode: 0,
-                data: res,
-            })
+                    for (let order of listOrderPackage) {
+                        if (order.packagePostId == packagePost.id) {
+                            return {
+                                ...packagePost,
+                                total: order.total
+                            }
+                        }
+                        else if (count == length) {
+                            return {
+                                ...packagePost,
+                                total: 0
+                            }
+                        }
+                        count++
+                    }
+                }
+                )
+                resolve({
+                    errCode: 0,
+                    data: listPackage.rows,
+                    count: listPackage.count
+                })
+            }
         }
         catch (error) {
             reject(error)

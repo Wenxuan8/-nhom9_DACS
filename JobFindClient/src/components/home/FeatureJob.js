@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import moment from 'moment';
 const FeatureJob = (props) => {
     const handleSplitTime = (time) => {
-        return moment(time).fromNow();
+        return moment(new Date(+time)).fromNow();
     }
     return (
         <>
@@ -23,7 +23,7 @@ const FeatureJob = (props) => {
                 </div>
                 <div class="items-link items-link2 f-right">
                     <a href="job_details.html">{props.data.postDetailData.workTypePostData.value}</a>
-                    <span style={{ position: 'absolute', right: '70px' }}>{handleSplitTime(props.data.createdAt)}</span>
+                    <span style={{ position: 'absolute', right: '70px' }}>{handleSplitTime(props.data.timePost)}</span>
                 </div>
             </div>
         </>
