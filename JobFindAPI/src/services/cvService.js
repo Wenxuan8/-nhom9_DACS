@@ -102,11 +102,10 @@ let getDetailCvById = (data) => {
                     ]
                 })
                 cv.isChecked = 1
+                await cv.save()
                 if (cv.file) {
                     cv.file = new Buffer(cv.file, 'base64').toString('binary');
                 }
-
-                await cv.save()
 
                 resolve({
                     errCode: 0,

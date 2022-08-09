@@ -8,15 +8,15 @@ import handleValidate from '../../util/Validation';
 import { Link } from 'react-router-dom'
 const Register = () => {
     const [inputValidates, setValidates] = useState({
-        phonenumber: true, password: true, firstName: true, lastName: true
+        phonenumber: true, password: true, firstName: true, lastName: true, email: true,againPass: true
     })
     const [inputValues, setInputValues] = useState({
-        phonenumber: '', firstName: '', lastName: '', password: '', isOpen: false, dataUser: {}, roleCode: ''
+        phonenumber: '', firstName: '', lastName: '', password: '', isOpen: false, dataUser: {}, roleCode: '',email:'',againPass:''
     });
     const { data: dataRole } = useFetchAllcode('ROLE');
 
     if (dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
-        let arr = dataRole.filter(item => item.code !== "ADMIN")
+        let arr = dataRole.filter(item => item.code !== "ADMIN" && item.code !== "COMPANY")
         setInputValues({
             ...inputValues, ["roleCode"]: arr[0].code
 
@@ -30,16 +30,24 @@ const Register = () => {
     };
 
     let handleOpenVerifyOTP = async () => {
-        //   let checkPhonenumber = handleValidate(inputValues.phonenumber, "phone")
-        // let checkPassword = handleValidate(inputValues.password, "password")
-        // let checkFirstName = handleValidate(inputValues.firstName, "isEmpty")
-        // let checkLastName = handleValidate(inputValues.lastName, "isEmpty")
-        // if (!(checkPhonenumber === true && checkPassword === true && checkFirstName === true && checkLastName === true)) {
-        //     setValidates({
-        //         phonenumber: checkPhonenumber, password: checkPassword, firstName: checkFirstName, lastName: checkLastName
-        //     })
-        //     return
-        // }
+        console.log("Hello")
+        let checkPhonenumber = handleValidate(inputValues.phonenumber, "phone")
+        let checkPassword = handleValidate(inputValues.password, "password")
+        let checkFirstName = handleValidate(inputValues.firstName, "isEmpty")
+        let checkLastName = handleValidate(inputValues.lastName, "isEmpty")
+        let checkEmail = handleValidate(inputValues.email,"email")
+        if (!(checkPhonenumber === true && checkPassword === true && checkFirstName === true && checkLastName === true && checkEmail === true)) {
+            setValidates({
+                phonenumber: checkPhonenumber, password: checkPassword, firstName: checkFirstName, lastName: checkLastName, email: checkEmail
+            })
+            return
+        }
+
+        if (inputValues.againPass !== inputValues.password)
+        {
+            toast.error("Mật khẩu nhập lại không trùng khớp!")
+            return
+        }
         let res = await checkUserPhoneService(inputValues.phonenumber)
         if (res === true) {
             toast.error("Số điện thoại đã tồn tại !")
@@ -51,7 +59,8 @@ const Register = () => {
                     firstName: inputValues.firstName,
                     lastName: inputValues.lastName,
                     password: inputValues.password,
-                    roleCode: inputValues.roleCode
+                    roleCode: inputValues.roleCode,
+                    email: inputValues.email
                 }, ["isOpen"]: true
             })
         }
@@ -85,14 +94,22 @@ const Register = () => {
                                                 {inputValidates.phonenumber && <p style={{ color: 'red' }}>{inputValidates.phonenumber}</p>}
                                             </div>
                                             <div className="form-group">
-                                                <input type="password" value={inputValues.password} name="password" onChange={(event) => handleOnChange(event)} className="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" />
+                                                <input type="text" value={inputValues.email} name="email" onChange={(event) => handleOnChange(event)} className="form-control form-control-lg" placeholder="Email" />
+                                                {inputValidates.email && <p style={{ color: 'red' }}>{inputValidates.email}</p>}
+                                            </div>
+                                            <div className="form-group">
+                                                <input type="password" value={inputValues.password} name="password" onChange={(event) => handleOnChange(event)} className="form-control form-control-lg" id="exampleInputPassword1" placeholder="Mật khẩu" />
                                                 {inputValidates.password && <p style={{ color: 'red' }}>{inputValidates.password}</p>}
                                             </div>
                                             <div className="form-group">
-                                                <select className="form-control" value={inputValues.roleCode} name="roleCode" onChange={(event) => handleOnChange(event)}>
+                                                <input type="password" value={inputValues.againPass} name="againPass" onChange={(event) => handleOnChange(event)} className="form-control form-control-lg" placeholder="Nhập lại mật khẩu" />
+                                                {inputValidates.againPass && <p style={{ color: 'red' }}>{inputValidates.againPass}</p>}
+                                            </div>
+                                            <div className="form-group">
+                                                <select style={{color:'black'}} className="form-control" value={inputValues.roleCode} name="roleCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataRole && dataRole.length > 0 &&
                                                         dataRole.map((item, index) => {
-                                                            if (item.code !== "ADMIN") {
+                                                            if (item.code !== "ADMIN" && item.code !== "COMPANY") {
                                                                 return (
                                                                     <option key={index} value={item.code}>{item.value}</option>
                                                                 )
@@ -103,10 +120,10 @@ const Register = () => {
                                                 </select>
                                             </div>
                                             <div className="mt-3">
-                                                <a onClick={() => handleOpenVerifyOTP()} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >SIGN UP</a>
+                                                <a onClick={() => handleOpenVerifyOTP()} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Đăng ký</a>
                                             </div>
                                             <div className="text-center mt-4 font-weight-light">
-                                                Already have an account? <Link to="/login" className="text-primary">Login</Link>
+                                                Bạn đã có tài khoản rồi? <Link to="/login" className="text-primary">Đăng nhập ngay</Link>
                                             </div>
                                         </form>
                                     </div>

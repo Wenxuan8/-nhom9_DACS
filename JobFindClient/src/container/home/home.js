@@ -5,7 +5,7 @@ import FeatureJobs from '../../components/home/FeaturesJobs'
 import { getListPostService } from '../../service/userService'
 const Home = () => {
     const [dataFeature, setDataFeature] = useState([])
-
+    const [dataHot,setDateHot] = useState([])
     let loadPost = async (limit, offset) => {
         let arrData = await getListPostService({
             limit: limit,
@@ -18,8 +18,23 @@ const Home = () => {
             experienceJobCode: '',
             sortName: false
         })
+        let arrData2 = await getListPostService({
+            limit: limit,
+            offset: offset,
+            categoryJobCode: '',
+            addressCode: '',
+            salaryJobCode: '',
+            categoryJoblevelCode: '',
+            categoryWorktypeCode: '',
+            experienceJobCode: '',
+            sortName: false,
+            isHot: 1
+        })
         if (arrData && arrData.errCode === 0) {
             setDataFeature(arrData.data)
+        }
+        if (arrData2 && arrData2.errCode === 0) {
+            setDateHot(arrData2.data)
         }
     }
     useEffect(() => {
@@ -110,6 +125,20 @@ const Home = () => {
                             <div class="col-lg-12">
                                 <div class="section-tittle text-center">
 
+                                    <h2>Công việc nổi bật</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <FeatureJobs dataFeature={dataHot} />
+                    </div>
+                </section>
+                <section class="featured-job-area feature-padding">
+                    <div class="container">
+                        {/* <!-- Section Tittle --> */}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="section-tittle text-center">
+
                                     <h2>Công việc mới đăng</h2>
                                 </div>
                             </div>
@@ -117,6 +146,7 @@ const Home = () => {
                         <FeatureJobs dataFeature={dataFeature} />
                     </div>
                 </section>
+
                 {/* <!-- Featured_job_end -->
         <!-- How  Apply Process Start--> */}
                 <div class="apply-process-area apply-bg pt-150 pb-150" style={{

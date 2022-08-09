@@ -13,6 +13,7 @@ const ManageCvCandidate = (props) => {
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
+    console.log(dataCv)
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         setUser(userData)
@@ -97,14 +98,14 @@ const ManageCvCandidate = (props) => {
                                             return (
                                                 <tr key={index}>
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
-                                                    <td>{item.postData.name}</td>
-                                                    <td>{item.postData.jobTypePostData.value}</td>
-                                                    <td>{item.postData.jobLevelPostData.value}</td>
-                                                    <td>{item.postData.provincePostData.value}</td>
+                                                    <td>{item.postCvData.postDetailData.name}</td>
+                                                    <td>{item.postCvData.postDetailData.jobTypePostData.value}</td>
+                                                    <td>{item.postCvData.postDetailData.jobLevelPostData.value}</td>
+                                                    <td>{item.postCvData.postDetailData.provincePostData.value}</td>
 
                                                     <td>{item.isChecked === 0 ? 'Chưa xem' : 'Đã xem'}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/detail-job/${item.postData.id}/`}>Xem công việc</Link>
+                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/detail-job/${item.postCvData.id}/`}>Xem công việc</Link>
                                                         &nbsp; &nbsp;
 
                                                     </td>

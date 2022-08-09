@@ -484,10 +484,6 @@ let getFilterPost = (data) => {
             if (data.categoryJobCode && data.categoryJobCode !== '') objectFilter.where = { ...objectFilter.where, categoryJobCode: data.categoryJobCode }
             if (data.addressCode && data.addressCode !== '') objectFilter.where = { ...objectFilter.where, addressCode: data.addressCode }
 
-            objectFilter.where = {...objectFilter.where}
-
-
-
             let listDetailPost = await db.DetailPost.findAll(objectFilter)
             let listDetailPostId = listDetailPost.map(item => {
                 return {
@@ -530,7 +526,10 @@ let getFilterPost = (data) => {
                 postFilter.limit = +data.limit
                 postFilter.offset = +data.offset
             }
-
+            if (data.isHot == 1)
+            {
+                postFilter.where = {...postFilter.where, isHot: data.isHot}
+            }
             let res = await db.Post.findAndCountAll(postFilter)
 
             resolve({

@@ -197,7 +197,7 @@ const ManagePost = () => {
                                                     <td>{date}</td>
                                                     <td>{item.statusPostData.value}</td>
                                                     <td>
-                                                        {user.roleCode == 'COMPANY' || user.roleCode == 'EMPLOYER' &&
+                                                        {(user.roleCode == 'COMPANY' || user.roleCode == 'EMPLOYER') &&
                                                             <>
                                                                 <Link style={{ color: '#4B49AC' }} to={`/admin/list-cv/${item.id}/`}>Xem CV nộp</Link>
                                                                 &nbsp; &nbsp;

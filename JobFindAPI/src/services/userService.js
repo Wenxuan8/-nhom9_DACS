@@ -69,7 +69,8 @@ let handleCreateNewUser = (data) => {
                         genderCode: data.genderCode,
                         image: imageUrl,
                         dob: data.dob,
-                        companyId: data.companyId
+                        companyId: data.companyId,
+                        email: data.email
                     })
                     if (user)
                     {

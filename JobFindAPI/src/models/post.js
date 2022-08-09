@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
 
             //DetailPost
             Post.belongsTo(models.DetailPost,{foreignKey: 'detailPostId', targetKey: 'id', as: 'postDetailData' })
+
+            //Note
+            Post.hasMany(models.Note,{foreignKey:'postId',as:'postNoteData'})
         }
     };
     Post.init({

@@ -9,7 +9,7 @@
 // 2. type is wrong
 
 
-const passwordRegex = /^([a-zA-Z0-9]{6})$/  // min is 6 and without special char
+const passwordRegex = /^([a-zA-Z0-9]{6,20})$/  // min is 6 and without special char
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/  // format abc@abc
 const phoneRegex = /^\d{10}$/   // min 10 number
 const handleValidate = (data, type) => {
@@ -22,7 +22,7 @@ const handleValidate = (data, type) => {
         case "password":
             if (passwordRegex.test(data))
                 return true
-            kq = 'Mật khẩu không có ký tự đặt biệt và 8 ký tự trở lên'
+            kq = 'Mật khẩu không có ký tự đặt biệt và 6 ký tự trở lên và tối đa 20 ký tự'
             return kq
         case "email":
             if (emailRegex.test(data))
