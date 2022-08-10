@@ -62,6 +62,9 @@ let handleCreateNewUser = (data) => {
                         })
                         imageUrl = uploadedResponse.url
                     }
+                    if (!data.email) {
+                        data.email = 'nguyenletantai1102200@gmail.com'
+                    }
                     let user = await db.User.create({
                         firstName: data.firstName,
                         lastName: data.lastName,

@@ -1,6 +1,29 @@
 import db from "../models/index";
 const { Op, and } = require("sequelize");
+require('dotenv').config();
+var nodemailer = require('nodemailer');
+let sendmail = (note, userMail) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD,
+        }
+    });
 
+    var mailOptions = {
+        from: process.env.EMAIL_APP,
+        to: userMail,
+        subject: 'Thông báo từ trang Job Finder',
+        text: note
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+        } else {
+        }
+    });
+}
 let handleCreateNewPost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -137,23 +160,36 @@ let handleUpdatePost = (data) => {
         }
     })
 }
-let handleBanPost = (postId) => {
+let handleBanPost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
 
-            if (!postId) {
+            if (!data.postId || !data.note || !data.userId) {
                 resolve({
                     errCode: 1,
                     errMessage: `Missing required parameters !`
                 })
             } else {
                 let foundPost = await db.Post.findOne({
-                    where: { id: postId },
+                    where: { id: data.postId },
                     raw: false
                 })
                 if (foundPost) {
                     foundPost.statusCode = 'PS4'
                     await foundPost.save()
+                    await db.Note.create({
+                        postId: foundPost.id,
+                        note: data.note,
+                        userId: data.userId
+                    })
+                    let user = await db.User.findOne({
+                        where: { id: foundPost.userId},
+                        attributes: {
+                            exclude: ['userId']
+                        }
+                    })
+                    sendmail(data.note,user.email)
+
                     resolve({
                         errCode: 0,
                         errMessage: 'Đã chặn bài viết thành công'
@@ -176,7 +212,7 @@ let handleActivePost = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
 
-            if (!data.id) {
+            if (!data.id || !data.userId || !data.note) {
                 resolve({
                     errCode: 1,
                     errMessage: `Missing required parameters !`
@@ -189,6 +225,18 @@ let handleActivePost = (data) => {
                 if (foundPost) {
                     foundPost.statusCode = 'PS3'
                     await foundPost.save()
+                    await db.Note.create({
+                        postId: foundPost.id,
+                        note: data.note,
+                        userId: data.userId
+                    })
+                    let user = await db.User.findOne({
+                        where: { id: foundPost.userId},
+                        attributes: {
+                            exclude: ['userId']
+                        }
+                    })
+                    sendmail(data.note,user.email)
                     resolve({
                         errCode: 0,
                         errMessage: 'Đã mở lại trạng thái chờ duyệt'
@@ -227,6 +275,19 @@ let handleAcceptPost = (data) => {
                         foundPost.timePost = new Date().getTime()
                     }
                     await foundPost.save()
+                    let note = data.statusCode == "PS1" ? "Đã duyệt bài thành công" : data.note
+                    await db.Note.create({
+                        postId: foundPost.id,
+                        note:note,
+                        userId: data.userId
+                    })
+                    let user = await db.User.findOne({
+                        where: { id: foundPost.userId},
+                        attributes: {
+                            exclude: ['userId']
+                        }
+                    })
+                    sendmail(note,user.email)
                     resolve({
                         errCode: 0,
                         errMessage: data.statusCode == "PS1" ? 'Duyệt bài thành công' : 'Đã từ chối bài thành công'
@@ -348,9 +409,10 @@ let getAllPostByAdmin = (data) => {
                             ]
                         },
                         { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
-                        { model: db.User, as: 'userPostData' , attributes: { exclude: ['userId']},
+                        {
+                            model: db.User, as: 'userPostData', attributes: { exclude: ['userId'] },
                             include: [
-                                {model: db.Company, as:'companyUserData'}
+                                { model: db.Company, as: 'companyUserData' }
                             ]
                         }
                     ]
@@ -526,9 +588,8 @@ let getFilterPost = (data) => {
                 postFilter.limit = +data.limit
                 postFilter.offset = +data.offset
             }
-            if (data.isHot == 1)
-            {
-                postFilter.where = {...postFilter.where, isHot: data.isHot}
+            if (data.isHot == 1) {
+                postFilter.where = { ...postFilter.where, isHot: data.isHot }
             }
             let res = await db.Post.findAndCountAll(postFilter)
 
@@ -591,7 +652,7 @@ module.exports = {
     handleBanPost: handleBanPost,
     handleAcceptPost: handleAcceptPost,
     getListPostByAdmin: getListPostByAdmin,
-    getAllPostByAdmin : getAllPostByAdmin,
+    getAllPostByAdmin: getAllPostByAdmin,
     getDetailPostById: getDetailPostById,
     handleActivePost: handleActivePost,
     getFilterPost: getFilterPost,

@@ -12,12 +12,14 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             //Post
             Note.belongsTo(models.Post,{foreignKey:'postId',targetKey:'id',as:'postNoteData'})
-
+            //User
+            Note.belongsTo(models.User,{foreignKey:'userId',targetKey:'id',as:'userNoteData'})
         }
     };
     Note.init({
         postId: DataTypes.INTEGER,
-        note: DataTypes.STRING
+        note: DataTypes.STRING,
+        userId: DataTypes.INTEGER
     }, 
     {
         sequelize,

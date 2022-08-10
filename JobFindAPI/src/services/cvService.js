@@ -152,6 +152,12 @@ let getAllCvByUserId = (data) => {
                         }
                     ]
                 })
+                cv.rows = cv.rows.map(item => {
+                    return {
+                        ...item,
+                        file:  new Buffer(item.file, 'base64').toString('binary')
+                    }
+                })
                 resolve({
                     errCode: 0,
                     data: cv.rows,

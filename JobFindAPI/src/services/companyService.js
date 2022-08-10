@@ -392,7 +392,12 @@ let getDetailCompanyById = (id) => {
             } else {
 
                 let company = await db.Company.findOne({
-                    where: { id: id }
+                    where: { id: id },
+                    include: [
+                        { model: db.Allcode, as: 'censorData', attributes: ['value', 'code'] },
+                    ],
+                    nest: true,
+                    raw: true
                 })
                 if (!company) {
                     resolve({
@@ -432,9 +437,9 @@ let getDetailCompanyById = (id) => {
                                     { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
                                     { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                                     { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
-                                    { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
+                                    { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
                                 ]
-                            }
+                            },
                         ]
                     })
                     resolve({

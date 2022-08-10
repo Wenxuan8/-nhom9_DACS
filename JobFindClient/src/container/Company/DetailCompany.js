@@ -24,8 +24,17 @@ const DetailCompany = () => {
         }
     }, [])
 
+    const copyLink = () => {
+        let copyText = document.getElementById("mylink");
 
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText.value);
+    }
+    console.log(dataCompany)
     return (
         <div className='container-detail-company'>
             <div className="company-cover">
@@ -53,7 +62,10 @@ const DetailCompany = () => {
                             </div>
                         </div>
                         <div className="box-follow">
-                            <a className="btn btn-follow btn-primary-hover">Theo dõi công ty</a>
+                            
+                                
+                                <a style={{background: dataCompany.censorData.code === 'CS2' ? 'yellow' : dataCompany.censorData.code!=='CS1' ? 'red' : '' }} className="btn btn-follow btn-primary-hover">{dataCompany.censorData.value}</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -155,9 +167,9 @@ const DetailCompany = () => {
                                 <div className="box-body">
                                     <p>Sao chép đường dẫn</p>
                                     <div className="box-copy">
-                                        <input type="text" defaultValue={window.location.href} className="url-copy" readOnly />
+                                        <input id='mylink' type="text" defaultValue={window.location.href} className="url-copy" readOnly />
                                         <div className="btn-copy">
-                                            <button className="btn-copy-url"><i className="fa-regular fa-copy" /></button>
+                                            <button onClick={copyLink} className="btn-copy-url"><i className="fa-regular fa-copy" /></button>
                                         </div>
                                     </div>
                                     <p>Chia sẻ qua mạng xã hội</p>

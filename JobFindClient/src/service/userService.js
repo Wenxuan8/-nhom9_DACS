@@ -132,10 +132,8 @@ const activePostService = (data) => {
     return axios.put(`/api/active-post`, data)
 
 }
-const banPostService = (postId) => {
-    return axios.put(`/api/ban-post`, {
-        id: postId
-    })
+const banPostService = (data) => {
+    return axios.put(`/api/ban-post`, data)
 }
 const acceptPostService = (data) => {
     return axios.put(`/api/accept-post`, data)

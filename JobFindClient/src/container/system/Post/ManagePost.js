@@ -6,12 +6,18 @@ import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import NoteModal from '../../../components/modal/NoteModal';
 
 const ManagePost = () => {
     const [dataPost, setdataPost] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
+    const [propsModal, setPropsModal] = useState({
+        isActive: false,
+        handlePost: () => { },
+        postId: ''
+    })
     useEffect(() => {
         try {
             const userData = JSON.parse(localStorage.getItem('userData'));
@@ -66,34 +72,11 @@ const ManagePost = () => {
             setdataPost(arrData.data)
         }
     }
-    let handleBanPost = async (id) => {
-        let res = await banPostService(id)
-        if (res && res.errCode === 0) {
-            let arrData = []
-            if (user.roleCode == 'ADMIN') {
-                arrData = await getAllPostByRoleAdminService({
-                    limit: PAGINATION.pagerow,
-                    offset: numberPage * PAGINATION.pagerow,
-                })
-            }
-            else {
-                arrData = await getAllPostByAdminService({
-                    limit: PAGINATION.pagerow,
-                    offset: numberPage * PAGINATION.pagerow,
-                    companyId: user.companyId
-                })
-            }
-            if (arrData && arrData.errCode === 0) {
-                setdataPost(arrData.data)
-            }
-            toast.success(res.errMessage)
-        } else {
-            toast.error(res.errMessage)
-        }
-    }
-    let handleActivePost = async (id) => {
-        let res = await activePostService({
-            id: id
+    let handleBanPost = async (id, note) => {
+        let res = await banPostService({
+            postId: id,
+            userId: user.id,
+            note: note
         })
         if (res && res.errCode === 0) {
             let arrData = []
@@ -118,10 +101,41 @@ const ManagePost = () => {
             toast.error(res.errMessage)
         }
     }
-    let handleAccecptPost = async (id,statusCode) => {
+    let handleActivePost = async (id, note) => {
+        let res = await activePostService({
+            id: id,
+            userId: user.id,
+            note: note
+        })
+        if (res && res.errCode === 0) {
+            let arrData = []
+            if (user.roleCode == 'ADMIN') {
+                arrData = await getAllPostByRoleAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                })
+            }
+            else {
+                arrData = await getAllPostByAdminService({
+                    limit: PAGINATION.pagerow,
+                    offset: numberPage * PAGINATION.pagerow,
+                    companyId: user.companyId
+                })
+            }
+            if (arrData && arrData.errCode === 0) {
+                setdataPost(arrData.data)
+            }
+            toast.success(res.errMessage)
+        } else {
+            toast.error(res.errMessage)
+        }
+    }
+    let handleAccecptPost = async (id, note = null, statusCode = 'PS2') => {
         let res = await acceptPostService({
             id: id,
-            statusCode: statusCode
+            statusCode: statusCode,
+            note: note,
+            userId: user.id
         })
         if (res && res.errCode === 0) {
             let arrData = []
@@ -206,18 +220,28 @@ const ManagePost = () => {
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
                                                         {user.roleCode == 'ADMIN' ? (item.statusCode == 'PS1' ? <>
-                                                            <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleBanPost(item.id)}  >Chặn</a>
+                                                            <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => setPropsModal({
+                                                                isActive: true,
+                                                                handlePost: handleBanPost,
+                                                                postId: item.id
+                                                            })}  >Chặn</a>
                                                             &nbsp; &nbsp;
                                                         </>
                                                             : item.statusCode == 'PS4' ? <>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleActivePost(item.id)}  >Mở lại</a>
-                                                            </> :  <>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleAccecptPost(item.id,'PS1')}  >Duyệt</a>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer', marginLeft:'10px' }} onClick={() => handleAccecptPost(item.id,'PS2')}  >Từ chối</a>
-                                                            </> ) : <></>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => setPropsModal({
+                                                                    isActive: true,
+                                                                    handlePost: handleActivePost,
+                                                                    postId: item.id
+                                                                })}  >Mở lại</a>
+                                                            </> : <>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleAccecptPost(item.id, '', 'PS1')}  >Duyệt</a>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer', marginLeft: '10px' }} onClick={() => setPropsModal({
+                                                                    isActive: true,
+                                                                    handlePost: handleAccecptPost,
+                                                                    postId: item.id
+                                                                })}  >Từ chối</a>
+                                                            </>) : <></>
                                                         }
-
-
                                                     </td>
                                                 </tr>
                                             )
@@ -249,7 +273,11 @@ const ManagePost = () => {
                 </div>
 
             </div>
-
+            <NoteModal isOpen={propsModal.isActive} onHide={() => setPropsModal({
+                isActive: false,
+                handlePost: () => { },
+                postId: ''
+            })} postId={propsModal.postId} handlePost={propsModal.handlePost} />
         </div>
     )
 }
