@@ -183,12 +183,12 @@ let handleBanPost = (data) => {
                         userId: data.userId
                     })
                     let user = await db.User.findOne({
-                        where: { id: foundPost.userId},
+                        where: { id: foundPost.userId },
                         attributes: {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note,user.email)
+                    sendmail(data.note, user.email)
 
                     resolve({
                         errCode: 0,
@@ -231,12 +231,12 @@ let handleActivePost = (data) => {
                         userId: data.userId
                     })
                     let user = await db.User.findOne({
-                        where: { id: foundPost.userId},
+                        where: { id: foundPost.userId },
                         attributes: {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note,user.email)
+                    sendmail(data.note, user.email)
                     resolve({
                         errCode: 0,
                         errMessage: 'Đã mở lại trạng thái chờ duyệt'
@@ -278,16 +278,16 @@ let handleAcceptPost = (data) => {
                     let note = data.statusCode == "PS1" ? "Đã duyệt bài thành công" : data.note
                     await db.Note.create({
                         postId: foundPost.id,
-                        note:note,
+                        note: note,
                         userId: data.userId
                     })
                     let user = await db.User.findOne({
-                        where: { id: foundPost.userId},
+                        where: { id: foundPost.userId },
                         attributes: {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(note,user.email)
+                    sendmail(note, user.email)
                     resolve({
                         errCode: 0,
                         errMessage: data.statusCode == "PS1" ? 'Duyệt bài thành công' : 'Đã từ chối bài thành công'
@@ -645,6 +645,41 @@ let getStatisticalTypePost = (data) => {
     })
 }
 
+let getListNoteByPost = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let res = await db.Note.findAndCountAll({
+                    where: {postId: data.id},
+                    limit: +data.limit,
+                    offset: +data.offset,
+                    include: [
+                        {model: db.User , as: 'userNoteData' ,
+                            attributes: {
+                                exclude: ['userId']
+                            }
+                        }
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                resolve({
+                    errCode: 0,
+                    data: res.rows,
+                    count: res.count
+                })
+
+            }
+        } catch (error) {
+            reject(error.message)
+        }
+    })
+}
 
 module.exports = {
     handleCreateNewPost: handleCreateNewPost,
@@ -657,4 +692,5 @@ module.exports = {
     handleActivePost: handleActivePost,
     getFilterPost: getFilterPost,
     getStatisticalTypePost: getStatisticalTypePost,
+    getListNoteByPost: getListNoteByPost
 }

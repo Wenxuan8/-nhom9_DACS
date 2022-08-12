@@ -34,6 +34,7 @@ import BuyPost from './Post/BuyPost';
 import PaymentSuccess from './Post/BuySucces';
 import AddpackagePost from './PackagePost/AddPackagePost';
 import ManagePackagePost from './PackagePost/ManagePackagePost';
+import NotePost from './Post/NotePost';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -316,6 +317,9 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/list-cv/:id">
                                     <ManageCv />
+                                </Route>
+                                <Route exact path="/admin/note/:id">
+                                    <NotePost />
                                 </Route>
                                 <Route exact path="/admin/user-cv/:id">
                                     <UserCv />

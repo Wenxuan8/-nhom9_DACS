@@ -162,6 +162,9 @@ const getStatisticalTypePost = (limit) => {
     return axios.get(`/api/get-statistical-post?limit=${limit}`)
 }
 
+const getListNoteByPost = (data) => {
+    return axios.get(`/api/get-note-by-post?limit=${data.limit}&offset=${data.offset}&id=${data.id}`)
+}
 //======================== PACKAGE ====================================//
 const getPackageByType = (isHot) => {
     return axios.get(`/api/get-package-by-type?isHot=${isHot}`)
@@ -205,5 +208,6 @@ export {
     createCompanyService, getDetailCompanyByUserId, updateCompanyService, RecruitmentService, getAllUserByCompanyIdService, QuitCompanyService,
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
-    setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost
+    setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
+    getListNoteByPost
 }

@@ -58,7 +58,7 @@ let initWebRoutes = (app) => {
     router.get('/api/get-detail-post-by-id', postController.getDetailPostById)
     router.get('/api/get-filter-post', postController.getFilterPost)
     router.get('/api/get-statistical-post', postController.getStatisticalTypePost)
-
+    router.get('/api/get-note-by-post', postController.getListNoteByPost)
     //==================API PACKAGE==========================//
     router.get('/api/get-package-by-type', packageController.getPackageByType)
     router.get('/api/get-package-by-id', packageController.getPackageById)

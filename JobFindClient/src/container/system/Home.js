@@ -246,17 +246,17 @@ const Home = () => {
                                                 )
                                             })
                                         }
+                                    </tbody>
+                                </table>
                                         {
                                             dataCv && dataCv.length == 0 && (
-                                                <div style={{ textAlign: 'center', width: "480%" }}>
+                                                <div style={{ textAlign: 'center' }}>
 
                                                     Không có dữ liệu
 
                                                 </div>
                                             )
                                         }
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                         <ReactPaginate
@@ -329,17 +329,17 @@ const Home = () => {
                                                 )
                                             })
                                         }
+                                    </tbody>
+                                </table>
                                         {
                                             dataStatisticalPackagePost && dataStatisticalPackagePost.length == 0 && (
-                                                <div style={{ textAlign: 'center', width: "400%" }}>
+                                                <div style={{ textAlign: 'center'}}>
 
                                                     Không có dữ liệu
 
                                                 </div>
                                             )
                                         }
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                         <ReactPaginate
