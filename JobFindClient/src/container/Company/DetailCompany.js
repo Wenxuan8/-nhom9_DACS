@@ -20,7 +20,6 @@ const DetailCompany = () => {
                 }
             }
             fetchCompany()
-
         }
     }, [])
 
@@ -34,7 +33,6 @@ const DetailCompany = () => {
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(copyText.value);
     }
-    console.log(dataCompany)
     return (
         <div className='container-detail-company'>
             <div className="company-cover">
@@ -64,7 +62,7 @@ const DetailCompany = () => {
                         <div className="box-follow">
                             
                                 
-                                <a style={{background: dataCompany.censorData.code === 'CS2' ? 'yellow' : dataCompany.censorData.code!=='CS1' ? 'red' : '' }} className="btn btn-follow btn-primary-hover">{dataCompany.censorData.value}</a>
+                                <a style={{background: dataCompany.censorData && (dataCompany.censorData.code === 'CS2' ? 'yellow' : dataCompany.censorData.code!=='CS1' ? 'red' : '' )}} className="btn btn-follow btn-primary-hover">{dataCompany.censorData && dataCompany.censorData.value}</a>
                             
                         </div>
                     </div>
@@ -141,7 +139,10 @@ const DetailCompany = () => {
                                             )
                                         })
                                     }
-
+                                    {
+                                        dataCompany && dataCompany.postData && dataCompany.postData.length === 0 && 
+                                        <div style={{textAlign:'center'}}>Không có bài đăng nào</div>
+                                    }
 
                                     <div className="text-center">
                                     </div>

@@ -30,7 +30,13 @@ const Login = () => {
 
             }
             else {
-                history.push("/")
+                const lastUrl = localStorage.getItem("lastUrl")
+                if (lastUrl) {
+                    window.location.href = lastUrl
+                }
+                else {
+                    history.push("/")
+                }
             }
         }
         else {

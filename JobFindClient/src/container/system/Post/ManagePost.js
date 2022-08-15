@@ -219,7 +219,10 @@ const ManagePost = () => {
                                                                 &nbsp; &nbsp;
                                                             </>
                                                         }
+                                                        { 
+                                                        item.statusCode.code !== 'PS4' &&
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Sửa</Link>
+                                                        }
                                                         &nbsp; &nbsp;
                                                         {user.roleCode == 'ADMIN' ? (item.statusCode == 'PS1' ? <>
                                                             <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => setPropsModal({
@@ -237,11 +240,14 @@ const ManagePost = () => {
                                                                 })}  >Mở lại</a>
                                                             </> : <>
                                                                 <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleAccecptPost(item.id, '', 'PS1')}  >Duyệt</a>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer', marginLeft: '10px' }} onClick={() => setPropsModal({
-                                                                    isActive: true,
-                                                                    handlePost: handleAccecptPost,
-                                                                    postId: item.id
-                                                                })}  >Từ chối</a>
+                                                                {
+                                                                    item.statusCode !== 'PS2' &&
+                                                                    <a style={{ color: '#4B49AC', cursor: 'pointer', marginLeft: '10px' }} onClick={() => setPropsModal({
+                                                                        isActive: true,
+                                                                        handlePost: handleAccecptPost,
+                                                                        postId: item.id
+                                                                    })}  >Từ chối</a>
+                                                                }
                                                             </>) : <></>
                                                         }
                                                     </td>
@@ -278,8 +284,8 @@ const ManagePost = () => {
             <NoteModal isOpen={propsModal.isActive} onHide={() => setPropsModal({
                 isActive: false,
                 handlePost: () => { },
-                postId: ''
-            })} postId={propsModal.postId} handlePost={propsModal.handlePost} />
+                id: ''
+            })} id={propsModal.postId} handleFunc={propsModal.handlePost} />
         </div>
     )
 }

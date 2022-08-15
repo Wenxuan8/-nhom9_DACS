@@ -44,7 +44,7 @@ const Header = () => {
                             </Link>
                             <a onClick={() => handleLogout()} className="dropdown-item">
                                 <i className="ti-power-off text-primary" />
-                                Logout
+                                Đăng xuất
                             </a>
                         </div>
                     </li>

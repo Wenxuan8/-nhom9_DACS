@@ -2,7 +2,34 @@ const { Op, and, where } = require("sequelize");
 import e from "express";
 import db from "../models/index";
 const cloudinary = require('../utils/cloudinary');
+require('dotenv').config();
+var nodemailer = require('nodemailer');
+let sendmail = (note, userMail, link = null) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD,
+        }
+    });
 
+    var mailOptions = {
+        from: process.env.EMAIL_APP,
+        to: userMail,
+        subject: 'Thông báo từ trang Job Finder',
+        html: note
+    };
+    if (link)
+    {
+        mailOptions.html = note + ` xem thông tin <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+    }
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+        } else {
+        }
+    });
+}
 let checkCompany = (name, id = null) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
@@ -288,6 +315,55 @@ let handleUnBanCompany = (companyId) => {
         }
     })
 }
+let handleAccecptCompany = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (!data.companyId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Missing required parameters !`
+                })
+            } else {
+                let foundCompany = await db.Company.findOne({
+                    where: { id: data.companyId },
+                    raw: false
+                })
+                if (foundCompany) {
+                    if (data.note == 'null')
+                    {
+                        foundCompany.censorCode = "CS1"
+                    }
+                    else {
+                        foundCompany.censorCode = "CS2"
+                    }
+                    await foundCompany.save()
+                    let note = data.note != 'null' ? data.note : "Đã duyệt công ty thành công"
+                    let user = await db.User.findOne({
+                        where: { id: foundCompany.userId },
+                        attributes: {
+                            exclude: ['userId']
+                        }
+                    })
+                    sendmail(note, user.email)
+                    resolve({
+                        errCode: 0,
+                        errMessage: data.note != 'null' ? "Đã quay lại trạng thái chờ" : "Đã duyệt công ty thành công"
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'Không tồn tại bài viết'
+                    })
+                }
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 let handleAddUserCompany = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -453,18 +529,26 @@ let getDetailCompanyById = (id) => {
         }
     })
 }
-let getDetailCompanyByUserId = (userId) => {
+let getDetailCompanyByUserId = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!userId) {
+            if (!data.userId && !data.companyId) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                let company = await db.Company.findOne({
-                    where: { userId: userId }
-                })
+                let company
+                if (data.userId !== 'null') {
+                    company = await db.Company.findOne({
+                        where: { userId: data.userId }
+                    })
+                }
+                else {
+                    company = await db.Company.findOne({
+                        where: { id: data.companyId }
+                    })
+                }
                 if (!company) {
                     resolve({
                         errCode: 2,
@@ -583,6 +667,42 @@ let handleQuitCompany = (data) => {
         }
     })
 }
+let getAllCompanyByAdmin = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.limit || data.offset === '') {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let company = await db.Company.findAndCountAll({
+                    order: [['createdAt', 'DESC']],
+                    limit: +data.limit,
+                    offset: +data.offset,
+                    attributes: {
+                        exclude: ['detailPostId']
+                    },
+                    nest: true,
+                    raw: true,
+                    include: [
+                        { model: db.Allcode, as: 'statusCompanyData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'censorData', attributes: ['value', 'code'] }
+                    ]
+                })
+                resolve({
+                    errCode: 0,
+                    data: company.rows,
+                    count: company.count
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+
+}
 module.exports = {
     handleCreateNewCompany: handleCreateNewCompany,
     handleUpdateCompany: handleUpdateCompany,
@@ -593,5 +713,7 @@ module.exports = {
     getDetailCompanyById: getDetailCompanyById,
     getDetailCompanyByUserId: getDetailCompanyByUserId,
     getAllUserByCompanyId: getAllUserByCompanyId,
-    handleQuitCompany: handleQuitCompany
+    handleQuitCompany: handleQuitCompany,
+    getAllCompanyByAdmin: getAllCompanyByAdmin,
+    handleAccecptCompany: handleAccecptCompany
 }

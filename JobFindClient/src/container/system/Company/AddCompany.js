@@ -10,7 +10,9 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import { Spinner, Modal } from 'reactstrap'
 import '../../../components/modal/modal.css'
+import { useParams } from 'react-router-dom';
 const AddCompany = () => {
+    const { id } = useParams()
     const mdParser = new MarkdownIt();
     const [user, setUser] = useState({})
     const [isLoading, setIsLoading] = useState(false)
@@ -20,14 +22,17 @@ const AddCompany = () => {
     });
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
-        if (userData) {
+        if (userData && userData.roleCode !== "ADMIN") {
 
             fetchCompany(userData.id)
         }
+        else if (id && userData.roleCode === 'ADMIN') {
+            fetchCompany(null,id)
+        }
         setUser(userData)
     }, [])
-    let fetchCompany = async (userId) => {
-        let res = await getDetailCompanyByUserId(userId)
+    let fetchCompany = async (userId,companyId = null) => {
+        let res = await getDetailCompanyByUserId(userId,companyId)
         if (res && res.errCode === 0) {
 
             setInputValues({
@@ -61,7 +66,6 @@ const AddCompany = () => {
         if (file) {
             let base64 = await CommonUtils.getBase64(file);
             let objectUrl = URL.createObjectURL(file)
-            console.log(base64)
             setInputValues({ ...inputValues, [name]: base64, [`${name}Review`]: objectUrl })
 
         }

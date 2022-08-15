@@ -1,12 +1,13 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import SendCvModal from '../../components/modal/SendCvModal'
 import { getDetailPostByIdService } from '../../service/userService'
 import moment from 'moment';
 import CommonUtils from '../../util/CommonUtils';
 const JobDetail = () => {
+    const history = useHistory()
     const { id } = useParams()
     const [isActiveModal, setAcitveModal] = useState(false)
     const [dataPost, setDataPost] = useState({});
@@ -32,7 +33,14 @@ const JobDetail = () => {
             if (userData)
                 setAcitveModal(true)
             else
+            {
                 toast.error("Xin hãy đăng nhập để có thể thực hiện nộp CV")
+                setTimeout(()=>{
+                    localStorage.setItem("lastUrl",window.location.href)
+                    history.push("/login")
+                },1000)
+            }
+
         }
         else
             toast.error("Hạn ứng tuyển đã hết")
@@ -134,7 +142,7 @@ const JobDetail = () => {
                                             <li>Địa chỉ     : <span>{dataPost.companyData.address}</span></li>
                                             <li>Điện thoại  : <span>{dataPost.companyData.phonenumber}</span></li>
                                             <li>Mã số thuế  : <span>{dataPost.companyData.taxnumber}</span></li>
-                                            <li>Số nhân viên: <span>{dataPost.companyData.amount}</span></li>
+                                            <li>Số nhân viên: <span>{dataPost.companyData.amountEmployer}</span></li>
                                         </ul>
 
                                     </div>

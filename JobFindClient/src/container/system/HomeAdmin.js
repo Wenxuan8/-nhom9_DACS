@@ -35,6 +35,7 @@ import PaymentSuccess from './Post/BuySucces';
 import AddpackagePost from './PackagePost/AddPackagePost';
 import ManagePackagePost from './PackagePost/ManagePackagePost';
 import NotePost from './Post/NotePost';
+import ManageCompany from './Company/ManageCompany';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -291,6 +292,9 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/edit-company">
                                     <AddCompany />
                                 </Route>
+                                <Route exact path="/admin/edit-company-admin/:id">
+                                    <AddCompany />
+                                </Route>
                                 <Route exact path="/admin/recruitment">
                                     <Recruitment />
                                 </Route>
@@ -329,6 +333,9 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/user-info/">
                                     <UserInfo />
+                                </Route>
+                                <Route exact path="/admin/list-company-admin/">
+                                    <ManageCompany />
                                 </Route>
                             </div>
                             {/* content-wrapper ends */}

@@ -2,7 +2,7 @@ import db from "../models/index";
 const { Op, and } = require("sequelize");
 require('dotenv').config();
 var nodemailer = require('nodemailer');
-let sendmail = (note, userMail) => {
+let sendmail = (note, userMail, link = null) => {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -15,8 +15,12 @@ let sendmail = (note, userMail) => {
         from: process.env.EMAIL_APP,
         to: userMail,
         subject: 'Thông báo từ trang Job Finder',
-        text: note
+        html: note
     };
+    if (link)
+    {
+        mailOptions.html = note + ` xem thông tin <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+    }
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -188,7 +192,7 @@ let handleBanPost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note, user.email)
+                    sendmail(data.note, user.email,`/admin/note/${foundPost.id}`)
 
                     resolve({
                         errCode: 0,
@@ -236,7 +240,7 @@ let handleActivePost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note, user.email)
+                    sendmail(data.note, user.email,`/admin/note/${foundPost.id}`)
                     resolve({
                         errCode: 0,
                         errMessage: 'Đã mở lại trạng thái chờ duyệt'
@@ -287,7 +291,13 @@ let handleAcceptPost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(note, user.email)
+                    if (data.statusCode == "PS1")
+                    {
+                        sendmail(note, user.email)
+                    }
+                    else {
+                        sendmail(data.note, user.email,`/admin/note/${foundPost.id}`)
+                    }
                     resolve({
                         errCode: 0,
                         errMessage: data.statusCode == "PS1" ? 'Duyệt bài thành công' : 'Đã từ chối bài thành công'

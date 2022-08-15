@@ -9,6 +9,7 @@ function NoteModal(props) {
     const [inputValue, setInputValue] = useState({
         note: '',
     })
+    console.log(props.id)
     const handleChange = (event) => {
         const { name, value } = event.target
         setInputValue({
@@ -17,8 +18,9 @@ function NoteModal(props) {
         })
     }
     const handlePost = () => {
+        console.log(props)
         setIsLoading(true)
-        props.handlePost(props.postId,inputValue.note)
+        props.handleFunc(props.id,inputValue.note)
         setIsLoading(false)
         props.onHide()
     }

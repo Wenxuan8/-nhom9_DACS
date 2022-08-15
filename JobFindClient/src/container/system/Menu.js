@@ -113,6 +113,18 @@ const Menu = () => {
                             </div>
                         </li>
                         <li className="nav-item relative">
+                            <a className="nav-link" data-toggle="collapse" href="#company" aria-expanded="false" aria-controls="company">
+                                <i class="fa-solid fa-clipboard menu-icon"></i>
+                                <span className="menu-title">Quản lý các công ty</span>
+                                <i className="menu-arrow" />
+                            </a>
+                            <div className="collapse" id="company">
+                                <ul className="nav flex-column sub-menu">
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/list-company-admin/">Danh sách các công ty</Link ></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#post" aria-expanded="false" aria-controls="post">
                                 <i class="fa-solid fa-clipboard menu-icon"></i>
                                 <span className="menu-title">Quản lý bài đăng</span>

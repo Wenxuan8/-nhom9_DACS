@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom'
+import { toast } from 'react-toastify';
 import './header.scss';
 
 const Header = () => {
@@ -8,6 +9,13 @@ const Header = () => {
     const [user, setUser] = useState({})
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData && userData.roleCode !== 'CANDIDATE')
+        {
+            toast.error("Vai trò của bạn không làm việc ở đây")
+            setTimeout(() => {
+                window.location.href = "/admin"
+            }, 1000);
+        }
         setUser(userData)
     }, [])
 
@@ -44,7 +52,7 @@ const Header = () => {
                                                     <li ><NavLink to="/" isActive={() => window.scrollTo(0, 0)}>Trang chủ</NavLink></li>
                                                     <li ><NavLink to="/job" isActive={() => window.scrollTo(0, 0)}>Việc làm </NavLink></li>
                                                     <li ><NavLink to="/company" isActive={() => window.scrollTo(0, 0)}>Công ty </NavLink></li>
-                                                    <li ><NavLink to="#" isActive={() => window.scrollTo(0, 0)}>Giới thiệu</NavLink></li>
+                                                    <li ><NavLink to="/about" isActive={() => window.scrollTo(0, 0)}>Giới thiệu</NavLink></li>
                                                     {/* <li><NavLink to="/contact" >Contact</NavLink></li> */}
                                                 </ul>
                                             </nav>

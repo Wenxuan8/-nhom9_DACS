@@ -40,7 +40,8 @@ let initWebRoutes = (app) => {
     router.get('/api/get-detail-company-by-userId', companyController.getDetailCompanyByUserId)
     router.get('/api/get-all-user-by-companyId', companyController.getAllUserByCompanyId)
     router.put('/api/quit-company', companyController.handleQuitCompany)
-
+    router.get('/api/get-all-company', companyController.getAllCompanyByAdmin)
+    router.put('/api/accecpt-company', companyController.handleAccecptCompany)
     //==================API CV==========================//
     router.post('/api/create-new-cv', cvController.handleCreateNewCV)
     router.get('/api/get-all-list-cv-by-post', cvController.getAllListCvByPost)

@@ -90,8 +90,8 @@ const createCompanyService = (data) => {
     return axios.post(`/api/create-new-company`, data)
 
 }
-const getDetailCompanyByUserId = (userId) => {
-    return axios.get(`/api/get-detail-company-by-userId?userId=${userId}`)
+const getDetailCompanyByUserId = (userId,companyId) => {
+    return axios.get(`/api/get-detail-company-by-userId?userId=${userId}&companyId=${companyId}`)
 
 }
 const getDetailCompanyById = (id) => {
@@ -118,6 +118,16 @@ const getListCompany = (data) => {
     return axios.get(`/api/get-list-company?limit=${data.limit}&offset=${data.offset}`)
 
 }
+
+const getAllCompany = (data) => {
+    return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}`)
+}
+
+const accecptCompanyService = (data) => {
+    return axios.put(`/api/accecpt-company`, data)
+
+}
+
 //======================== POST ====================================//
 
 const createPostService = (data) => {
@@ -209,5 +219,5 @@ export {
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
     setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
-    getListNoteByPost
+    getListNoteByPost , getAllCompany , accecptCompanyService
 }
