@@ -18,12 +18,12 @@ const AddCompany = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [inputValues, setInputValues] = useState({
         image: '', coverImage: '', imageReview: '', coverImageReview: '', isOpen: false, name: '', phonenumber: '', address: '', website: '',
-        amountEmployer: '', taxnumber: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: ''
+        amountEmployer: '', taxnumber: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '', file: '' , imageClick: '',
+        isFileChange: false
     });
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         if (userData && userData.roleCode !== "ADMIN") {
-
             fetchCompany(userData.id)
         }
         else if (id && userData.roleCode === 'ADMIN') {
@@ -50,7 +50,8 @@ const AddCompany = () => {
                 ["imageReview"]: res.data.thumbnail,
                 ["coverImageReview"]: res.data.coverimage,
                 ["isActionADD"]: false,
-                ["id"]: res.data.id
+                ["id"]: res.data.id,
+                ["file"] : res.data.file
             })
         }
     }
@@ -71,15 +72,30 @@ const AddCompany = () => {
         }
 
     }
-    let openPreviewImage = () => {
-        if (!inputValues.imageReview) return;
 
-        setInputValues({ ...inputValues, ["isOpen"]: true })
+    let handleOnChangeFile = async (event) => {
+        let data = event.target.files;
+        let file = data[0];
+        if (file) {
+            if (file.size > 2097152)
+            {
+                toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB")
+                return
+            }
+            let base64 = await CommonUtils.getBase64(file);
+
+            setInputValues({...inputValues,file : base64,isFileChange: true})
+        }
+    }
+    let openPreviewImage = (event) => {
+        const  name  = event.target.getAttribute('name')
+        if (!inputValues.imageReview && !inputValues.coverImageReview) return;
+        setInputValues({ ...inputValues,imageClick: name === 'cover' ? inputValues.coverImage : inputValues.imageReview,["isOpen"]: true })
     }
     let handleSaveCompany = async () => {
         setIsLoading(true)
         if (inputValues.isActionADD === true) {
-            let res = await createCompanyService({
+            let params = {
                 name: inputValues.name,
                 phonenumber: inputValues.phonenumber,
                 address: inputValues.address,
@@ -90,8 +106,12 @@ const AddCompany = () => {
                 amountEmployer: inputValues.amountEmployer,
                 taxnumber: inputValues.taxnumber,
                 website: inputValues.website,
-                userId: user.id
-            })
+                userId: user.id,
+            }
+            if (inputValues.file) {
+                params.file = inputValues.file
+            }
+            let res = await createCompanyService(params)
             setTimeout(() => {
                 setIsLoading(false)
                 if (res && res.errCode === 0) {
@@ -103,7 +123,7 @@ const AddCompany = () => {
                 }
             }, 1000);
         } else {
-            let res = await updateCompanyService({
+            let params = {
                 name: inputValues.name,
                 phonenumber: inputValues.phonenumber,
                 address: inputValues.address,
@@ -115,7 +135,11 @@ const AddCompany = () => {
                 taxnumber: inputValues.taxnumber,
                 website: inputValues.website,
                 id: inputValues.id
-            })
+            }
+            if (inputValues.isFileChange) {
+                params.file = inputValues.file
+            }
+            let res = await updateCompanyService(params)
             setIsLoading(false)
             if (res && res.errCode === 0) {
                 toast.success(res.errMessage)
@@ -209,7 +233,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hiển thị</label>
                                             <div className="col-sm-9">
-                                                <div style={{ backgroundImage: `url(${inputValues.imageReview})` }} onClick={() => openPreviewImage()} className="box-img-preview"></div>
+                                                <div name='review' style={{ backgroundImage: `url(${inputValues.imageReview})` }} onClick={(event) => openPreviewImage(event)} className="box-img-preview"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -227,10 +251,29 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hiển thị</label>
                                             <div className="col-sm-9">
-                                                <div style={{ backgroundImage: `url(${inputValues.coverImageReview})` }} onClick={() => openPreviewImage()} className="box-img-preview"></div>
+                                                <div name='cover' style={{ backgroundImage: `url(${inputValues.coverImageReview})` }} onClick={(event) => openPreviewImage(event)} className="box-img-preview"></div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group row">
+                                            <label className="col-sm-3 col-form-label">Hồ sơ chứng nhận</label>
+                                            <div className="col-sm-9">
+                                                <input name='coverImage' onChange={(event) => handleOnChangeFile(event)} accept='.pdf' type="file" className="form-control form-file" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {
+                                        inputValues.file &&
+                                    <div className="col-md-12">
+                                        <div className="form-group row">
+                                            <label className="col-sm-3 col-form-label">Hiển thị</label>
+                                            <iframe width={'100%'} height={'700px'} src={inputValues.file}></iframe>
+                                        </div>
+                                    </div>
+                                    }
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12">
@@ -257,7 +300,7 @@ const AddCompany = () => {
                 </div>
                 {
                     inputValues.isOpen === true &&
-                    <Lightbox mainSrc={inputValues.imageReview}
+                    <Lightbox mainSrc={inputValues.imageClick}
                         onCloseRequest={() => setInputValues({ ...inputValues, ["isOpen"]: false })}
                     />
                 }

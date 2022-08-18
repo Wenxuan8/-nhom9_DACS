@@ -76,7 +76,7 @@ const ManageCompany = () => {
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
-                        <h4 className="card-title">Danh sách bài đăng</h4>
+                        <h4 className="card-title">Danh sách công ty</h4>
 
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">

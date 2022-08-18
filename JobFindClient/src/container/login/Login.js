@@ -32,6 +32,7 @@ const Login = () => {
             else {
                 const lastUrl = localStorage.getItem("lastUrl")
                 if (lastUrl) {
+                    localStorage.removeItem("lastUrl")
                     window.location.href = lastUrl
                 }
                 else {

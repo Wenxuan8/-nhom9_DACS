@@ -54,7 +54,6 @@ const UserCv = () => {
                     <div className="card-body">
                         <h4 className="card-title">FILE CV</h4>
                         <iframe width={'100%'} height={'700px'} src={dataCV.file}></iframe>
-
                     </div>
                 </div>
 

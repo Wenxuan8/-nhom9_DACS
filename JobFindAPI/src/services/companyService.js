@@ -97,7 +97,7 @@ let handleCreateNewCompany = (data) => {
         try {
             if (!data.name || !data.phonenumber || !data.address
                 || !data.descriptionHTML || !data.descriptionMarkdown
-                || !data.amountEmployer || !data.userId || data.censorCode) {
+                || !data.amountEmployer || !data.userId) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
@@ -138,7 +138,7 @@ let handleCreateNewCompany = (data) => {
                         taxnumber: data.taxnumber,
                         statusCode: 'S1',
                         userId: data.userId,
-                        censorCode: data.censorCode,
+                        censorCode: data.file ? 'CS3' : 'CS2',
                         file: data.file ? data.file : null
                     })
                     let user = await db.User.findOne({
@@ -226,7 +226,10 @@ let handleUpdateCompany = (data) => {
                         res.amountEmployer = data.amountEmployer
                         res.taxnumber = data.taxnumber
                         res.phonenumber = data.phonenumber
-                        res.file = data.file ? data.file : null
+                        if (data.file) {
+                            res.file = data.file
+                            res.censorCode = 'CS3'
+                        }
                         await res.save();
                         resolve({
                             errCode: 0,
@@ -518,6 +521,10 @@ let getDetailCompanyById = (id) => {
                             },
                         ]
                     })
+                    if (company.file)
+                    {
+                        company.file = new Buffer(company.file, 'base64').toString('binary')
+                    }
                     resolve({
                         errCode: 0,
                         data: company,
@@ -556,6 +563,9 @@ let getDetailCompanyByUserId = (data) => {
                     })
                 }
                 else {
+                    if (company.file) {
+                        company.file = new Buffer(company.file,'base64').toString('binary')
+                    }
                     resolve({
                         errCode: 0,
                         data: company,

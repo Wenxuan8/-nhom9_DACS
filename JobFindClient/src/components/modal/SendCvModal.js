@@ -30,6 +30,11 @@ function SendCvModal(props) {
         let data = event.target.files;
         let file = data[0];
         if (file) {
+            if (file.size > 2097152)
+            {
+                toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB")
+                return
+            }
             let base64 = await CommonUtils.getBase64(file);
             setInputValue({
                 ...inputValue,
@@ -72,7 +77,7 @@ function SendCvModal(props) {
                     <textarea placeholder='Giới thiệu sơ lược về bản thân để tăng sự yêu thích đối với nhà tuyển dụng' 
                     name='description' className='mt-2' style={{ width: "100%" }} rows='5' onChange={(event) => handleChange(event)}></textarea>
 
-                    <input type="file" className='mt-2' accept='.pdf,.doc,.docx'
+                    <input type="file" className='mt-2' accept='.pdf'
                     onChange={(event) => handleOnChangeFile(event)}></input>
                     {
                         inputValue.linkFile && <div><a href={inputValue.linkFile} style={{ color: 'blue' }} target='_blank'>Nhấn vào đây để xem lại CV của bạn </a></div>
