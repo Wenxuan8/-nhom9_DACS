@@ -151,6 +151,7 @@ const Menu = () => {
                                     <li className="nav-item relative"> <Link className="nav-link" to="/admin/edit-company/">Quản lý công ty</Link ></li>
                                     <li className="nav-item relative"> <Link className="nav-link" to="/admin/recruitment/">Tuyển dụng vào công ty</Link ></li>
                                     <li className="nav-item relative"> <Link className="nav-link" to="/admin/list-employer/">Danh sách nhân viên</Link ></li>
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/add-user/">Thêm nhân viên</Link ></li>
                                 </ul>
                             </div>
                         </li>

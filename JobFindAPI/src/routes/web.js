@@ -50,6 +50,7 @@ let initWebRoutes = (app) => {
     router.get('/api/get-statistical-cv', cvController.getStatisticalCv)    
     //==================API POST==========================//
     router.post('/api/create-new-post', postController.handleCreateNewPost)
+    router.post('/api/create-reup-post', postController.handleReupPost)
     router.put('/api/update-post', postController.handleUpdatePost)
     router.put('/api/active-post', postController.handleActivePost)
     router.put('/api/ban-post', postController.handleBanPost)

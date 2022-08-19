@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import DatePicker from '../../../components/input/DatePicker';
-import { createPostService, updatePostService, getDetailPostByIdService } from '../../../service/userService';
+import { createPostService, updatePostService, getDetailPostByIdService, reupPostService } from '../../../service/userService';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
@@ -12,6 +12,7 @@ import { Spinner, Modal } from 'reactstrap'
 import localization from 'moment/locale/vi';
 import moment from 'moment';
 import '../../../components/modal/modal.css'
+import ReupPostModal from '../../../components/modal/ReupPostModal';
 const AddPost = () => {
     const mdParser = new MarkdownIt();
     const [user, setUser] = useState({})
@@ -23,6 +24,10 @@ const AddPost = () => {
         name: '', categoryJobCode: '', addressCode: '', salaryJobCode: '', amount: '', timeEnd: '', categoryJoblevelCode: '', categoryWorktypeCode: '', experienceJobCode: '',
         genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '' , isHot: 0
     });
+    const [propsModal, setPropsModal] = useState({
+        isActive: false,
+        handlePost: ()=> {},
+    })
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         if (id) {
@@ -180,6 +185,19 @@ const AddPost = () => {
             }, 1000);
         }
     }
+    let handleReupPost = async (timeEnd)=> {
+        let res = await reupPostService({
+            userId: user.id,
+            postId: id,
+            timeEnd: timeEnd
+        })
+        if (res && res.errCode === 0) {
+            toast.success(res.errMessage)
+
+        } else {
+            toast.error(res.errMessage)
+        }
+    }
     return (
         <>
             <div className=''>
@@ -229,7 +247,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Thời gian KT</label>
                                             <div className="col-sm-9">
-                                                <DatePicker className="form-control" onChange={handleOnChangeDatePicker}
+                                                <DatePicker disabled={!inputValues.isActionADD} dis className="form-control" onChange={handleOnChangeDatePicker}
                                                     value={timeEnd}
                                                 />
                                             </div>
@@ -369,6 +387,17 @@ const AddPost = () => {
                                     <i class="ti-file btn1-icon-prepend"></i>
                                     Lưu
                                 </button>
+                                {
+                                    id && user.roleCode !== "ADMIN" && 
+                                <button onClick={() => setPropsModal({
+                                    ...propsModal,
+                                    isActive: true,
+                                    handlePost: handleReupPost
+                                })} type="button" className="ml-2 btn1 btn1-primary1 btn1-icon-text">
+                                    <i class="ti-file btn1-icon-prepend"></i>
+                                    Đăng lại
+                                </button>
+                                }
                             </form>
                         </div>
                     </div>
@@ -386,6 +415,10 @@ const AddPost = () => {
 
                 </Modal>
             }
+            <ReupPostModal isOpen={propsModal.isActive} onHide={() => setPropsModal({
+                ...propsModal,
+                isActive: false,
+            })} id={propsModal.postId} handleFunc={propsModal.handlePost} />
         </>
     )
 }

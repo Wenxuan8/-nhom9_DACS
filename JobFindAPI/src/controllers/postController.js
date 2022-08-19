@@ -12,6 +12,18 @@ let handleCreateNewPost = async (req, res) => {
         })
     }
 }
+let handleReupPost = async (req, res) => {
+    try {
+        let data = await postService.handleReupPost(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
 let handleUpdatePost = async (req, res) => {
     try {
         let data = await postService.handleUpdatePost(req.body);
@@ -147,5 +159,6 @@ module.exports = {
     handleAcceptPost: handleAcceptPost,
     getFilterPost: getFilterPost,
     getStatisticalTypePost: getStatisticalTypePost,
-    getListNoteByPost: getListNoteByPost
+    getListNoteByPost: getListNoteByPost,
+    handleReupPost : handleReupPost
 }

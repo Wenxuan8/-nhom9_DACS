@@ -65,7 +65,7 @@ let handleCreateNewUser = (data) => {
                     if (!data.email) {
                         data.email = 'nguyenletantai1102200@gmail.com'
                     }
-                    let user = await db.User.create({
+                    let params = {
                         firstName: data.firstName,
                         lastName: data.lastName,
                         address: data.address,
@@ -74,7 +74,11 @@ let handleCreateNewUser = (data) => {
                         dob: data.dob,
                         companyId: data.companyId,
                         email: data.email
-                    })
+                    }
+                    if (data.companyId){
+                        params.companyId = data.companyId
+                    }
+                    let user = await db.User.create(params)
                     if (user)
                     {
                         await db.Account.create({

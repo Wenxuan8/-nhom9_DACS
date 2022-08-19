@@ -134,6 +134,10 @@ const createPostService = (data) => {
     return axios.post(`/api/create-new-post`, data)
 
 }
+const reupPostService = (data) => {
+    return axios.post(`/api/create-reup-post`, data)
+
+}
 const updatePostService = (data) => {
     return axios.put(`/api/update-post`, data)
 
@@ -219,5 +223,5 @@ export {
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
     setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
-    getListNoteByPost , getAllCompany , accecptCompanyService
+    getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService
 }

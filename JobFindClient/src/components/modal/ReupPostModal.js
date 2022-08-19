@@ -2,23 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Spinner } from 'reactstrap';
 import {banPostService} from '../../service/userService'
+import DatePicker from '../input/DatePicker';
 import './modal.css'
-function NoteModal(props) {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+function ReupPostModal(props) {
     const [isLoading, setIsLoading] = useState(false)
     const [inputValue, setInputValue] = useState({
-        note: '',
+        timeEnd: '',
     })
-    const handleChange = (event) => {
-        const { name, value } = event.target
+    let handleOnChangeDatePicker = (date) => {
         setInputValue({
             ...inputValue,
-            [name]: value
+            timeEnd: new Date(date[0]).getTime()
         })
     }
     const handlePost = () => {
         setIsLoading(true)
-        props.handleFunc(props.id,inputValue.note)
+        props.handleFunc(inputValue.timeEnd)
         setIsLoading(false)
         props.onHide()
     }
@@ -27,12 +26,13 @@ function NoteModal(props) {
             <Modal isOpen={props.isOpen} className={'booking-modal-container'}
                 size="md" centered
             >
-                <p className='text-center'>Hãy gửi lời nhắn để nhà tuyển dụng</p>
+                <p className='text-center'>Hãy chọn thời gian kết thúc tuyển dụng</p>
                 <ModalBody>
-                    Nhập lời giới thiệu gửi đến nhà tuyển dụng
+                    Chọn thời gian kết thúc
                     <div>
-                    <textarea placeholder='Giải thích lý do cho nhà tuyển dụng' 
-                    name='note' className='mt-2' style={{ width: "100%" }} rows='5' onChange={(event) => handleChange(event)}></textarea>
+                    <DatePicker className="form-control" onChange={handleOnChangeDatePicker}
+                                                    value={inputValue.timeEnd}
+                                                />
                     </div>
                 </ModalBody>
                 <ModalFooter style={{ justifyContent: 'space-between' }}>
@@ -64,4 +64,4 @@ function NoteModal(props) {
     );
 }
 
-export default NoteModal;
+export default ReupPostModal;
