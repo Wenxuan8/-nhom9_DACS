@@ -6,36 +6,40 @@ import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import CommonUtils from '../../../util/CommonUtils';
+import {Input} from 'antd'
+
 const ManageUser = () => {
     const [user, setUser] = useState({})
     const [dataUser, setdataUser] = useState([]);
     const [count, setCount] = useState('')
-    const [numberPage, setnumberPage] = useState('')
+    const [numberPage, setnumberPage] = useState(0)
+    const [search,setSearch] = useState('')
+
     let fetchAllUser = async () => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         setUser(userData)
 
         let res = await getAllUsers({
             limit: PAGINATION.pagerow,
-            offset: 0
+            offset: 0,
+            search: CommonUtils.removeSpace(search)
         })
         if (res && res.errCode === 0) {
-
+            setnumberPage(0)
             setdataUser(res.data);
             setCount(Math.ceil(res.count / PAGINATION.pagerow))
         }
     }
     useEffect(async () => {
         await fetchAllUser()
-    }, [])
+    }, [search])
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
         let arrData = await getAllUsers({
-
-
             limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow
-
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search)
         })
         if (arrData && arrData.errCode === 0) {
             setdataUser(arrData.data)
@@ -66,13 +70,18 @@ const ManageUser = () => {
                 toast.error(res.errMessage)
             }
     }
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách người dùng</h4>
-
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên hoặc số điện thoại" allowClear enterButton="Tìm kiếm">
+                                    
+                        </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
@@ -128,9 +137,19 @@ const ManageUser = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataUser && dataUser.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                                        }
                         </div>
                     </div>
                     <ReactPaginate
+                        forcePage={numberPage}
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}

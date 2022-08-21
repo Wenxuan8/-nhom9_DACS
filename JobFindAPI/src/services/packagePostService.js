@@ -17,11 +17,14 @@ let getAllPackage = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-
-                let packagePosts = await db.PackagePost.findAndCountAll({
+                let objectFilter = {
                     offset: +data.offset,
                     limit: +data.limit
-                })
+                }
+                if (data.search) {
+                    objectFilter.where = {name: {[Op.like]: `%${data.search}%`}}
+                }
+                let packagePosts = await db.PackagePost.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: packagePosts.rows,

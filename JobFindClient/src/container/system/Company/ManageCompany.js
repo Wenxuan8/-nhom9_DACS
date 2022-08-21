@@ -7,14 +7,16 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
-import { Modal } from 'antd';
+import { Modal ,Input } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import CommonUtils from '../../../util/CommonUtils';
 const {confirm} = Modal
 const ManageCompany = () => {
     const [dataCompany, setdataCompany] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
+    const [search,setSearch] = useState('')
     const [propsModal, setPropsModal] = useState({
         isActive: false,
         handleCompany: () => { },
@@ -29,9 +31,12 @@ const ManageCompany = () => {
                     arrData = await getAllCompany({
                         limit: PAGINATION.pagerow,
                         offset: 0,
+                        search: CommonUtils.removeSpace(search)
+
                     })
                     if (arrData && arrData.errCode === 0) {
                         setdataCompany(arrData.data)
+                        setnumberPage(0)
                         setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                     }
                 }
@@ -43,13 +48,15 @@ const ManageCompany = () => {
             console.log(error)
         }
 
-    }, [])
+    }, [search])
 
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
         let arrData = await getAllCompany({
             limit: PAGINATION.pagerow,
             offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search)
+
         })
         if (arrData && arrData.errCode === 0) {
             setdataCompany(arrData.data)
@@ -64,6 +71,8 @@ const ManageCompany = () => {
             let arrData = await getAllCompany({
                 limit: PAGINATION.pagerow,
                 offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search)
+
             })
             if (arrData && arrData.errCode === 0) {
                 setdataCompany(arrData.data)
@@ -85,17 +94,25 @@ const ManageCompany = () => {
             },
           });
     }
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách công ty</h4>
-
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên công ty" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            STT
+                                        </th>
                                         <th>
                                             Mã công ty
                                         </th>
@@ -124,6 +141,7 @@ const ManageCompany = () => {
                                         dataCompany.map((item, index) => {
                                             return (
                                                 <tr key={index}>
+                                                    <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.id}</td>
                                                     <td>{item.name}</td>
                                                     <td>{item.phonenumber}</td>
@@ -164,9 +182,19 @@ const ManageCompany = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataCompany && dataCompany.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                            }
                         </div>
                     </div>
                     <ReactPaginate
+                        forcePage={numberPage}
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}

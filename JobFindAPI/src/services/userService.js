@@ -1,5 +1,6 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
+const { Op } = require("sequelize");
 const cloudinary = require('../utils/cloudinary');
 const salt = bcrypt.genSaltSync(10);
 require('dotenv').config();
@@ -436,8 +437,7 @@ let getAllUser = (data) => {
                     errMessage: 'Missing required parameter !'
                 })
             } else {
-
-                let res = await db.Account.findAndCountAll({
+                let objectFilter = {
                     limit: +data.limit,
                     offset: +data.offset,
                     attributes: {
@@ -456,7 +456,11 @@ let getAllUser = (data) => {
                     ],
                     raw: true,
                     nest: true,
-                })
+                }
+                if (data.search) {
+                    objectFilter.where = {phonenumber: {[Op.like]: `%${data.search}%`}}
+                }
+                let res = await db.Account.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: res.rows,

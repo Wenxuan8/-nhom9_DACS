@@ -8,24 +8,26 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import CommonUtils from '../../../util/CommonUtils';
+import {Input} from 'antd'
 const ManageJobType = () => {
     const [dataJobType, setdataJobType] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [imgPreview, setimgPreview] = useState('')
     const [isOpen, setisOpen] = useState(false)
-    console.log(dataJobType)
+    const [search,setSearch] = useState('')
     useEffect(() => {
         try {
             let fetchData = async () => {
                 let arrData = await getListAllCodeService({
-
                     type: 'JOBTYPE',
                     limit: PAGINATION.pagerow,
-                    offset: 0
-
+                    offset: 0,
+                    search: CommonUtils.removeSpace(search)
                 })
                 if (arrData && arrData.errCode === 0) {
+                    setnumberPage(0)
                     setdataJobType(arrData.data)
                     setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                 }
@@ -35,7 +37,7 @@ const ManageJobType = () => {
             console.log(error)
         }
 
-    }, [])
+    }, [search])
     let openPreviewImage = (url) => {
         setimgPreview(url);
         setisOpen(true);
@@ -46,11 +48,10 @@ const ManageJobType = () => {
         if (res && res.errCode === 0) {
             toast.success(res.errMessage)
             let arrData = await getListAllCodeService({
-
                 type: 'JOBTYPE',
                 limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow
-
+                offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search)
             })
             if (arrData && arrData.errCode === 0) {
                 setdataJobType(arrData.data)
@@ -65,7 +66,8 @@ const ManageJobType = () => {
 
             type: 'JOBTYPE',
             limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search)
 
         })
         if (arrData && arrData.errCode === 0) {
@@ -73,14 +75,18 @@ const ManageJobType = () => {
 
         }
     }
-
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách loại công việc</h4>
-
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên công việc" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
@@ -124,9 +130,19 @@ const ManageJobType = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataJobType && dataJobType.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                            }
                         </div>
                     </div>
                     <ReactPaginate
+                    forcePage={numberPage}
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}

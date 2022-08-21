@@ -6,11 +6,13 @@ import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import CommonUtils from '../../../util/CommonUtils';
+import {Input} from 'antd'
 const ManageExpType = () => {
     const [dataExpType, setdataExpType] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
+    const [search,setSearch] = useState('')
 
     useEffect(() => {
         try {
@@ -19,11 +21,13 @@ const ManageExpType = () => {
 
                     type: 'EXPTYPE',
                     limit: PAGINATION.pagerow,
-                    offset: 0
+                    offset: 0,
+                    search: CommonUtils.removeSpace(search)
 
                 })
                 if (arrData && arrData.errCode === 0) {
                     setdataExpType(arrData.data)
+                    setnumberPage(0)
                     setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                 }
             }
@@ -32,7 +36,7 @@ const ManageExpType = () => {
             console.log(error)
         }
 
-    }, [])
+    }, [search])
     let handleDeleteExpType = async (event, code) => {
         event.preventDefault();
         let res = await DeleteAllcodeService(code)
@@ -42,7 +46,9 @@ const ManageExpType = () => {
 
                 type: 'EXPTYPE',
                 limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow
+                offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search)
+
 
             })
             if (arrData && arrData.errCode === 0) {
@@ -58,7 +64,9 @@ const ManageExpType = () => {
 
             type: 'EXPTYPE',
             limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search)
+
 
         })
         if (arrData && arrData.errCode === 0) {
@@ -66,14 +74,18 @@ const ManageExpType = () => {
 
         }
     }
-
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách khoảng kinh nghiệm làm việc</h4>
-
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên công việc" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
@@ -114,9 +126,19 @@ const ManageExpType = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataExpType && dataExpType.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                                        }
                         </div>
                     </div>
                     <ReactPaginate
+                    forcePage={numberPage}
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}

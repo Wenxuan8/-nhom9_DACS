@@ -481,8 +481,8 @@ let getAllPostByAdmin = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                let post = await db.Post.findAndCountAll({
-                    order: [['createdAt', 'DESC']],
+                let objectFilter = {
+                    order: [['updatedAt', 'DESC']],
                     limit: +data.limit,
                     offset: +data.offset,
                     attributes: {
@@ -511,7 +511,11 @@ let getAllPostByAdmin = (data) => {
                             ]
                         }
                     ]
-                })
+                }
+                if (data.search) {
+                    objectFilter.include[0].where = {name: {[Op.like]: `%${data.search}%`}}
+                }
+                let post = await db.Post.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: post.rows,

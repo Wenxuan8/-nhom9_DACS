@@ -200,12 +200,16 @@ let getListAllCodeService = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-
-                let allcode = await db.Allcode.findAndCountAll({
+                let objectFilter = {
                     where: { type: data.type },
                     offset: +data.offset,
                     limit: +data.limit
-                })
+                }
+                if (data.search) {
+                    objectFilter.where = {...objectFilter.where, value: {[Op.like]: `%${data.search}%`}}
+                }
+
+                let allcode = await db.Allcode.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: allcode.rows,

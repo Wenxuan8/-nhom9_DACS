@@ -3,7 +3,7 @@ import axios from "../axios";
 
 //==================USER==========================//
 const getAllUsers = (data) => {
-    return axios.get(`/api/get-all-user?limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-all-user?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
 
 }
 const createNewUser = (data) => {
@@ -56,7 +56,7 @@ const getAllCodeService = (type) => {
 
 }
 const getListAllCodeService = (data) => {
-    return axios.get(`/api/get-list-allcode?type=${data.type}&limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-list-allcode?type=${data.type}&limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
 
 }
 
@@ -120,7 +120,7 @@ const getListCompany = (data) => {
 }
 
 const getAllCompany = (data) => {
-    return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
 }
 
 const accecptCompanyService = (data) => {
@@ -157,7 +157,7 @@ const getAllPostByAdminService = (data) => {
 
 }
 const getAllPostByRoleAdminService = (data) => {
-    return axios.get(`/api/get-all-post-admin?limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-all-post-admin?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
 
 }
 const getDetailPostByIdService = (id) => {
@@ -201,7 +201,7 @@ const paymentOrderSuccessService = (data) => {
 }
 
 const getAllPackage = (data) => {
-    return axios.get(`/api/get-all-package?limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-all-package?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
 }
 
 const setActiveTypePackage= (data) => {

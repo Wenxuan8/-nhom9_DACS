@@ -230,6 +230,9 @@ let handleUpdateCompany = (data) => {
                             res.file = data.file
                             res.censorCode = 'CS3'
                         }
+                        else if (res.censorCode !== 'CS2'){
+                            res.censorCode = 'CS3'
+                        }
                         await res.save();
                         resolve({
                             errCode: 0,
@@ -550,8 +553,14 @@ let getDetailCompanyByUserId = (data) => {
             } else {
                 let company
                 if (data.userId !== 'null') {
+                    let user = await db.User.findOne({
+                        where: {id: data.userId},
+                        attributes: {
+                            exclude: ['userId']
+                        }
+                    })
                     company = await db.Company.findOne({
-                        where: { userId: data.userId }
+                        where : {id: user.companyId}
                     })
                 }
                 else {
@@ -689,8 +698,8 @@ let getAllCompanyByAdmin = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                let company = await db.Company.findAndCountAll({
-                    order: [['createdAt', 'DESC']],
+                let objectFilter = {
+                    order: [['updatedAt', 'DESC']],
                     limit: +data.limit,
                     offset: +data.offset,
                     attributes: {
@@ -702,7 +711,11 @@ let getAllCompanyByAdmin = (data) => {
                         { model: db.Allcode, as: 'statusCompanyData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'censorData', attributes: ['value', 'code'] }
                     ]
-                })
+                }
+                if (data.search) {
+                    objectFilter.where = {name: {[Op.like]: `%${data.search}%`}}
+                }
+                let company = await db.Company.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: company.rows,

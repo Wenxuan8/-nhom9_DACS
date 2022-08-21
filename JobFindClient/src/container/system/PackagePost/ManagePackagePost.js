@@ -6,22 +6,26 @@ import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import CommonUtils from '../../../util/CommonUtils';
+import {Input} from 'antd'
 const ManagePackagePost = () => {
     const [dataPackagePost, setDataPackagePost] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
-    console.log(dataPackagePost)
+    const [search,setSearch] = useState('')
+
     useEffect(() => {
         try {
             let fetchData = async () => {
                 let arrData = await getAllPackage({
                     limit: PAGINATION.pagerow,
-                    offset: 0
+                    offset: 0,
+                    search: CommonUtils.removeSpace(search)
 
                 })
                 if (arrData && arrData.errCode === 0) {
                     setDataPackagePost(arrData.data)
+                    setnumberPage(0)
                     setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                 }
             }
@@ -30,7 +34,7 @@ const ManagePackagePost = () => {
             console.log(error)
         }
 
-    }, [])
+    }, [search])
     let hanndleSetActivePackage = async (event,id, isActive) => {
         event.preventDefault();
         let res = await setActiveTypePackage({
@@ -41,7 +45,9 @@ const ManagePackagePost = () => {
             toast.success(res.errMessage)
             let arrData = await getAllPackage({
                 limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow
+                offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search)
+
             })
             if (arrData && arrData.errCode === 0) {
                 setDataPackagePost(arrData.data)
@@ -54,21 +60,27 @@ const ManagePackagePost = () => {
         setnumberPage(number.selected)
         let arrData = await getAllPackage({
             limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search)
+
         })
         if (arrData && arrData.errCode === 0) {
             setDataPackagePost(arrData.data)
 
         }
     }
-
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
-                        <h4 className="card-title">Danh sách các gói bài viết</h4>
-
+                        <h4 className="card-title">Danh sách các gói bài đăng</h4>
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên gói bài đăng" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
@@ -126,9 +138,20 @@ const ManagePackagePost = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataPackagePost && dataPackagePost.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                            }
                         </div>
                     </div>
                     <ReactPaginate
+                                        forcePage={numberPage}
+
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}

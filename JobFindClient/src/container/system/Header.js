@@ -18,7 +18,7 @@ const Header = () => {
     return (
         <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <Link className="navbar-brand brand-logo mr-5" to={"/admin/"}><img src="/assetsAdmin/images/logo.svg" className="mr-2" alt="logo" /></Link>
+                <Link className="navbar-brand brand-logo mr-5" to={"/admin/"}><img src="/assets/img/logo/logo.png" className="mr-2" alt="logo" /></Link>
                 <a className="navbar-brand brand-logo-mini" href="index.html"><img src="/assetsAdmin/images/logo-mini.svg" alt="logo" /></a>
             </div>
             <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">

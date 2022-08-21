@@ -9,12 +9,15 @@ import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
 import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import CommonUtils from '../../../util/CommonUtils';
+import {Input} from 'antd'
 const {confirm} = Modal
 const ManagePost = () => {
     const [dataPost, setdataPost] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
+    const [search,setSearch] = useState('')
     const [propsModal, setPropsModal] = useState({
         isActive: false,
         handlePost: () => { },
@@ -30,6 +33,7 @@ const ManagePost = () => {
                         arrData = await getAllPostByRoleAdminService({
                             limit: PAGINATION.pagerow,
                             offset: 0,
+                            search: CommonUtils.removeSpace(search)
                         })
                     }
                     else {
@@ -41,6 +45,7 @@ const ManagePost = () => {
                     }
                     if (arrData && arrData.errCode === 0) {
                         setdataPost(arrData.data)
+                        setnumberPage(0)
                         setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                     }
                 }
@@ -52,7 +57,7 @@ const ManagePost = () => {
             console.log(error)
         }
 
-    }, [])
+    }, [search])
 
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
@@ -61,6 +66,8 @@ const ManagePost = () => {
             arrData = await getAllPostByRoleAdminService({
                 limit: PAGINATION.pagerow,
                 offset: number.selected * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search)
+
             })
         }
         else {
@@ -86,6 +93,8 @@ const ManagePost = () => {
                 arrData = await getAllPostByRoleAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
+                    search: CommonUtils.removeSpace(search)
+
                 })
             }
             else {
@@ -115,6 +124,8 @@ const ManagePost = () => {
                 arrData = await getAllPostByRoleAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
+                    search: CommonUtils.removeSpace(search)
+
                 })
             }
             else {
@@ -145,6 +156,8 @@ const ManagePost = () => {
                 arrData = await getAllPostByRoleAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
+                    search: CommonUtils.removeSpace(search)
+
                 })
             }
             else {
@@ -174,19 +187,27 @@ const ManagePost = () => {
             },
           });
     }
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách bài đăng</h4>
-
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên bài đăng" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>
                                             STT
+                                        </th>
+                                        <th>
+                                            Mã bài đăng
                                         </th>
                                         <th>
                                             Tên bài đăng
@@ -218,6 +239,7 @@ const ManagePost = () => {
                                             return (
                                                 <tr key={index}>
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
+                                                    <td>{item.id}</td>
                                                     <td>{item.postDetailData.name}</td>
                                                     <td>{item.postDetailData.jobTypePostData.value}</td>
                                                     <td>{item.postDetailData.jobLevelPostData.value}</td>
@@ -272,9 +294,20 @@ const ManagePost = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataPost && dataPost.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                            }
                         </div>
                     </div>
                     <ReactPaginate
+                                        forcePage={numberPage}
+
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}

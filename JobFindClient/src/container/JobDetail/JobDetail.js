@@ -124,8 +124,10 @@ const JobDetail = () => {
                                             <h4>Thông tin công việc</h4>
                                         </div>
                                         <ul>
+                                            <li>Lĩnh vực : <span>{dataPost.postDetailData.jobTypePostData.value}</span></li>
                                             <li>Nơi làm việc : <span>{dataPost.postDetailData.provincePostData.value}</span></li>
                                             <li>Hình thức làm việc : <span>{dataPost.postDetailData.workTypePostData.value}</span></li>
+                                            <li>Kinh nghiệm:  <span>{dataPost.postDetailData.expTypePostData.value}</span></li>
                                             <li>Lương :  <span>{dataPost.postDetailData.salaryTypePostData.value}</span></li>
                                             <li>Hạn nộp : <span>{moment.unix(dataPost.timeEnd / 1000).format('DD/MM/YYYY')}</span></li>
                                         </ul>

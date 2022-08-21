@@ -6,11 +6,13 @@ import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import CommonUtils from '../../../util/CommonUtils';
+import {Input} from 'antd'
 const ManageSalaryType = () => {
     const [dataSalaryType, setdataSalaryType] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
+    const [search,setSearch] = useState('')
 
     useEffect(() => {
         try {
@@ -19,11 +21,13 @@ const ManageSalaryType = () => {
 
                     type: 'SALARYTYPE',
                     limit: PAGINATION.pagerow,
-                    offset: 0
+                    offset: 0,
+                    search: CommonUtils.removeSpace(search)
 
                 })
                 if (arrData && arrData.errCode === 0) {
                     setdataSalaryType(arrData.data)
+                    setnumberPage(0)
                     setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                 }
             }
@@ -32,7 +36,7 @@ const ManageSalaryType = () => {
             console.log(error)
         }
 
-    }, [])
+    }, [search])
     let handleDeleteSalaryType = async (event, code) => {
         event.preventDefault();
         let res = await DeleteAllcodeService(code)
@@ -42,7 +46,9 @@ const ManageSalaryType = () => {
 
                 type: 'SALARYTYPE',
                 limit: PAGINATION.pagerow,
-                offset: numberPage * PAGINATION.pagerow
+                offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search)
+
 
             })
             if (arrData && arrData.errCode === 0) {
@@ -58,7 +64,9 @@ const ManageSalaryType = () => {
 
             type: 'SALARYTYPE',
             limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search)
+
 
         })
         if (arrData && arrData.errCode === 0) {
@@ -66,14 +74,18 @@ const ManageSalaryType = () => {
 
         }
     }
-
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách khoảng lương</h4>
-
+                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên khoảng lương" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
@@ -114,9 +126,19 @@ const ManageSalaryType = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataSalaryType && dataSalaryType.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                                        }
                         </div>
                     </div>
                     <ReactPaginate
+                    forcePage={numberPage}
                         previousLabel={'Quay lại'}
                         nextLabel={'Tiếp'}
                         breakLabel={'...'}
