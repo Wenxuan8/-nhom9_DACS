@@ -92,7 +92,7 @@ function SendCvModal(props) {
                     <Button onClick={() => {
                         setInputValue({
                             ...inputValue,
-                            ["userId"]: '', ["postId"]: '', ["file"]: '', ["description"]: '', ["linkFile"] : ''
+                            ["file"]: '', ["description"]: '', ["linkFile"] : ''
                         })
                         props.onHide()
                     }}>

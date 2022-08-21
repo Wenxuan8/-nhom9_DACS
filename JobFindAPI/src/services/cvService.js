@@ -132,6 +132,10 @@ let getAllCvByUserId = (data) => {
                     offset: +data.offset,
                     raw: true,
                     nest: true,
+                    order: [['createdAt', 'DESC']],
+                    attributes: {
+                        exclude: ['file']
+                    },
                     include: [
                         {
                             model: db.Post, as: 'postCvData',
@@ -151,12 +155,6 @@ let getAllCvByUserId = (data) => {
                             ]
                         }
                     ]
-                })
-                cv.rows = cv.rows.map(item => {
-                    return {
-                        ...item,
-                        file:  new Buffer(item.file, 'base64').toString('binary')
-                    }
                 })
                 resolve({
                     errCode: 0,

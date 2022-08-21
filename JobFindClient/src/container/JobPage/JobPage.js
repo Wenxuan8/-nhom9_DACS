@@ -4,6 +4,7 @@ import RightContent from './RightPage/RightContent'
 import { PAGINATION } from '../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { getListPostService } from '../../service/userService'
+import CommonUtils from '../../util/CommonUtils';
 const JobPage = () => {
 
     const [countPage, setCountPage] = useState(1)
@@ -19,8 +20,9 @@ const JobPage = () => {
     const [exp, setExp] = useState([])
     const [jobLevel, setJobLevel] = useState([])
     const [jobLocation, setJobLocation] = useState('')
+    const [search,setSearch] = useState('')
     let loadPost = async (limit, offset, sortName) => {
-        let arrData = await getListPostService({
+        let params = {
             limit: limit,
             offset: offset,
             categoryJobCode: jobType,
@@ -29,8 +31,10 @@ const JobPage = () => {
             categoryJoblevelCode: jobLevel,
             categoryWorktypeCode: workType,
             experienceJobCode: exp,
-            sortName: sortName
-        })
+            sortName: sortName,
+            search : CommonUtils.removeSpace(search)
+        }
+        let arrData = await getListPostService(params)
         if (arrData && arrData.errCode === 0) {
             setPost(arrData.data)
             setCountPage(Math.ceil(arrData.count / limit))
@@ -38,13 +42,9 @@ const JobPage = () => {
         }
     }
 
-    useEffect(() => {
-        let fetchPost = async () => {
-            await loadPost(limit, offset, false)
-        }
-        fetchPost();
-    }, [])
-
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
     const recieveWorkType = (data) => {
         setWorkType(prev => {
             let isCheck = workType.includes(data)
@@ -89,24 +89,28 @@ const JobPage = () => {
     }
     useEffect(() => {
         let filterdata = async () => {
-            let arrData = await getListPostService({
+            let params = {
                 limit: limit,
-                offset: offset,
+                offset: 0,
                 categoryJobCode: jobType,
                 addressCode: jobLocation,
                 salaryJobCode: salary,
                 categoryJoblevelCode: jobLevel,
                 categoryWorktypeCode: workType,
                 experienceJobCode: exp,
-            })
+                search: CommonUtils.removeSpace(search)
+            }
+            let arrData = await getListPostService(params)
             if (arrData && arrData.errCode === 0) {
+                setNumberPage(0)
+                setOffset(0)
                 setPost(arrData.data)
                 setCountPage(Math.ceil(arrData.count / limit))
                 setCount(arrData.count)
             }
         }
         filterdata()
-    }, [workType, jobLevel, exp, jobType, jobLocation, salary])
+    }, [workType, jobLevel, exp, jobType, jobLocation, salary, search])
     const handleChangePage = (number) => {
         setNumberPage(number.selected)
         loadPost(limit, number.selected * limit)
@@ -162,9 +166,10 @@ const JobPage = () => {
                                 {/* <!-- Job Category Listing End --> */}
                             </div>
                             {/* <!-- Right content --> */}
-                            <RightContent count={count} post={post} />
-                        </div>
-                        <ReactPaginate
+                            <div class="col-xl-9 col-lg-9 col-md-8">
+                            <RightContent handleSearch={handleSearch} count={count} post={post} />
+                            <ReactPaginate
+                            forcePage={numberPage}
                             previousLabel={'Quay lại'}
                             nextLabel={'Tiếp'}
                             breakLabel={'...'}
@@ -182,6 +187,8 @@ const JobPage = () => {
                             activeClassName={"active"}
                             onPageChange={handleChangePage}
                         />
+                            </div>
+                        </div>
                     </div>
                 </div>
 

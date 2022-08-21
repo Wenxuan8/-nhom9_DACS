@@ -1,6 +1,7 @@
 import db from "../models/index";
 const { Op, and } = require("sequelize");
 import paypal from 'paypal-rest-sdk'
+require('dotenv').config();
 paypal.configure({
     'mode': 'sandbox',
     'client_id': 'ARulk2xnPxfzBhbH4DrZsANY3Pm80t4Prbw4AfaEI1kgtCH3Nzz__h2Fa8FFph8DsD9ZPZpN8d6tdahJ',
@@ -117,8 +118,8 @@ let getPaymentLink = (data) => {
                         "payment_method": "paypal"
                     },
                     "redirect_urls": {
-                        "return_url": `http://localhost:3000/admin/payment/success`,
-                        "cancel_url": "http://localhost:3000/admin/payment/cancel"
+                        "return_url": `${process.env.URL_REACT}/admin/payment/success`,
+                        "cancel_url": `${process.env.URL_REACT}/admin/payment/cancel`
                     },
                     "transactions": [{
                         "item_list": {
@@ -369,11 +370,15 @@ let getStatisticalPackage = (data) => {
                     where: {
                         createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
                     },
-                    attributes: ['packagePostId',[db.sequelize.fn('SUM', db.sequelize.col('currentPrice')), 'total']],
+                    attributes: ['packagePostId',[db.sequelize.literal('SUM(currentPrice * amount)'), 'total']],
                     order: [[db.Sequelize.literal('total'), 'DESC']],
                     group: ['packagePostId'],
                     nest: true,
                 })
+                const sum = listOrderPackage.reduce(
+                    (previousValue, currentValue) => previousValue + currentValue.total,
+                    0
+                  );
                 listPackage.rows = listPackage.rows.map(packagePost => {
                     let count = 1
                     let length = listOrderPackage.length
@@ -403,7 +408,8 @@ let getStatisticalPackage = (data) => {
                 resolve({
                     errCode: 0,
                     data: listPackage.rows,
-                    count: listPackage.count
+                    count: listPackage.count,
+                    sum: sum
                 })
             }
         }

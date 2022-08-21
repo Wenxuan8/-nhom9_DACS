@@ -84,41 +84,37 @@ const DetailCompany = () => {
                                     {dataCompany && dataCompany.postData && dataCompany.postData.length > 0 &&
                                         dataCompany.postData.map((item, index) => {
                                             return (
-                                                <div key={index} className="job-item  job-ta result-job-hover" data-job-id={589972} data-job-position={1}>
+                                                <Link to={`/detail-job/${item.id}`} className="company-logo">
+                                                <div key={index} className="job-item  job-ta result-job-hover">
                                                     <div className="avatar">
-                                                        <Link to={`/detail-job/${item.id}`} className="company-logo">
                                                             <img src={dataCompany.thumbnail} className="w-100" alt="Công ty Cổ phần Tập đoàn Hoa Sen" title="Nhân Viên Tuyển Dụng - Đào Tạo" />
-                                                        </Link>
                                                     </div>
                                                     <div className="body">
                                                         <div className="content">
                                                             <div className="ml-auto">
-                                                                <h3 className="title-job">
+                                                                <h4 className="title-job">
                                                                     <Link className="underline-box-job" to={`/detail-job/${item.id}`}>
                                                                         <span className="bold transform-job-title" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Nhân Viên Tuyển Dụng - Đào Tạo">{item.postDetailData.name}</span>
                                                                         <i className="fa-solid fa-circle-check" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Tin từ nhà tuyển dụng đã xác thực" />
                                                                     </Link>
-                                                                </h3>
-                                                                <p className="company underline-box-job">
-                                                                    <Link to={`/detail-job/${item.id}`} data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Công ty Cổ phần Tập đoàn Hoa Sen">{item.postDetailData.name}</Link>
-                                                                </p>
+                                                                </h4>
                                                             </div>
-                                                            <div className="mr-auto text-right">
+                                                            <div style={{minWidth:'100px'}} className="mr-auto text-right">
                                                                 <p className="deadline">
 
                                                                     {CommonUtils.formatDate(item.timeEnd) <= 0 ?
-                                                                        <div>Hết hạn ứng tuyển</div> : <div>Còn <strong>{CommonUtils.formatDate(item.timeEnd)}</strong> ngày để ứng tuyển </div>
+                                                                        <div>Hết hạn ứng tuyển</div> : <div>Còn <strong>{CommonUtils.formatDate(item.timeEnd)}</strong> ngày</div>
                                                                     }
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <div className="d-flex">
+                                                        <div style={{margin:"10px 0"}} className="d-flex">
                                                             <div className="label-content ml-auto">
                                                                 <label className="salary">{item.postDetailData.salaryTypePostData.value}</label>
-                                                                <label className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.postDetailData.provincePostData.value}</label>
+                                                                <label style={{margin:"0px 10px"}} className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.postDetailData.provincePostData.value}</label>
                                                                 <label className="time">{moment(item.createdAt).fromNow()}</label>
                                                             </div>
-                                                            <div className="icon mr-auto">
+                                                            {/* <div className="icon mr-auto">
                                                                 <div id="box-save-job-589972" className="box-save-job  box-save-job-hover   job-notsave " style={{ width: '23px' }}>
                                                                     <a href="javascript:void(0)" className="btn-save save" data-id={589972} data-title="Nhân Viên Tuyển Dụng - Đào Tạo">
                                                                         <span id="save-job-loading" style={{ display: 'none' }}>
@@ -132,10 +128,11 @@ const DetailCompany = () => {
                                                                         </span>
                                                                         <i className="fa-solid fa-heart" />
                                                                     </a>
-                                                                </div> </div>
+                                                                </div> </div> */}
                                                         </div>
                                                     </div>
                                                 </div>
+                                                </Link>
                                             )
                                         })
                                     }

@@ -14,10 +14,11 @@ import CommonUtils from '../../util/CommonUtils';
 const CandidateInfo = () => {
     const [birthday, setbirthday] = useState('');
     const [isChangeDate, setisChangeDate] = useState(false)
+    const [isChangeImg,setisChangeImg] = useState(false)
     const [isActionADD, setisActionADD] = useState(true)
     const { id } = useParams();
     const [inputValues, setInputValues] = useState({
-        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: '', imageReview: '', isOpen: false,
+        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: '', imageReview: '', isOpen: false,email: ''
     });
 
     let setStateUser = (data) => {
@@ -32,7 +33,8 @@ const CandidateInfo = () => {
             ["id"]: data.userAccountData.id,
             ["dob"]: data.userAccountData.dob,
             ["image"]: data.userAccountData.image,
-            ["imageReview"]: data.userAccountData.image
+            ["imageReview"]: data.userAccountData.image,
+            ["email"] : data.userAccountData.email
         })
         setbirthday(moment.unix(+data.userAccountData.dob / 1000).locale('vi').format('DD/MM/YYYY'))
     }
@@ -75,7 +77,7 @@ const CandidateInfo = () => {
         if (file) {
             let base64 = await CommonUtils.getBase64(file);
             let objectUrl = URL.createObjectURL(file)
-
+            setisChangeImg(true)
             setInputValues({ ...inputValues, ["image"]: base64, ["imageReview"]: objectUrl })
 
         }
@@ -95,11 +97,15 @@ const CandidateInfo = () => {
             roleCode: inputValues.roleCode,
             genderCode: inputValues.genderCode,
             dob: isChangeDate === false ? inputValues.dob : new Date(birthday).getTime(),
-            image: inputValues.image
+            image: isChangeImg ? inputValues.image : null,
+            email: inputValues.email
         })
         if (res && res.errCode === 0) {
+            localStorage.setItem("userData", JSON.stringify(res.user))
             toast.success("Cập nhật người dùng thành công")
-
+            setTimeout(()=> {
+                window.location.reload()
+            },1000)
         } else {
             toast.error(res.errMessage)
         }
@@ -157,7 +163,7 @@ const CandidateInfo = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Giới tính</label>
                                         <div className="col-sm-9">
-                                            <select className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
+                                            <select  style={{color: "black"}} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                 {dataGender && dataGender.length > 0 &&
                                                     dataGender.map((item, index) => {
                                                         return (
@@ -187,7 +193,7 @@ const CandidateInfo = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Hình ảnh</label>
                                         <div className="col-sm-9">
-                                            <input onChange={(event) => handleOnChangeImage(event)} type="file" className="form-control form-file" />
+                                            <input accept='image/*' onChange={(event) => handleOnChangeImage(event)} type="file" className="form-control form-file" />
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +207,16 @@ const CandidateInfo = () => {
                                 </div>
 
                             </div>
-
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="form-group row">
+                                        <label className="col-sm-3 col-form-label">Email</label>
+                                        <div className="col-sm-9">
+                                            <input type="email" value={inputValues.email} name="email" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
                             <button type="button" onClick={() => handleSaveUser()} className="btn1 btn1-primary1 btn1-icon-text">

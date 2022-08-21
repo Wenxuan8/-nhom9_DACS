@@ -2,7 +2,34 @@ import db from "../models/index";
 import bcrypt from "bcryptjs";
 const cloudinary = require('../utils/cloudinary');
 const salt = bcrypt.genSaltSync(10);
+require('dotenv').config();
+var nodemailer = require('nodemailer');
+let sendmail = (note, userMail, link = null) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD,
+        }
+    });
 
+    var mailOptions = {
+        from: process.env.EMAIL_APP,
+        to: userMail,
+        subject: 'Thông báo từ trang Job Finder',
+        html: note
+    };
+    if (link)
+    {
+        mailOptions.html = note + ` xem thông tin <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+    }
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+        } else {
+        }
+    });
+}
 let hashUserPasswordFromBcrypt = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -41,7 +68,7 @@ let checkUserPhone = (userPhone) => {
 let handleCreateNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.phonenumber || !data.lastName || !data.firstName || !data.password) {
+            if (!data.phonenumber || !data.lastName || !data.firstName ) {
                 resolve({
                     errCode: 2,
                     errMessage: 'Missing required parameters !'
@@ -55,6 +82,11 @@ let handleCreateNewUser = (data) => {
                     })
                 } else {
                     let imageUrl = ""
+                    let isHavePass = true
+                    if (!data.password) {
+                        data.password = `${new Date().getTime().toString()}`
+                        isHavePass = false
+                    }
                     let hashPassword = await hashUserPasswordFromBcrypt(data.password);
                     if (data.image) {
                         const uploadedResponse = await cloudinary.uploader.upload(data.image, {
@@ -89,6 +121,13 @@ let handleCreateNewUser = (data) => {
                             userId: user.id
                         })
                     }
+                    if (!isHavePass) {
+                        let note = `<h3>Tài khoản đã tạo thành công</h3>
+                                    <p>Tài khoản: ${data.phonenumber}</p>
+                                    <p>Mật khẩu: ${data.password}</p>
+                        `
+                        sendmail(note,data.email)                        
+                    }
                     resolve({
                         errCode: 0,
                         message: 'Tạo tài khoản thành công'
@@ -98,7 +137,7 @@ let handleCreateNewUser = (data) => {
             }
 
         } catch (error) {
-            reject(error)
+            reject(error.message)
         }
     })
 }
@@ -218,6 +257,7 @@ let updateUserData = (data) => {
                     user.address = data.address
                     user.genderCode = data.genderCode
                     user.dob = data.dob
+                    user.email = data.email
                     if (data.image) {
                         let imageUrl = ""
                         const uploadedResponse = await cloudinary.uploader.upload(data.image, {
@@ -227,11 +267,26 @@ let updateUserData = (data) => {
                         user.image = imageUrl
                     }
                     await user.save();
+                    if (data.roleCode)
                     account.roleCode = data.roleCode
                     await account.save();
+                    let temp = {
+                        address: user.address,
+                        companyId: user.companyId,
+                        dob: user.dob,
+                        email: user.email,
+                        firstName: user.firstName,
+                        genderCode: user.genderCode,
+                        id: user.id,
+                        image: user.image,
+                        lastName: user.lastName,
+                        roleCode: account.roleCode
+                    }
+                    delete temp.file
                     resolve({
                         errCode: 0,
-                        message: 'Đã chỉnh sửa thành công'
+                        message: 'Đã chỉnh sửa thành công',
+                        user: temp
                     })
                 } else {
                     resolve({
@@ -300,7 +355,7 @@ let handleLogin = (data) => {
                             {
                                 let user = await db.User.findOne({
                                     attributes: {
-                                        exclude: ['userId']
+                                        exclude: ['userId','file']
                                     },
                                     where: {id: account.userId  },
                                     raw: true

@@ -4,7 +4,7 @@ import { createNewUser, getDetailUserById, UpdateUserService } from '../../../se
 import { useFetchAllcode } from '../../../util/fetch';
 import DatePicker from '../../../components/input/DatePicker';
 import { toast } from 'react-toastify';
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import localization from 'moment/locale/vi';
 import moment from 'moment';
 import { Spinner, Modal, ListGroupItemHeading } from 'reactstrap'
@@ -17,9 +17,8 @@ const AddUser = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { id } = useParams();
     const [inputValues, setInputValues] = useState({
-        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: ''
+        email: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: ''
     });
-
     let setStateUser = (data) => {
         setInputValues({
             ...inputValues,
@@ -60,8 +59,7 @@ const AddUser = () => {
         dataRole = dataRole.filter(item => item.code !== "COMPANY")
         }
     }
-
-    if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '' && !isActionADD) {
+    if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '' && isActionADD) {
         setInputValues({ ...inputValues, ["genderCode"]: dataGender[0].code, ["roleCode"]: dataRole[0].code })
     }
     
@@ -80,7 +78,7 @@ const AddUser = () => {
         setIsLoading(true)
         if (isActionADD === true) {
             let params = {
-                password: inputValues.password,
+                email : inputValues.email,
                 firstName: inputValues.firstName,
                 lastName: inputValues.lastName,
                 address: inputValues.address,
@@ -137,13 +135,15 @@ const AddUser = () => {
             }, 1000);
 
         }
-
     }
+    const history = useHistory()
     return (
         <div className=''>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
+                    <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
+                        
                         <h4 className="card-title">{isActionADD === true ? 'Thêm mới người dùng' : 'Cập nhật người dùng'}</h4>
                         <br></br>
                         <form className="form-sample">
@@ -169,9 +169,9 @@ const AddUser = () => {
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="form-group row">
-                                        <label className="col-sm-3 col-form-label">Mật khẩu</label>
+                                        <label className="col-sm-3 col-form-label">Email</label>
                                         <div className="col-sm-9">
-                                            <input type="password" value={inputValues.password} disabled={isActionADD === true ? false : true} name="password" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                            <input type="email" value={inputValues.email} disabled={isActionADD === true ? false : true} name="email" onChange={(event) => handleOnChange(event)} className="form-control" />
                                         </div>
                                     </div>
                                 </div>

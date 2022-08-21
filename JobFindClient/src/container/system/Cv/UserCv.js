@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 
 const UserCv = () => {
-
+    console.log("Hello")
     const { id } = useParams();
     const [dataCV, setdataCV] = useState({
         userCvData: {

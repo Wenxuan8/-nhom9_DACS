@@ -21,6 +21,7 @@ const Home = () => {
     const [user, setUser] = useState({})
     const [dataStatisticalTypePost, setDataStatisticalTypePost] = useState([])
     const [dataStatisticalPackagePost, setDataStatisticalPackagePost] = useState([])
+    const [dataSum,setDataSum] = useState(0)
     const [dataCv, setDataCv] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
@@ -60,6 +61,7 @@ const Home = () => {
             })
             if (arrData && arrData.errCode === 0) {
                 setDataStatisticalPackagePost(arrData.data)
+                setDataSum(arrData.sum)
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
         }
@@ -85,6 +87,8 @@ const Home = () => {
             })
             if (arrData && arrData.errCode === 0) {
                 setDataStatisticalPackagePost(arrData.data)
+                setDataSum(arrData.sum)
+
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
         }
@@ -143,6 +147,8 @@ const Home = () => {
                     })
                     if (arrData && arrData.errCode === 0) {
                         setDataStatisticalPackagePost(arrData.data)
+                setDataSum(arrData.sum)
+
                         setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                     }
                 }
@@ -342,6 +348,10 @@ const Home = () => {
                                         }
                             </div>
                         </div>
+                        {
+                        dataStatisticalPackagePost && dataStatisticalPackagePost.length > 0 &&
+                        <div class='mr-4' style={{display:'flex', justifyContent:'end'}}>Tổng doanh thu: {dataSum} USD</div>
+                        }
                         <ReactPaginate
                             previousLabel={'Quay lại'}
                             nextLabel={'Tiếp'}

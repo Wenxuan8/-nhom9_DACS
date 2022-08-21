@@ -4,7 +4,7 @@ import { createAllCodeService, getDetailAllcodeByCode, UpdateAllcodeService } fr
 import { useFetchAllcode } from '../../../util/fetch';
 import DatePicker from '../../../components/input/DatePicker';
 import { toast } from 'react-toastify';
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import CommonUtils from '../../../util/CommonUtils';
@@ -104,12 +104,14 @@ const AddJobType = () => {
             }, 1000);
         }
     }
-
+    const history = useHistory()
     return (
         <div className=''>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
+                    <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
+
                         <h4 className="card-title">{isActionADD === true ? 'Thêm mới loại công việc' : 'Cập nhật loại công việc'}</h4>
                         <br></br>
                         <form className="form-sample">

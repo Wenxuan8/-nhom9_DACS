@@ -640,7 +640,7 @@ let getFilterPost = (data) => {
             }
             if (data.categoryJobCode && data.categoryJobCode !== '') objectFilter.where = { ...objectFilter.where, categoryJobCode: data.categoryJobCode }
             if (data.addressCode && data.addressCode !== '') objectFilter.where = { ...objectFilter.where, addressCode: data.addressCode }
-
+            if (data.search) objectFilter.where = {...objectFilter.where,name: {[Op.like] : `%${data.search}%`}}
             let listDetailPost = await db.DetailPost.findAll(objectFilter)
             let listDetailPostId = listDetailPost.map(item => {
                 return {
@@ -651,7 +651,7 @@ let getFilterPost = (data) => {
             let postFilter = {
                 where: {
                     statusCode: 'PS1',
-                    [Op.or]: listDetailPostId
+                    [Op.or]: listDetailPostId,
                 },
                 include: [
                     {

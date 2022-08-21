@@ -20,6 +20,10 @@ class CommonUtils {
 
         return (moment.duration(start.diff(end)).asDays())
     }
+    static removeSpace(str) {
+        str = str.trim()
+        return str = str.replace(/\s+/g, ' ').trim()
+    }
 }
 
 export default CommonUtils;

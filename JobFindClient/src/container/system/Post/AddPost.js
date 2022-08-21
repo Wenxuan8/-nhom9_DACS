@@ -2,12 +2,12 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import DatePicker from '../../../components/input/DatePicker';
-import { createPostService, updatePostService, getDetailPostByIdService, reupPostService } from '../../../service/userService';
+import { createPostService, updatePostService, getDetailPostByIdService, reupPostService, getDetailCompanyByUserId } from '../../../service/userService';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import { useFetchAllcode } from '../../../util/fetch';
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Spinner, Modal } from 'reactstrap'
 import localization from 'moment/locale/vi';
 import moment from 'moment';
@@ -20,6 +20,10 @@ const AddPost = () => {
     const [isChangeDate, setisChangeDate] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const { id } = useParams();
+    const [companyPostAllow, setCompanyPostAllow] = useState({
+        hot: 0,
+        nonHot: 0
+    })
     const [inputValues, setInputValues] = useState({
         name: '', categoryJobCode: '', addressCode: '', salaryJobCode: '', amount: '', timeEnd: '', categoryJoblevelCode: '', categoryWorktypeCode: '', experienceJobCode: '',
         genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '' , isHot: 0
@@ -28,8 +32,22 @@ const AddPost = () => {
         isActive: false,
         handlePost: ()=> {},
     })
+    let fetchCompany = async (userId,companyId = null) => {
+        let res = await getDetailCompanyByUserId(userId,companyId)
+        if (res && res.errCode === 0) {
+            setCompanyPostAllow({
+                ...companyPostAllow,
+                hot: res.data.allowHotPost,
+                nonHot: res.data.allowPost
+            })
+        }
+    }
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData !== "ADMIN")
+        {
+            fetchCompany(userData.id)
+        }
         if (id) {
             fetchPost(id)
         }
@@ -198,14 +216,23 @@ const AddPost = () => {
             toast.error(res.errMessage)
         }
     }
+    const history = useHistory()
     return (
         <>
             <div className=''>
                 <div className="col-12 grid-margin">
                     <div className="card">
                         <div className="card-body">
+                        <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
                             <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới bài đăng' : 'Cập nhật bài đăng'}</h4>
                             <br></br>
+                            {inputValues.isActionADD === true && user.roleCode !== "ADMIN" &&
+                                <div className='mb-5'>
+                                    <h4>Công ty còn:</h4>
+                                    <p>{companyPostAllow.nonHot} bài bình thường</p>
+                                    <p>{companyPostAllow.hot} bài nổi bật</p>
+                                </div>
+                            }
                             <form className="form-sample">
 
                                 <div className="row">

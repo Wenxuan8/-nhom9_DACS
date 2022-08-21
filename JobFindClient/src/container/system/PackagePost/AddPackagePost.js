@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { getPackageById , createPackagePost , updatePackagePost } from '../../../service/userService';
 import { toast } from 'react-toastify';
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Spinner, Modal } from 'reactstrap'
 import '../../../components/modal/modal.css'
 const AddpackagePost = () => {
@@ -80,12 +80,14 @@ const AddpackagePost = () => {
             }, 500);
         }
     }
-
+    const history = useHistory()
     return (
         <div className=''>
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
+                    <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
+
                         <h4 className="card-title">{isActionADD === true ? 'Thêm mới gói bài viết' : 'Cập nhật gói bài viết'}</h4>
                         <br></br>
                         <form className="form-sample">

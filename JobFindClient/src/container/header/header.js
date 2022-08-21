@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import './header.scss';
 
 const Header = () => {
-
     const [user, setUser] = useState({})
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));

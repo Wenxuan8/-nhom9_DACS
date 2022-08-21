@@ -7,7 +7,9 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
-
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+const {confirm} = Modal
 const ManagePost = () => {
     const [dataPost, setdataPost] = useState([])
     const [count, setCount] = useState('')
@@ -160,6 +162,18 @@ const ManagePost = () => {
             toast.error(res.errMessage)
         }
     }
+    const confirmPost = (id) => {
+        confirm({
+            title: 'Bạn có chắc muốn duyệt công ty này?',
+            icon: <ExclamationCircleOutlined />,    
+            onOk() {
+                handleAccecptPost(id, '', 'PS1')
+            },
+        
+            onCancel() {
+            },
+          });
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
@@ -239,7 +253,7 @@ const ManagePost = () => {
                                                                     postId: item.id
                                                                 })}  >Mở lại</a>
                                                             </> : <>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleAccecptPost(item.id, '', 'PS1')}  >Duyệt</a>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id)}  >Duyệt</a>
                                                                 {
                                                                     item.statusCode !== 'PS2' &&
                                                                     <a style={{ color: '#4B49AC', cursor: 'pointer', marginLeft: '10px' }} onClick={() => setPropsModal({

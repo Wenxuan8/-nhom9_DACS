@@ -10,7 +10,7 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import { Spinner, Modal } from 'reactstrap'
 import '../../../components/modal/modal.css'
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 const AddCompany = () => {
     const { id } = useParams()
     const mdParser = new MarkdownIt();
@@ -156,12 +156,14 @@ const AddCompany = () => {
             ["descriptionHTML"]: html
         })
     }
+    const history = useHistory()
     return (
         <>
             <div className=''>
                 <div className="col-12 grid-margin">
                     <div className="card">
                         <div className="card-body">
+                        <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
                             <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới công ty' : 'Cập nhật công ty'}</h4>
                             <br></br>
                             <form className="form-sample">

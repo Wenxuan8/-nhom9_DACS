@@ -14,10 +14,11 @@ import CommonUtils from '../../../util/CommonUtils';
 const UserInfo = () => {
     const [birthday, setbirthday] = useState('');
     const [isChangeDate, setisChangeDate] = useState(false)
+    const [isChangeImg, setisChangeImg] = useState(false)
     const [isActionADD, setisActionADD] = useState(true)
     const { id } = useParams();
     const [inputValues, setInputValues] = useState({
-        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: '', imageReview: '', isOpen: false,
+        password: '', firstName: '', lastName: '', address: '', phonenumber: '', genderCode: '', roleCode: '', id: '', dob: '', image: '', imageReview: '', isOpen: false, email: ''
     });
 
     let setStateUser = (data) => {
@@ -32,7 +33,8 @@ const UserInfo = () => {
             ["id"]: data.userAccountData.id,
             ["dob"]: data.userAccountData.dob,
             ["image"]: data.userAccountData.image,
-            ["imageReview"]: data.userAccountData.image
+            ["imageReview"]: data.userAccountData.image,
+            ["email"]: data.userAccountData.email
         })
         setbirthday(moment.unix(+data.userAccountData.dob / 1000).locale('vi').format('DD/MM/YYYY'))
     }
@@ -55,7 +57,6 @@ const UserInfo = () => {
 
 
     if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
-        console.log(dataRole)
         setInputValues({ ...inputValues, ["genderCode"]: dataGender[0].code, ["roleCode"]: dataRole[0].code })
     }
 
@@ -76,6 +77,7 @@ const UserInfo = () => {
         if (file) {
             let base64 = await CommonUtils.getBase64(file);
             let objectUrl = URL.createObjectURL(file)
+            setisChangeImg(true)
             setInputValues({ ...inputValues, ["image"]: base64, ["imageReview"]: objectUrl })
 
         }
@@ -95,11 +97,15 @@ const UserInfo = () => {
             roleCode: inputValues.roleCode,
             genderCode: inputValues.genderCode,
             dob: isChangeDate === false ? inputValues.dob : new Date(birthday).getTime(),
-            image: inputValues.image
+            image: isChangeImg === true ? inputValues.image : null,
+            email: inputValues.email
         })
         if (res && res.errCode === 0) {
+            localStorage.setItem("userData", JSON.stringify(res.user))
             toast.success("Cập nhật người dùng thành công")
-
+            setTimeout(()=> {
+                window.location.reload()
+            },1000)
         } else {
             toast.error(res.errMessage)
         }
@@ -202,7 +208,16 @@ const UserInfo = () => {
                                 </div>
 
                             </div>
-
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="form-group row">
+                                        <label className="col-sm-3 col-form-label">Email</label>
+                                        <div className="col-sm-9">
+                                            <input type="email" value={inputValues.email} name="email" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
                             <button type="button" onClick={() => handleSaveUser()} className="btn1 btn1-primary1 btn1-icon-text">

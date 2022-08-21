@@ -444,11 +444,14 @@ let getListCompany = (data) => {
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-
-                let company = await db.Company.findAndCountAll({
+                let objectFilter = {
                     offset: +data.offset,
                     limit: +data.limit
-                })
+                }
+                if (data.search) {
+                    objectFilter.where = {name: {[Op.like]: `%${data.search}%`}}
+                }
+                let company = await db.Company.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: company.rows,

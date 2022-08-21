@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Job from '../../../components/Job/Job'
+import {Input} from 'antd'
 const RightContent = (props) => {
     return (
         <>
-            <div class="col-xl-9 col-lg-9 col-md-8">
                 {/* <!-- Featured_job_start --> */}
                 <section class="featured-job-area">
                     <div class="container">
@@ -12,7 +12,11 @@ const RightContent = (props) => {
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="count-job mb-35">
-                                    <span>{props.count} công việc tìm thấy</span>
+                                    <span>{props.count} công việc được tìm thấy</span>
+                                    <Input.Search onSearch={props.handleSearch} className='mt-5' placeholder="Nhập tên bài đăng" allowClear enterButton="Tìm kiếm">
+                                    
+                                    </Input.Search>
+
                                     {/* <!-- Select job items start --> */}
                                     {/* <div class="select-job-items">
                                                 <span>Sort by</span>
@@ -63,7 +67,6 @@ const RightContent = (props) => {
                     </div>
                 </section>
                 {/* <!-- Featured_job_end --> */}
-            </div>
         </>
     )
 }

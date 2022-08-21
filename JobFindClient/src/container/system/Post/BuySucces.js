@@ -8,7 +8,8 @@ import {
     Link,
     Redirect,
     useParams,
-    useLocation
+    useLocation,
+    useHistory
 } from "react-router-dom";
 
 
@@ -20,16 +21,14 @@ function useQuery() {
 
 function PaymentSuccess(props) {
     let query = useQuery();
-    const [message, setMessage] = useState(false)
+    const [message, setMessage] = useState("Đang xử lý")
     useEffect(() => {
-        setMessage("Đang xử lý")
         let orderData =  JSON.parse(localStorage.getItem("orderData"))
         if(orderData){
             orderData.paymentId = query.get("paymentId")
             orderData.token = query.get("token")
             orderData.PayerID = query.get("PayerID")
             createNewOrder(orderData)
-            setMessage("Chúc mừng bạn đã mua lượt đăng bài thành công")
         }
         else {
             setMessage("Thông tin đơn hàng không hợp lệ")
@@ -40,14 +39,17 @@ function PaymentSuccess(props) {
         if(res && res.errCode == 0){
             toast.success(res.errMessage)
             localStorage.removeItem("orderData")
+            setMessage("Chúc mừng bạn đã mua lượt đăng bài thành công")
         }else{
             toast.error(res.errMessage)
         }
     }
+    const history = useHistory()
     return (
 
         <div style={{height:'50vh',textAlign:'center'}}> 
            {message}
+           {message === 'Thông tin đơn hàng không hợp lệ' && <div className='mt-5'><button onClick={() => history.push("/admin/add-post") } style={{backgroundColor: "green"}}>Đăng bài ngay</button></div>}
         </div>
 
     );

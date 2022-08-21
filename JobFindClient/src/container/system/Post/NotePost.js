@@ -4,7 +4,7 @@ import { getListNoteByPost } from '../../../service/userService';
 import moment from 'moment';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
 
@@ -52,7 +52,7 @@ const NotePost = () => {
 
         }
     }
-
+    const history = useHistory()
     return (
 
         <div>
@@ -60,6 +60,8 @@ const NotePost = () => {
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
+                    <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
+
                         <h4 className="card-title">Thông tin chi tiết các ghi chú bài viết</h4>
 
                         <div className="table-responsive pt-2">

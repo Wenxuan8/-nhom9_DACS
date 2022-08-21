@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment';
 const Job = (props) => {
     const handleSplitTime = (time) => {
-        return moment(time).fromNow();
+        return moment(new Date(+time)).fromNow();
     }
     return (
         <>
@@ -12,9 +12,9 @@ const Job = (props) => {
                 </div>
                 <div class="job-tittle job-tittle2">
                     <a href="#">
-                        <h4>{props.data.postDetailData.name}</h4>
+                        <h5>{props.data.postDetailData.name}</h5>
                     </a>
-                    <ul>
+                    <ul className='my-font'>
                         <li>{props.data.postDetailData.jobLevelPostData.value}</li>
                         <li><i class="fas fa-map-marker-alt"></i>{props.data.postDetailData.provincePostData.value}</li>
                         <li>{props.data.postDetailData.salaryTypePostData.value}</li>
@@ -22,8 +22,8 @@ const Job = (props) => {
                 </div>
             </div>
             <div class="items-link items-link2 f-right">
-                <a href="job_details.html">{props.data.postDetailData.workTypePostData.value}</a>
-                <span style={{ position: 'absolute', right: '70px' }}>{handleSplitTime(props.data.createdAt)}</span>
+                <a className='my-font' href="job_details.html">{props.data.postDetailData.workTypePostData.value}</a>
+                <span style={{ position: 'absolute', right: '70px' }}>{handleSplitTime(props.data.timePost)}</span>
             </div>
 
         </>

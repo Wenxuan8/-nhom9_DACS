@@ -11,26 +11,25 @@ const Register = () => {
         phonenumber: true, password: true, firstName: true, lastName: true, email: true,againPass: true
     })
     const [inputValues, setInputValues] = useState({
-        phonenumber: '', firstName: '', lastName: '', password: '', isOpen: false, dataUser: {}, roleCode: '',email:'',againPass:''
+        phonenumber: '', firstName: '', lastName: '', password: '', isOpen: false, dataUser: {}, roleCode: '',email:'',againPass:'', genderCode: ''
     });
-    const { data: dataRole } = useFetchAllcode('ROLE');
+    let { data: dataRole } = useFetchAllcode('ROLE');
+    let { data : dataGender} = useFetchAllcode('GENDER');
 
-    if (dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
-        let arr = dataRole.filter(item => item.code !== "ADMIN" && item.code !== "COMPANY")
-        setInputValues({
-            ...inputValues, ["roleCode"]: arr[0].code
+    if (dataRole && dataRole.length > 0) {
+        dataRole = dataRole.filter(item => item.code !== "ADMIN" && item.code!== "COMPANY")
 
-        })
+    }
+    if (dataGender && dataGender.length > 0 && inputValues.genderCode === '' && dataRole && dataRole.length > 0 && inputValues.roleCode === '') {
+        setInputValues({ ...inputValues, ["genderCode"]: dataGender[0].code, ["roleCode"]: dataRole[0].code })
     }
 
     const handleOnChange = event => {
         const { name, value } = event.target;
         setInputValues({ ...inputValues, [name]: value });
-
     };
 
     let handleOpenVerifyOTP = async () => {
-        console.log("Hello")
         let checkPhonenumber = handleValidate(inputValues.phonenumber, "phone")
         let checkPassword = handleValidate(inputValues.password, "password")
         let checkFirstName = handleValidate(inputValues.firstName, "isEmpty")
@@ -118,6 +117,17 @@ const Register = () => {
                                                         })
                                                     }
                                                 </select>
+                                            </div>
+                                            <div className="form-group">
+                                            <select style={{color: "black"}} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
+                                                {dataGender && dataGender.length > 0 &&
+                                                    dataGender.map((item, index) => {
+                                                        return (
+                                                            <option key={index} value={item.code}>{item.value}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </select>
                                             </div>
                                             <div className="mt-3">
                                                 <a onClick={() => handleOpenVerifyOTP()} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Đăng ký</a>

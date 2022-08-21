@@ -7,7 +7,9 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
-
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+const {confirm} = Modal
 const ManageCompany = () => {
     const [dataCompany, setdataCompany] = useState([])
     const [count, setCount] = useState('')
@@ -71,6 +73,18 @@ const ManageCompany = () => {
             toast.error(res.errMessage)
         }
     }
+    const confirmPost = (id) => {
+        confirm({
+            title: 'Bạn có chắc muốn duyệt công ty này?',
+            icon: <ExclamationCircleOutlined />,    
+            onOk() {
+                handleAccecptCompany(id)
+            },
+        
+            onCancel() {
+            },
+          });
+    }
     return (
         <div>
             <div className="col-12 grid-margin">
@@ -121,7 +135,13 @@ const ManageCompany = () => {
                                                         &nbsp; &nbsp;
                                                         {item.censorData.code === 'CS3' &&
                                                             <>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => handleAccecptCompany(item.id)} >Duyệt</a>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id)} >Duyệt</a>
+                                                                &nbsp; &nbsp;
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => setPropsModal({
+                                                                    isActive:true,
+                                                                    handleCompany: handleAccecptCompany,
+                                                                    id: item.id
+                                                                })} >Từ chối</a>
                                                                 &nbsp; &nbsp;
                                                             </>
                                                         }

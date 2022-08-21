@@ -20,3 +20,17 @@
 .relative {
     position: relative;
 }
+
+.hover-pointer:hover {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1279.98px) {
+    .my-font {
+        font-size: 10px;
+    }
+    .single-job-items .job-tittle ul li {
+        font-size: 12px;
+    }
+}
+

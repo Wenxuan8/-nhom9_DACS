@@ -6,10 +6,10 @@ import {
     Route,
     Link
 } from "react-router-dom";
+import UserCv from '../system/Cv/UserCv';
 import ChangePassword from '../system/User/ChangePassword';
 import CandidateInfo from './CandidateInfo';
 import ManageCvCandidate from './ManageCvCandidate';
-
 const HomeCandidate = () => {
     return (
 
@@ -38,7 +38,8 @@ const HomeCandidate = () => {
                                 <Route exact path="/candidate/cv-post/" component={ManageCvCandidate}>
 
                                 </Route>
-
+                                <Route path="/candidate/cv-detail/:id" component={UserCv}>
+                                </Route>
 
                             </div>
                             {/* content-wrapper ends */}
@@ -50,7 +51,6 @@ const HomeCandidate = () => {
                     </div>
                     {/* page-body-wrapper ends */}
                 </div>
-
             </React.Fragment>
         </Switch >
 

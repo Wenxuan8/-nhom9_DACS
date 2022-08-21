@@ -3,13 +3,29 @@ import React from 'react'
 const Footer = () => {
     return (
         <footer className="footer">
-            <div className="d-sm-flex justify-content-center justify-content-sm-between">
-                <span className="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-                <span className="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted &amp; made with <i className="ti-heart text-danger ml-1" /></span>
-            </div>
-            <div className="d-sm-flex justify-content-center justify-content-sm-between">
-                <span className="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span>
-            </div>
+                <div className="footer-bottom-area footer-bg" style={{backgroundColor:'white'}}>
+                    <div className="container">
+                        <div className="footer-border">
+                            <div className="row d-flex justify-content-between align-items-center">
+                                <div className="col-xl-10 col-lg-10 ">
+                                    <div className="footer-copy-right">
+                                        <p>
+                                            Bản quyền &copy;<script>document.write(new Date().getFullYear());</script> được sản xuất <i className="fa fa-heart" aria-hidden="true"></i> từ <a href="https://www.linkedin.com/in/nguyenletantai" target="_blank">Tấn Tài</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="col-xl-2 col-lg-2">
+                                    <div className="footer-social f-right">
+                                        <a href="https://www.facebook.com/tantai.nguyenle.5"><i className="fab fa-facebook-f"></i></a>
+                                        <a href="#"><i className="fab fa-twitter"></i></a>
+                                        <a href="#"><i className="fas fa-globe"></i></a>
+                                        <a href="#"><i className="fab fa-behance"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </footer>
     )
 }

@@ -13,7 +13,6 @@ const ManageCvCandidate = (props) => {
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
-    console.log(dataCv)
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         setUser(userData)
@@ -107,7 +106,8 @@ const ManageCvCandidate = (props) => {
                                                     <td>
                                                         <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/detail-job/${item.postCvData.id}/`}>Xem công việc</Link>
                                                         &nbsp; &nbsp;
-
+                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/candidate/cv-detail/${item.id}`}>Xem CV đã nộp</Link>
+                                                        &nbsp; &nbsp;
                                                     </td>
                                                 </tr>
                                             )
