@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useHistory, useParams } from "react-router-dom";
 import { Spinner, Modal } from 'reactstrap'
 import '../../../components/modal/modal.css'
+import CommonUtils from '../../../util/CommonUtils';
 const AddJobLevel = () => {
 
 
@@ -31,9 +32,29 @@ const AddJobLevel = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            setInputValues({
+                ...inputValues,
+                value: CommonUtils.removeSpace(inputValues.value)
+            })
+        }, 1000)
+    
+        return () => clearTimeout(delayDebounceFn)
+      }, [inputValues.value])
+
     const handleOnChange = event => {
         const { name, value } = event.target;
-        setInputValues({ ...inputValues, [name]: value });
+        if (name === 'value') {
+            setInputValues({
+                ...inputValues,
+                value: value,
+                code: CommonUtils.replaceCode(value)
+            })
+        }
+        else {
+            setInputValues({ ...inputValues, [name]: value });
+        }
 
     };
 
@@ -106,7 +127,7 @@ const AddJobLevel = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Mã code</label>
                                         <div className="col-sm-9">
-                                            <input type="text" disabled={inputValues.code ? true: false} value={inputValues.code} name="code" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                            <input type="text" disabled={true} value={inputValues.code} name="code" onChange={(event) => handleOnChange(event)} className="form-control" />
                                         </div>
                                     </div>
                                 </div>
