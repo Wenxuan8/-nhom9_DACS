@@ -120,7 +120,7 @@ const getListCompany = (data) => {
 }
 
 const getAllCompany = (data) => {
-    return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+    return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}&search=${data.search}&censorCode=${data.censorCode}`)
 }
 
 const accecptCompanyService = (data) => {
@@ -157,7 +157,7 @@ const getAllPostByAdminService = (data) => {
 
 }
 const getAllPostByRoleAdminService = (data) => {
-    return axios.get(`/api/get-all-post-admin?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+    return axios.get(`/api/get-all-post-admin?limit=${data.limit}&offset=${data.offset}&search=${data.search}&censorCode=${data.censorCode}`)
 
 }
 const getDetailPostByIdService = (id) => {

@@ -510,10 +510,27 @@ let getAllPostByAdmin = (data) => {
                                 { model: db.Company, as: 'companyUserData' }
                             ]
                         }
-                    ]
+                    ],
+                }
+                // if (data.search) {
+                //     objectFilter.include[0].where = {name: {[Op.like]: `%${data.search}%`}}
+                // }
+                if (data.censorCode) {
+                    objectFilter.where = {statusCode : data.censorCode}
                 }
                 if (data.search) {
-                    objectFilter.include[0].where = {name: {[Op.like]: `%${data.search}%`}}
+                    objectFilter.where = { ...objectFilter.where,
+                        [Op.or]: [
+                            db.Sequelize.where(db.sequelize.col('postDetailData.name'),{
+                                [Op.like]: `%${data.search}%`
+                            }),
+                            {
+                                id : {
+                                    [Op.like]: `%${data.search}%`
+                                }
+                            }
+                        ]
+                    }
                 }
                 let post = await db.Post.findAndCountAll(objectFilter)
                 resolve({
@@ -523,7 +540,7 @@ let getAllPostByAdmin = (data) => {
                 })
             }
         } catch (error) {
-            reject(error)
+            reject(error.message)
         }
     })
 

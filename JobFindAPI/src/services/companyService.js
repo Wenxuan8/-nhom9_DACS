@@ -32,7 +32,6 @@ let sendmail = (note, userMail, link = null) => {
 }
 let checkCompany = (name, id = null) => {
     return new Promise(async (resolve, reject) => {
-        console.log(id)
         try {
             if (!name) {
                 resolve({
@@ -45,7 +44,6 @@ let checkCompany = (name, id = null) => {
                     company = await db.Company.findOne({
                         where: { name: name, id: { [Op.ne]: id } }
                     })
-                    console.log(company)
                 }
                 else {
                     company = await db.Company.findOne({
@@ -713,7 +711,19 @@ let getAllCompanyByAdmin = (data) => {
                     ]
                 }
                 if (data.search) {
-                    objectFilter.where = {name: {[Op.like]: `%${data.search}%`}}
+                    objectFilter.where = {
+                        [Op.or]: [
+                            {
+                                name: {[Op.like]: `%${data.search}%`}
+                            },
+                            {
+                                id: {[Op.like]: `%${data.search}%`}
+                            }
+                        ]
+                    }
+                }
+                if (data.censorCode){
+                    objectFilter.where = {...objectFilter.where, censorCode: data.censorCode}
                 }
                 let company = await db.Company.findAndCountAll(objectFilter)
                 resolve({

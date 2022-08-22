@@ -7,7 +7,7 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
-import { Modal } from 'antd';
+import { Col, Modal, Row, Select } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import CommonUtils from '../../../util/CommonUtils';
 import {Input} from 'antd'
@@ -18,11 +18,34 @@ const ManagePost = () => {
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
     const [search,setSearch] = useState('')
+    const [censorCode,setCensorCode] = useState('')
     const [propsModal, setPropsModal] = useState({
         isActive: false,
         handlePost: () => { },
         postId: ''
     })
+    const censorOptions = [
+        {
+            value: '',
+            label: 'Tất cả'
+        },
+        {
+            value : 'PS1',
+            label: 'Đã kiểm duyệt'
+        },
+        {
+            value: 'PS2',
+            label: 'Đã bị từ chối'
+        },
+        {
+            value: 'PS3',
+            label: 'Chờ kiểm duyệt'
+        },
+        {
+            value: 'PS4',
+            label: 'Bài viết đã bị chặn'
+        }
+    ]
     useEffect(() => {
         try {
             const userData = JSON.parse(localStorage.getItem('userData'));
@@ -33,7 +56,8 @@ const ManagePost = () => {
                         arrData = await getAllPostByRoleAdminService({
                             limit: PAGINATION.pagerow,
                             offset: 0,
-                            search: CommonUtils.removeSpace(search)
+                            search: CommonUtils.removeSpace(search),
+                            censorCode: censorCode
                         })
                     }
                     else {
@@ -57,7 +81,7 @@ const ManagePost = () => {
             console.log(error)
         }
 
-    }, [search])
+    }, [search,censorCode])
 
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
@@ -66,7 +90,8 @@ const ManagePost = () => {
             arrData = await getAllPostByRoleAdminService({
                 limit: PAGINATION.pagerow,
                 offset: number.selected * PAGINATION.pagerow,
-                search: CommonUtils.removeSpace(search)
+                search: CommonUtils.removeSpace(search),
+                censorCode: censorCode
 
             })
         }
@@ -81,6 +106,9 @@ const ManagePost = () => {
             setdataPost(arrData.data)
         }
     }
+    let handleOnChangeCensor = (value) => {
+        setCensorCode(value)
+    }
     let handleBanPost = async (id, note) => {
         let res = await banPostService({
             postId: id,
@@ -93,7 +121,8 @@ const ManagePost = () => {
                 arrData = await getAllPostByRoleAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
-                    search: CommonUtils.removeSpace(search)
+                    search: CommonUtils.removeSpace(search),
+                    censorCode: censorCode
 
                 })
             }
@@ -124,7 +153,8 @@ const ManagePost = () => {
                 arrData = await getAllPostByRoleAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
-                    search: CommonUtils.removeSpace(search)
+                    search: CommonUtils.removeSpace(search),
+                    censorCode: censorCode
 
                 })
             }
@@ -156,7 +186,8 @@ const ManagePost = () => {
                 arrData = await getAllPostByRoleAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
-                    search: CommonUtils.removeSpace(search)
+                    search: CommonUtils.removeSpace(search),
+                    censorCode: censorCode
 
                 })
             }
@@ -196,9 +227,19 @@ const ManagePost = () => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách bài đăng</h4>
-                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên bài đăng" allowClear enterButton="Tìm kiếm">
+                        <Row justify='space-around' className='mt-5 mb-5'>
+                            <Col xs={12} xxl={12}>
+                        <Input.Search onSearch={handleSearch} placeholder="Nhập tên hoặc mã bài đăng" allowClear enterButton="Tìm kiếm">
+                        </Input.Search>
+                            </Col>
+                            <Col xs={8} xxl={8}>
+                                <label className='mr-2'>Loại trạng thái: </label>
+                                <Select onChange={(value)=> handleOnChangeCensor(value)} style={{width:'50%'}} size='default' defaultValue={censorOptions[0].value} options={censorOptions}>
                                     
-                                    </Input.Search>
+                                </Select>
+                            </Col>
+
+                        </Row>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>

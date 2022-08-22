@@ -7,21 +7,43 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
-import { Modal ,Input } from 'antd';
+import { Modal, Input, Row, Col, Select } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import CommonUtils from '../../../util/CommonUtils';
-const {confirm} = Modal
+const { confirm } = Modal
 const ManageCompany = () => {
     const [dataCompany, setdataCompany] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
-    const [search,setSearch] = useState('')
+    const [search, setSearch] = useState('')
+    const [censorCode, setCensorCode] = useState('')
     const [propsModal, setPropsModal] = useState({
         isActive: false,
         handleCompany: () => { },
         id: ''
     })
+    const censorOptions = [
+        {
+            value: '',
+            label: 'Tất cả'
+        },
+        {
+            value: 'CS1',
+            label: 'Đã kiểm duyệt'
+        },
+        {
+            value: 'CS2',
+            label: 'Chưa kiểm duyệt'
+        },
+        {
+            value: 'CS3',
+            label: 'Đang chờ kiểm duyệt'
+        },
+    ]
+    let handleOnChangeCensor = (value) => {
+        setCensorCode(value)
+    }
     useEffect(() => {
         try {
             const userData = JSON.parse(localStorage.getItem('userData'));
@@ -31,7 +53,9 @@ const ManageCompany = () => {
                     arrData = await getAllCompany({
                         limit: PAGINATION.pagerow,
                         offset: 0,
-                        search: CommonUtils.removeSpace(search)
+                        search: CommonUtils.removeSpace(search),
+                        censorCode: censorCode
+
 
                     })
                     if (arrData && arrData.errCode === 0) {
@@ -48,14 +72,16 @@ const ManageCompany = () => {
             console.log(error)
         }
 
-    }, [search])
+    }, [search, censorCode])
 
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
         let arrData = await getAllCompany({
             limit: PAGINATION.pagerow,
             offset: number.selected * PAGINATION.pagerow,
-            search: CommonUtils.removeSpace(search)
+            search: CommonUtils.removeSpace(search),
+            censorCode: censorCode
+
 
         })
         if (arrData && arrData.errCode === 0) {
@@ -71,7 +97,9 @@ const ManageCompany = () => {
             let arrData = await getAllCompany({
                 limit: PAGINATION.pagerow,
                 offset: numberPage * PAGINATION.pagerow,
-                search: CommonUtils.removeSpace(search)
+                search: CommonUtils.removeSpace(search),
+                censorCode: censorCode
+
 
             })
             if (arrData && arrData.errCode === 0) {
@@ -85,14 +113,14 @@ const ManageCompany = () => {
     const confirmPost = (id) => {
         confirm({
             title: 'Bạn có chắc muốn duyệt công ty này?',
-            icon: <ExclamationCircleOutlined />,    
+            icon: <ExclamationCircleOutlined />,
             onOk() {
                 handleAccecptCompany(id)
             },
-        
+
             onCancel() {
             },
-          });
+        });
     }
     const handleSearch = (value) => {
         setSearch(value)
@@ -103,9 +131,19 @@ const ManageCompany = () => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách công ty</h4>
-                        <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên công ty" allowClear enterButton="Tìm kiếm">
-                                    
-                                    </Input.Search>
+                        <Row justify='space-around' className='mt-5 mb-5'>
+                            <Col xs={12} xxl={12}>
+                                <Input.Search onSearch={handleSearch} placeholder="Nhập tên hoặc mã bài đăng" allowClear enterButton="Tìm kiếm">
+                                </Input.Search>
+                            </Col>
+                            <Col xs={8} xxl={8}>
+                                <label className='mr-2'>Loại trạng thái: </label>
+                                <Select onChange={(value) => handleOnChangeCensor(value)} style={{ width: '50%' }} size='default' defaultValue={censorOptions[0].value} options={censorOptions}>
+
+                                </Select>
+                            </Col>
+
+                        </Row>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
@@ -156,7 +194,7 @@ const ManageCompany = () => {
                                                                 <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id)} >Duyệt</a>
                                                                 &nbsp; &nbsp;
                                                                 <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => setPropsModal({
-                                                                    isActive:true,
+                                                                    isActive: true,
                                                                     handleCompany: handleAccecptCompany,
                                                                     id: item.id
                                                                 })} >Từ chối</a>
@@ -183,13 +221,13 @@ const ManageCompany = () => {
                                 </tbody>
                             </table>
                             {
-                                            dataCompany && dataCompany.length == 0 && (
-                                                <div style={{ textAlign: 'center' }}>
+                                dataCompany && dataCompany.length == 0 && (
+                                    <div style={{ textAlign: 'center' }}>
 
-                                                    Không có dữ liệu
+                                        Không có dữ liệu
 
-                                                </div>
-                                            )
+                                    </div>
+                                )
                             }
                         </div>
                     </div>
