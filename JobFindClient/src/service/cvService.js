@@ -8,8 +8,8 @@ const createNewCv = (data) => {
 const getAllListCvByPostService = (data) => {
     return axios.get(`/api/get-all-list-cv-by-post?limit=${data.limit}&offset=${data.offset}&postId=${data.postId}`)
 }
-const getDetailCvService = (id) => {
-    return axios.get(`/api/get-detail-cv-by-id?cvId=${id}`)
+const getDetailCvService = (id,roleCode) => {
+    return axios.get(`/api/get-detail-cv-by-id?cvId=${id}&roleCode=${roleCode}`)
 }
 const getAllListCvByUserIdService = (data) => {
     return axios.get(`/api/get-all-cv-by-userId?limit=${data.limit}&offset=${data.offset}&userId=${data.userId}`)

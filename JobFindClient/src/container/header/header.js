@@ -8,13 +8,13 @@ const Header = () => {
     const [user, setUser] = useState({})
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
-        if (userData && userData.roleCode !== 'CANDIDATE')
-        {
-            toast.error("Vai trò của bạn không làm việc ở đây")
-            setTimeout(() => {
-                window.location.href = "/admin"
-            }, 1000);
-        }
+        // if (userData && userData.roleCode !== 'CANDIDATE')
+        // {
+        //     toast.error("Vai trò của bạn không làm việc ở đây")
+        //     setTimeout(() => {
+        //         window.location.href = "/admin"
+        //     }, 1000);
+        // }
         setUser(userData)
     }, [])
 

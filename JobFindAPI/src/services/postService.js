@@ -19,7 +19,7 @@ let sendmail = (note, userMail, link = null) => {
     };
     if (link)
     {
-        mailOptions.html = note + ` xem thông tin <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+        mailOptions.html = note + ` xem thông tin bài viết <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -277,7 +277,7 @@ let handleBanPost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note, user.email,`/admin/note/${foundPost.id}`)
+                    sendmail(data.note, user.email,`admin/list-post/${foundPost.id}`)
 
                     resolve({
                         errCode: 0,
@@ -325,7 +325,7 @@ let handleActivePost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note, user.email,`/admin/note/${foundPost.id}`)
+                    sendmail(data.note, user.email,`admin/list-post/${foundPost.id}`)
                     resolve({
                         errCode: 0,
                         errMessage: 'Đã mở lại trạng thái chờ duyệt'
@@ -378,10 +378,10 @@ let handleAcceptPost = (data) => {
                     })
                     if (data.statusCode == "PS1")
                     {
-                        sendmail(note, user.email)
+                        sendmail(note, user.email,`detail-job/${foundPost.id}`)
                     }
                     else {
-                        sendmail(data.note, user.email,`/admin/note/${foundPost.id}`)
+                        sendmail(data.note, user.email,`admin/list-post/${foundPost.id}`)
                     }
                     resolve({
                         errCode: 0,
@@ -429,11 +429,11 @@ let getListPostByAdmin = (data) => {
                             userId: item.id
                         }
                     })
-                    let post = await db.Post.findAndCountAll({
+                    let objectFilter = {
                         where: {
                             [Op.and]: [{ [Op.or]: listUserOfCompany }]
                         },
-                        order: [['createdAt', 'DESC']],
+                        order: [['updatedAt', 'DESC']],
                         limit: +data.limit,
                         offset: +data.offset,
                         attributes: {
@@ -455,8 +455,35 @@ let getListPostByAdmin = (data) => {
                                 ]
                             },
                             { model: db.Allcode, as: 'statusPostData', attributes: ['value', 'code'] },
+                            { model: db.User, as: 'userPostData',
+                                attributes: {
+                                    exclude: ['userId']
+                                },
+                                include: [
+                                    {model : db.Company, as: 'userCompanyData'}
+                                ]
+                            }
                         ]
-                    })
+                    }
+                    if (data.censorCode) {
+                        objectFilter.where = {...objectFilter.where,statusCode: data.censorCode}
+                    }
+                    if (data.search) {
+                        objectFilter.where = {
+                            ...objectFilter.where,
+                            [Op.or]: [
+                                db.Sequelize.where(db.sequelize.col('postDetailData.name'),{
+                                    [Op.like]: `%${data.search}%`
+                                }),
+                                {
+                                    id : {
+                                        [Op.like]: `%${data.search}%`
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                    let post = await db.Post.findAndCountAll(objectFilter)
                     resolve({
                         errCode: 0,
                         data: post.rows,
@@ -465,7 +492,7 @@ let getListPostByAdmin = (data) => {
                 }
             }
         } catch (error) {
-            reject(error)
+            reject(error.message)
         }
     })
 
@@ -511,6 +538,7 @@ let getAllPostByAdmin = (data) => {
                             ]
                         }
                     ],
+                    order: [['updatedAt', 'DESC']],
                 }
                 // if (data.search) {
                 //     objectFilter.include[0].where = {name: {[Op.like]: `%${data.search}%`}}
@@ -528,7 +556,10 @@ let getAllPostByAdmin = (data) => {
                                 id : {
                                     [Op.like]: `%${data.search}%`
                                 }
-                            }
+                            },
+                            db.Sequelize.where(db.sequelize.col('userPostData.companyUserData.name'),{
+                                [Op.like]: `%${data.search}%`
+                            }),
                         ]
                     }
                 }
@@ -674,6 +705,7 @@ let getFilterPost = (data) => {
                     statusCode: 'PS1',
                     [Op.or]: listDetailPostId,
                 },
+                order: [['timePost', 'DESC']],
                 include: [
                     {
                         model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
@@ -781,6 +813,7 @@ let getListNoteByPost = (data) => {
                             }
                         }
                     ],
+                    order: [['createddAt', 'DESC']],
                     raw: true,
                     nest: true
                 })

@@ -49,7 +49,7 @@ function PaymentSuccess(props) {
 
         <div style={{height:'50vh',textAlign:'center'}}> 
            {message}
-           {message === 'Thông tin đơn hàng không hợp lệ' && <div className='mt-5'><button onClick={() => history.push("/admin/add-post") } style={{backgroundColor: "green"}}>Đăng bài ngay</button></div>}
+           {message === 'Chúc mừng bạn đã mua lượt đăng bài thành công' && <div className='mt-5'><button onClick={() => history.push("/admin/add-post") } style={{backgroundColor: "green"}}>Đăng bài ngay</button></div>}
         </div>
 
     );

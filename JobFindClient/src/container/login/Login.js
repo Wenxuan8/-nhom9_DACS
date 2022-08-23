@@ -69,12 +69,7 @@ const Login = () => {
                                             <a onClick={() => handleLogin()} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Đăng nhập</a>
                                         </div>
                                         <div className="my-2 d-flex justify-content-between align-items-center">
-                                            <div className="form-check">
-                                                <label className="form-check-label text-muted">
-                                                    <input type="checkbox" className="form-check-input" />
-                                                    Ghi nhớ số điện thoại
-                                                </label>
-                                            </div>
+                                            
                                             {/* <a href="#" className="auth-link text-black">Forgot password?</a> */}
                                             <Link to="/forget-password" className="auth-link text-black" style={{ color: 'blue' }}>Quên mật khẩu?</Link>
                                         </div>

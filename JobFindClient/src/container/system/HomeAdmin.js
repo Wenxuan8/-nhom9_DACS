@@ -310,6 +310,9 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/list-post/">
                                     <ManagePost />
                                 </Route>
+                                <Route exact path="/admin/list-post/:id">
+                                    <ManagePost />
+                                </Route>
                                 <Route exact path="/admin/buy-post/">
                                     <BuyPost />
                                 </Route>

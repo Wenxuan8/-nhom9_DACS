@@ -82,7 +82,7 @@ let getAllListCvByPost = (data) => {
 let getDetailCvById = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.cvId) {
+            if (!data.cvId || !data.roleCode) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
@@ -101,8 +101,11 @@ let getDetailCvById = (data) => {
                         }
                     ]
                 })
-                cv.isChecked = 1
-                await cv.save()
+                if (data.roleCode !== 'CANDIDATE')
+                {
+                    cv.isChecked = 1
+                    await cv.save()
+                }
                 if (cv.file) {
                     cv.file = new Buffer(cv.file, 'base64').toString('binary');
                 }

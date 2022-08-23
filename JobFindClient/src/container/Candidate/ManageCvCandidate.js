@@ -6,6 +6,7 @@ import { PAGINATION } from '../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { useParams } from "react-router-dom";
+import moment from 'moment';
 
 
 const ManageCvCandidate = (props) => {
@@ -83,6 +84,9 @@ const ManageCvCandidate = (props) => {
                                             Địa chỉ
                                         </th>
                                         <th>
+                                            Thời gian nộp
+                                        </th>
+                                        <th>
                                             Trạng thái
                                         </th>
                                         <th>
@@ -101,7 +105,7 @@ const ManageCvCandidate = (props) => {
                                                     <td>{item.postCvData.postDetailData.jobTypePostData.value}</td>
                                                     <td>{item.postCvData.postDetailData.jobLevelPostData.value}</td>
                                                     <td>{item.postCvData.postDetailData.provincePostData.value}</td>
-
+                                                    <td>{moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss')}</td>
                                                     <td>{item.isChecked === 0 ? 'Chưa xem' : 'Đã xem'}</td>
                                                     <td>
                                                         <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/detail-job/${item.postCvData.id}/`}>Xem công việc</Link>

@@ -153,7 +153,7 @@ const acceptPostService = (data) => {
     return axios.put(`/api/accept-post`, data)
 }
 const getAllPostByAdminService = (data) => {
-    return axios.get(`/api/get-list-post-admin?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}`)
+    return axios.get(`/api/get-list-post-admin?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}&search=${data.search}&censorCode=${data.censorCode}`)
 
 }
 const getAllPostByRoleAdminService = (data) => {

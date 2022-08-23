@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 
 const UserCv = () => {
-    console.log("Hello")
+    const user = JSON.parse(localStorage.getItem("userData"))
     const { id } = useParams();
     const [dataCV, setdataCV] = useState({
         userCvData: {
@@ -21,9 +21,8 @@ const UserCv = () => {
     });
     useEffect(() => {
         if (id) {
-
             let fetchCV = async () => {
-                let res = await getDetailCvService(id)
+                let res = await getDetailCvService(id,user.roleCode)
                 if (res && res.errCode === 0) {
                     setdataCV(res.data)
                 }

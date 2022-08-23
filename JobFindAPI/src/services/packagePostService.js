@@ -208,10 +208,10 @@ let paymentOrderSuccess = (data) => {
                             })
                             if (company) {
                                 if (infoItem.isHot == 0) {
-                                    company.allowPost += +infoItem.value
+                                    company.allowPost += +infoItem.value * +data.amount
                                 }
                                 else {
-                                    company.allowHotPost += +infoItem.value
+                                    company.allowHotPost += +infoItem.value * +data.amount
                                 }
                                 await company.save()
 

@@ -21,7 +21,7 @@ let sendmail = (note, userMail, link = null) => {
     };
     if (link)
     {
-        mailOptions.html = note + ` xem thông tin <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+        mailOptions.html = note + ` xem thông tin công ty <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -228,7 +228,7 @@ let handleUpdateCompany = (data) => {
                             res.file = data.file
                             res.censorCode = 'CS3'
                         }
-                        else if (res.censorCode !== 'CS2'){
+                        else if (res.censorCode !== 'CS3'){
                             res.censorCode = 'CS3'
                         }
                         await res.save();
@@ -342,14 +342,16 @@ let handleAccecptCompany = (data) => {
                         foundCompany.censorCode = "CS2"
                     }
                     await foundCompany.save()
-                    let note = data.note != 'null' ? data.note : "Đã duyệt công ty thành công"
+                    let note = data.note != 'null' ? data.note : `Công ty ${foundCompany.name} của bạn đã kiểm duyệt thành công`
                     let user = await db.User.findOne({
                         where: { id: foundCompany.userId },
                         attributes: {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(note, user.email)
+                    if (data.note != 'null') {
+                        sendmail(note, user.email,"admin/edit-company")
+                    }
                     resolve({
                         errCode: 0,
                         errMessage: data.note != 'null' ? "Đã quay lại trạng thái chờ" : "Đã duyệt công ty thành công"

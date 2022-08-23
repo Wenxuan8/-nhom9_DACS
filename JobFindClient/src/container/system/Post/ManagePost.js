@@ -4,7 +4,7 @@ import { banPostService, getAllPostByAdminService, activePostService, getAllPost
 import moment from 'moment';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoteModal from '../../../components/modal/NoteModal';
 import { Col, Modal, Row, Select } from 'antd';
@@ -13,12 +13,14 @@ import CommonUtils from '../../../util/CommonUtils';
 import {Input} from 'antd'
 const {confirm} = Modal
 const ManagePost = () => {
+    const { id } = useParams()
+    const [isSearchBy,setIsSearchBy] = useState(false)
     const [dataPost, setdataPost] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const [user, setUser] = useState({})
     const [search,setSearch] = useState('')
-    const [censorCode,setCensorCode] = useState('')
+    const [censorCode,setCensorCode] = useState('PS3')
     const [propsModal, setPropsModal] = useState({
         isActive: false,
         handlePost: () => { },
@@ -49,32 +51,51 @@ const ManagePost = () => {
     useEffect(() => {
         try {
             const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData) {
-                let fetchData = async () => {
-                    let arrData = []
-                    if (userData.roleCode == 'ADMIN') {
-                        arrData = await getAllPostByRoleAdminService({
-                            limit: PAGINATION.pagerow,
-                            offset: 0,
-                            search: CommonUtils.removeSpace(search),
-                            censorCode: censorCode
-                        })
-                    }
-                    else {
-                        arrData = await getAllPostByAdminService({
-                            limit: PAGINATION.pagerow,
-                            offset: 0,
-                            companyId: userData.companyId
-                        })
-                    }
-                    if (arrData && arrData.errCode === 0) {
-                        setdataPost(arrData.data)
-                        setnumberPage(0)
-                        setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
-                    }
+            console.log(id)
+            if (id && !isSearchBy) {
+                setIsSearchBy(true)
+                let fetchDataById = async () => {
+                    setSearch(id)
+                    setCensorCode('')
+                    let arrDataById = await getAllPostByAdminService({
+                        limit: PAGINATION.pagerow,
+                        offset: 0,
+                        search: id,
+                        censorCode: ''
+                    })
                 }
-                fetchData();
-                setUser(userData)
+                fetchDataById()
+            }
+            else {
+                if (userData) {
+                    let fetchData = async () => {
+                        let arrData = []
+                        if (userData.roleCode == 'ADMIN') {
+                            arrData = await getAllPostByRoleAdminService({
+                                limit: PAGINATION.pagerow,
+                                offset: 0,
+                                search: CommonUtils.removeSpace(search),
+                                censorCode: censorCode
+                            })
+                        }
+                        else {
+                            arrData = await getAllPostByAdminService({
+                                limit: PAGINATION.pagerow,
+                                offset: 0,
+                                companyId: userData.companyId,
+                                search: CommonUtils.removeSpace(search),
+                                censorCode: censorCode
+                            })
+                        }
+                        if (arrData && arrData.errCode === 0) {
+                            setdataPost(arrData.data)
+                            setnumberPage(0)
+                            setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+                        }
+                    }
+                    fetchData();
+                    setUser(userData)
+                }
             }
 
         } catch (error) {
@@ -99,7 +120,9 @@ const ManagePost = () => {
             arrData = await getAllPostByAdminService({
                 limit: PAGINATION.pagerow,
                 offset: number.selected * PAGINATION.pagerow,
-                companyId: user.companyId
+                companyId: user.companyId,
+                search: CommonUtils.removeSpace(search),
+                censorCode: censorCode
             })
         }
         if (arrData && arrData.errCode === 0) {
@@ -130,7 +153,9 @@ const ManagePost = () => {
                 arrData = await getAllPostByAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
-                    companyId: user.companyId
+                    companyId: user.companyId,
+                    search: CommonUtils.removeSpace(search),
+                    censorCode: censorCode
                 })
             }
             if (arrData && arrData.errCode === 0) {
@@ -162,7 +187,9 @@ const ManagePost = () => {
                 arrData = await getAllPostByAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
-                    companyId: user.companyId
+                    companyId: user.companyId,
+                    search: CommonUtils.removeSpace(search),
+                    censorCode: censorCode
                 })
             }
             if (arrData && arrData.errCode === 0) {
@@ -195,7 +222,9 @@ const ManagePost = () => {
                 arrData = await getAllPostByAdminService({
                     limit: PAGINATION.pagerow,
                     offset: numberPage * PAGINATION.pagerow,
-                    companyId: user.companyId
+                    companyId: user.companyId,
+                    search: CommonUtils.removeSpace(search),
+                    censorCode: censorCode
                 })
             }
             if (arrData && arrData.errCode === 0) {
@@ -229,12 +258,12 @@ const ManagePost = () => {
                         <h4 className="card-title">Danh sách bài đăng</h4>
                         <Row justify='space-around' className='mt-5 mb-5'>
                             <Col xs={12} xxl={12}>
-                        <Input.Search onSearch={handleSearch} placeholder="Nhập tên hoặc mã bài đăng" allowClear enterButton="Tìm kiếm">
+                        <Input.Search value={search} onSearch={handleSearch} placeholder={user?.roleCode === "ADMIN" ? "Nhập tên hoặc mã bài đăng, tên công ty" :"Nhập tên hoặc mã bài đăng"} allowClear enterButton="Tìm kiếm">
                         </Input.Search>
                             </Col>
                             <Col xs={8} xxl={8}>
                                 <label className='mr-2'>Loại trạng thái: </label>
-                                <Select onChange={(value)=> handleOnChangeCensor(value)} style={{width:'50%'}} size='default' defaultValue={censorOptions[0].value} options={censorOptions}>
+                                <Select onChange={(value)=> handleOnChangeCensor(value)} style={{width:'50%'}} size='default' defaultValue={id ? censorOptions[0].value : censorOptions[3].value} options={censorOptions}>
                                     
                                 </Select>
                             </Col>
@@ -253,14 +282,14 @@ const ManagePost = () => {
                                         <th>
                                             Tên bài đăng
                                         </th>
+                                        {
+                                        user?.roleCode === 'ADMIN' &&   
                                         <th>
-                                            Ngành
+                                            Tên công ty
                                         </th>
+                                        }
                                         <th>
-                                            Chức vụ
-                                        </th>
-                                        <th>
-                                            Hình thức làm việc
+                                            Tên người đăng
                                         </th>
                                         <th>
                                             Ngày kết thúc
@@ -282,11 +311,14 @@ const ManagePost = () => {
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.id}</td>
                                                     <td>{item.postDetailData.name}</td>
-                                                    <td>{item.postDetailData.jobTypePostData.value}</td>
-                                                    <td>{item.postDetailData.jobLevelPostData.value}</td>
-                                                    <td>{item.postDetailData.workTypePostData.value}</td>
+                                                    {
+                                                    user?.roleCode === "ADMIN" &&
+                                                    <td>{item.userPostData.companyUserData.name}</td>
+                                                    }
+                                                    <td>{`${item.userPostData.firstName} ${item.userPostData.lastName}`}</td>
                                                     <td>{date}</td>
-                                                    <td>{item.statusPostData.value}</td>
+                                                    <td><label className={item.statusPostData.code == 'PS1' ? 'badge badge-success' : (item.statusPostData.code == 'PS3' ? 'badge badge-warning'  : 'badge badge-danger')}>{item.statusPostData.value}</label></td>
+
                                                     <td>
                                                         <Link style={{color:'#4B49AC'}} to={`/admin/note/${item.id}`}>Chú thích</Link>
                                                         &nbsp; &nbsp;
@@ -298,7 +330,7 @@ const ManagePost = () => {
                                                         }
                                                         { 
                                                         item.statusCode.code !== 'PS4' &&
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>Sửa</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-post/${item.id}/`}>{user?.roleCode === "ADMIN" ? 'Xem chi tiết' : 'Sửa'}</Link>
                                                         }
                                                         &nbsp; &nbsp;
                                                         {user.roleCode == 'ADMIN' ? (item.statusCode == 'PS1' ? <>

@@ -26,14 +26,14 @@ const AddPost = () => {
     })
     const [inputValues, setInputValues] = useState({
         name: '', categoryJobCode: '', addressCode: '', salaryJobCode: '', amount: '', timeEnd: '', categoryJoblevelCode: '', categoryWorktypeCode: '', experienceJobCode: '',
-        genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '' , isHot: 0
+        genderCode: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '', isHot: 0
     });
     const [propsModal, setPropsModal] = useState({
         isActive: false,
-        handlePost: ()=> {},
+        handlePost: () => { },
     })
-    let fetchCompany = async (userId,companyId = null) => {
-        let res = await getDetailCompanyByUserId(userId,companyId)
+    let fetchCompany = async (userId, companyId = null) => {
+        let res = await getDetailCompanyByUserId(userId, companyId)
         if (res && res.errCode === 0) {
             setCompanyPostAllow({
                 ...companyPostAllow,
@@ -44,8 +44,7 @@ const AddPost = () => {
     }
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
-        if (userData !== "ADMIN")
-        {
+        if (userData !== "ADMIN") {
             fetchCompany(userData.id)
         }
         if (id) {
@@ -105,7 +104,7 @@ const AddPost = () => {
         setInputValues({
             ...inputValues, ["genderCode"]: dataGenderPost[0].code, ["categoryJobCode"]: dataJobType[0].code,
             ["categoryJoblevelCode"]: dataJobLevel[0].code, ["salaryJobCode"]: dataSalaryType[0].code, ["experienceJobCode"]: dataExpType[0].code,
-            ["categoryWorktypeCode"]: dataWorkType[0].code, ["addressCode"] : dataProvince[0].code
+            ["categoryWorktypeCode"]: dataWorkType[0].code, ["addressCode"]: dataProvince[0].code
         })
     }
     const handleOnChange = event => {
@@ -153,6 +152,7 @@ const AddPost = () => {
             setTimeout(() => {
                 setIsLoading(false)
                 if (res && res.errCode === 0) {
+                    fetchCompany(user.id)
                     toast.success(res.errMessage)
                     setInputValues({
                         ...inputValues,
@@ -168,7 +168,7 @@ const AddPost = () => {
                         ["categoryWorktypeCode"]: '',
                         ["experienceJobCode"]: '',
                         ["genderCode"]: '',
-                        ["isHot"] : 0
+                        ["isHot"]: 0
                     })
                     settimeEnd('')
                 } else {
@@ -203,7 +203,7 @@ const AddPost = () => {
             }, 1000);
         }
     }
-    let handleReupPost = async (timeEnd)=> {
+    let handleReupPost = async (timeEnd) => {
         let res = await reupPostService({
             userId: user.id,
             postId: id,
@@ -223,8 +223,8 @@ const AddPost = () => {
                 <div className="col-12 grid-margin">
                     <div className="card">
                         <div className="card-body">
-                        <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
-                            <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới bài đăng' : 'Cập nhật bài đăng'}</h4>
+                            <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
+                            <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới bài đăng' :(user?.roleCode === 'ADMIN' ? 'Xem thông tin bài đăng' : 'Cập nhật bài đăng')}</h4>
                             <br></br>
                             {inputValues.isActionADD === true && user.roleCode !== "ADMIN" &&
                                 <div className='mb-5'>
@@ -240,7 +240,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Tên bài đăng</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.name} name="name" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.name} name="name" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -248,7 +248,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Địa chỉ</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.addressCode} name="addressCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataProvince && dataProvince.length > 0 &&
                                                         dataProvince.map((item, index) => {
                                                             return (
@@ -266,7 +266,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">SL nhân viên</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.amount} name="amount" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.amount} name="amount" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -286,7 +286,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Giới tính</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.genderCode} name="genderCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataGenderPost && dataGenderPost.length > 0 &&
                                                         dataGenderPost.map((item, index) => {
                                                             return (
@@ -302,7 +302,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Kinh nghiệm</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.experienceJobCode} name="experienceJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataExpType && dataExpType.length > 0 &&
                                                         dataExpType.map((item, index) => {
                                                             return (
@@ -320,7 +320,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ngành</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.categoryJobCode} name="categoryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobType && dataJobType.length > 0 &&
                                                         dataJobType.map((item, index) => {
                                                             return (
@@ -336,7 +336,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Chức vụ</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.categoryJoblevelCode} name="categoryJoblevelCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataJobLevel && dataJobLevel.length > 0 &&
                                                         dataJobLevel.map((item, index) => {
                                                             return (
@@ -354,7 +354,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Lương</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.salaryJobCode} name="salaryJobCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataSalaryType && dataSalaryType.length > 0 &&
                                                         dataSalaryType.map((item, index) => {
                                                             return (
@@ -370,7 +370,7 @@ const AddPost = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hình thức LV</label>
                                             <div className="col-sm-9">
-                                                <select style={{ color: "black" }} className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
+                                                <select disabled={user?.roleCode === "ADMIN" ? true : false} style={{ color: "black" }} className="form-control" value={inputValues.categoryWorktypeCode} name="categoryWorktypeCode" onChange={(event) => handleOnChange(event)}>
                                                     {dataWorkType && dataWorkType.length > 0 &&
                                                         dataWorkType.map((item, index) => {
                                                             return (
@@ -383,17 +383,17 @@ const AddPost = () => {
                                         </div>
                                     </div>
                                 </div>
-                                { inputValues.isActionADD && (<>
-                                <div className='row'>
-                                    <div className="col-md-6">
-                                        <div className="form-group row">
-                                            <label className="col-sm-3 col-form-label">Bài viết nổi bật</label>
-                                            <div className="col-sm-9">
-                                                <input  onChange={handleIsHot} checked={inputValues.isHot} style={{marginTop:'20px'}} type={'checkbox'}></input>
+                                {inputValues.isActionADD && (<>
+                                    <div className='row'>
+                                        <div className="col-md-6">
+                                            <div className="form-group row">
+                                                <label className="col-sm-3 col-form-label">Bài viết nổi bật</label>
+                                                <div className="col-sm-9">
+                                                    <input disabled={user?.roleCode === "ADMIN" ? true : false} onChange={handleIsHot} checked={inputValues.isHot} style={{ marginTop: '20px' }} type={'checkbox'}></input>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 </>)}
                                 <div className="row">
                                     <div className="col-md-12">
@@ -410,20 +410,23 @@ const AddPost = () => {
                                     </div>
 
                                 </div>
-                                <button onClick={() => handleSavePost()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
-                                    <i class="ti-file btn1-icon-prepend"></i>
-                                    Lưu
-                                </button>
+
                                 {
-                                    id && user.roleCode !== "ADMIN" && 
-                                <button onClick={() => setPropsModal({
-                                    ...propsModal,
-                                    isActive: true,
-                                    handlePost: handleReupPost
-                                })} type="button" className="ml-2 btn1 btn1-primary1 btn1-icon-text">
-                                    <i class="ti-file btn1-icon-prepend"></i>
-                                    Đăng lại
-                                </button>
+                                    id && user.roleCode !== "ADMIN" &&
+                                    <>
+                                        <button onClick={() => handleSavePost()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
+                                            <i class="ti-file btn1-icon-prepend"></i>
+                                            Lưu
+                                        </button>
+                                        <button onClick={() => setPropsModal({
+                                            ...propsModal,
+                                            isActive: true,
+                                            handlePost: handleReupPost
+                                        })} type="button" className="ml-2 btn1 btn1-primary1 btn1-icon-text">
+                                            <i class="ti-file btn1-icon-prepend"></i>
+                                            Đăng lại
+                                        </button>
+                                    </>
                                 }
                             </form>
                         </div>

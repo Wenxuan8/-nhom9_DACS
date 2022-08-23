@@ -4,7 +4,7 @@ import { getAllListCvByPostService } from '../../../service/cvService';
 
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
 
@@ -51,7 +51,7 @@ const ManageCv = () => {
 
         }
     }
-
+    const history = useHistory()
     return (
 
         <div>
@@ -60,6 +60,7 @@ const ManageCv = () => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách CV</h4>
+                        <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
 
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
@@ -108,6 +109,15 @@ const ManageCv = () => {
 
                                 </tbody>
                             </table>
+                            {
+                                            dataCv && dataCv.length == 0 && (
+                                                <div style={{ textAlign: 'center' }}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                            }
                         </div>
                     </div>
                     <ReactPaginate

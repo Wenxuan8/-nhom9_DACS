@@ -184,10 +184,10 @@ const ManageCompany = () => {
                                                     <td>{item.name}</td>
                                                     <td>{item.phonenumber}</td>
                                                     <td>{item.taxnumber}</td>
-                                                    <td>{item.censorData.value}</td>
+                                                    <td><label className={item.censorData.code == 'CS1' ? 'badge badge-success' : (item.censorData.code == 'CS3'? 'badge badge-warning'  : 'badge badge-danger')}>{item.censorData.value}</label></td>
                                                     <td>{moment(item.createdAt).format('DD-MM-YYYY')}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-company-admin/${item.id}`}>Sửa</Link>
+                                                        <Link style={{ color: '#4B49AC' }} to={`/admin/edit-company-admin/${item.id}`}>{user?.roleCode === "ADMIN" ? 'Xem chi tiết' : 'Sửa'}</Link>
                                                         &nbsp; &nbsp;
                                                         {item.censorData.code === 'CS3' &&
                                                             <>

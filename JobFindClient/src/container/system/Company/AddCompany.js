@@ -18,7 +18,7 @@ const AddCompany = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [inputValues, setInputValues] = useState({
         image: '', coverImage: '', imageReview: '', coverImageReview: '', isOpen: false, name: '', phonenumber: '', address: '', website: '',
-        amountEmployer: '', taxnumber: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '', file: '' , imageClick: '',
+        amountEmployer: '', taxnumber: '', descriptionHTML: '', descriptionMarkdown: '', isActionADD: true, id: '', file: '', imageClick: '',
         isFileChange: false
     });
     useEffect(() => {
@@ -27,12 +27,12 @@ const AddCompany = () => {
             fetchCompany(userData.id)
         }
         else if (id && userData.roleCode === 'ADMIN') {
-            fetchCompany(null,id)
+            fetchCompany(null, id)
         }
         setUser(userData)
     }, [])
-    let fetchCompany = async (userId,companyId = null) => {
-        let res = await getDetailCompanyByUserId(userId,companyId)
+    let fetchCompany = async (userId, companyId = null) => {
+        let res = await getDetailCompanyByUserId(userId, companyId)
         if (res && res.errCode === 0) {
 
             setInputValues({
@@ -51,7 +51,7 @@ const AddCompany = () => {
                 ["coverImageReview"]: res.data.coverimage,
                 ["isActionADD"]: false,
                 ["id"]: res.data.id,
-                ["file"] : res.data.file
+                ["file"]: res.data.file
             })
         }
     }
@@ -77,20 +77,19 @@ const AddCompany = () => {
         let data = event.target.files;
         let file = data[0];
         if (file) {
-            if (file.size > 2097152)
-            {
+            if (file.size > 2097152) {
                 toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB")
                 return
             }
             let base64 = await CommonUtils.getBase64(file);
 
-            setInputValues({...inputValues,file : base64,isFileChange: true})
+            setInputValues({ ...inputValues, file: base64, isFileChange: true })
         }
     }
     let openPreviewImage = (event) => {
-        const  name  = event.target.getAttribute('name')
+        const name = event.target.getAttribute('name')
         if (!inputValues.imageReview && !inputValues.coverImageReview) return;
-        setInputValues({ ...inputValues,imageClick: name === 'cover' ? inputValues.coverImage : inputValues.imageReview,["isOpen"]: true })
+        setInputValues({ ...inputValues, imageClick: name === 'cover' ? inputValues.coverImage : inputValues.imageReview, ["isOpen"]: true })
     }
     let handleSaveCompany = async () => {
         setIsLoading(true)
@@ -117,7 +116,12 @@ const AddCompany = () => {
                 if (res && res.errCode === 0) {
                     toast.success("Tạo mới công ty thành công")
                     fetchCompany(user.id)
-
+                    let userData = JSON.parse(localStorage.getItem("userData"))
+                    let newUser = { ...userData, rolde: "COMPANY" }
+                    localStorage.setItem("userData", JSON.stringify(newUser))
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1000)
                 } else {
                     toast.error(res.errMessage)
                 }
@@ -163,8 +167,8 @@ const AddCompany = () => {
                 <div className="col-12 grid-margin">
                     <div className="card">
                         <div className="card-body">
-                        <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
-                            <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới công ty' : 'Cập nhật công ty'}</h4>
+                            <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
+                            <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới công ty' :(user?.roleCode === 'ADMIN' ? 'Xem thông tin công ty' : 'Cập nhật công ty')}</h4>
                             <br></br>
                             <form className="form-sample">
 
@@ -173,7 +177,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Tên</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.name} name="name" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.name} name="name" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +185,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Số điện thoại</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.phonenumber} name="phonenumber" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.phonenumber} name="phonenumber" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +195,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Mã số thuế</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.taxnumber} name="taxnumber" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.taxnumber} name="taxnumber" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +203,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Số nhân viên</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.amountEmployer} name="amountEmployer" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.amountEmployer} name="amountEmployer" onChange={(event) => handleOnChange(event)} type="number" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +213,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Địa chỉ</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.address} name="address" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.address} name="address" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -217,7 +221,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Link website</label>
                                             <div className="col-sm-9">
-                                                <input value={inputValues.website} name="website" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} value={inputValues.website} name="website" onChange={(event) => handleOnChange(event)} type="text" className="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -227,7 +231,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ảnh đại diện</label>
                                             <div className="col-sm-9">
-                                                <input name='image' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
+                                                <input                                                 disabled={user?.roleCode === "ADMIN" ? true : false} name='image' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
                                             </div>
                                         </div>
                                     </div>
@@ -245,7 +249,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ảnh bìa</label>
                                             <div className="col-sm-9">
-                                                <input name='coverImage' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
+                                                <input                                                 disabled={user?.roleCode === "ADMIN" ? true : false} name='coverImage' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
                                             </div>
                                         </div>
                                     </div>
@@ -263,18 +267,18 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hồ sơ chứng nhận</label>
                                             <div className="col-sm-9">
-                                                <input name='coverImage' onChange={(event) => handleOnChangeFile(event)} accept='.pdf' type="file" className="form-control form-file" />
+                                                <input                                                 disabled={user?.roleCode === "ADMIN" ? true : false} name='coverImage' onChange={(event) => handleOnChangeFile(event)} accept='.pdf' type="file" className="form-control form-file" />
                                             </div>
                                         </div>
                                     </div>
                                     {
                                         inputValues.file &&
-                                    <div className="col-md-12">
-                                        <div className="form-group row">
-                                            <label className="col-sm-3 col-form-label">Hiển thị</label>
-                                            <iframe width={'100%'} height={'700px'} src={inputValues.file}></iframe>
+                                        <div className="col-md-12">
+                                            <div className="form-group row">
+                                                <label className="col-sm-3 col-form-label">Hiển thị</label>
+                                                <iframe width={'100%'} height={'700px'} src={inputValues.file}></iframe>
+                                            </div>
                                         </div>
-                                    </div>
                                     }
                                 </div>
                                 <div className="row">
