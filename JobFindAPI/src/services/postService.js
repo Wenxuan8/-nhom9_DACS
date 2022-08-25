@@ -1,5 +1,5 @@
 import db from "../models/index";
-const { Op, and } = require("sequelize");
+const { Op } = require("sequelize");
 require('dotenv').config();
 var nodemailer = require('nodemailer');
 let sendmail = (note, userMail, link = null) => {
@@ -19,7 +19,8 @@ let sendmail = (note, userMail, link = null) => {
     };
     if (link)
     {
-        mailOptions.html = note + ` xem thông tin bài viết <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+        mailOptions.html = note + `
+        xem thông tin bài viết <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -57,56 +58,64 @@ let handleCreateNewPost = (data) => {
                     return
                 }
                 else {
-                    if (data.isHot == '1') {
-                        if (company.allowHotPost > 0) {
-                            company.allowHotPost -= 1
-                            await company.save()
+                    if (company.statusCode == "S1") {
+                        if (data.isHot == '1') {
+                            if (company.allowHotPost > 0) {
+                                company.allowHotPost -= 1
+                                await company.save()
+                            }
+                            else {
+                                resolve({
+                                    errCode: 2,
+                                    errMessage: 'Công ty bạn đã hết số lần đăng bài viết nổi bật'
+                                })
+                                return
+                            }
                         }
                         else {
-                            resolve({
-                                errCode: 2,
-                                errMessage: 'Công ty bạn đã hết số lần đăng bài viết nổi bật'
-                            })
-                            return
+                            if (company.allowPost > 0) {
+                                company.allowPost -= 1
+                                await company.save()
+                            }
+                            else {
+                                resolve({
+                                    errCode: 2,
+                                    errMessage: 'Công ty bạn đã hết số lần đăng bài viết bình thường'
+                                })
+                                return
+                            }
                         }
+                        let detailPost = await db.DetailPost.create({
+                            name: data.name,
+                            descriptionHTML: data.descriptionHTML,
+                            descriptionMarkdown: data.descriptionMarkdown,
+                            categoryJobCode: data.categoryJobCode,
+                            addressCode: data.addressCode,
+                            salaryJobCode: data.salaryJobCode,
+                            amount: data.amount,
+                            categoryJoblevelCode: data.categoryJoblevelCode,
+                            categoryWorktypeCode: data.categoryWorktypeCode,
+                            experienceJobCode: data.experienceJobCode,
+                            genderPostCode: data.genderPostCode,
+                        })
+                        await db.Post.create({
+                            statusCode: 'PS3',
+                            timeEnd: data.timeEnd,
+                            userId: data.userId,
+                            isHot: data.isHot,
+                            detailPostId: detailPost.id
+                        })
+                        resolve({
+                            errCode: 0,
+                            errMessage: 'Tạo bài tuyển dụng thành công hãy chờ quản trị viên duyệt'
+                        })
                     }
                     else {
-                        if (company.allowPost > 0) {
-                            company.allowPost -= 1
-                            await company.save()
-                        }
-                        else {
-                            resolve({
-                                errCode: 2,
-                                errMessage: 'Công ty bạn đã hết số lần đăng bài viết bình thường'
-                            })
-                            return
-                        }
+                        resolve({
+                            errCode: 2,
+                            errMessage: 'Công ty bạn đã bị chặn không thể đăng bài'
+                        })
                     }
-                    let detailPost = await db.DetailPost.create({
-                        name: data.name,
-                        descriptionHTML: data.descriptionHTML,
-                        descriptionMarkdown: data.descriptionMarkdown,
-                        categoryJobCode: data.categoryJobCode,
-                        addressCode: data.addressCode,
-                        salaryJobCode: data.salaryJobCode,
-                        amount: data.amount,
-                        categoryJoblevelCode: data.categoryJoblevelCode,
-                        categoryWorktypeCode: data.categoryWorktypeCode,
-                        experienceJobCode: data.experienceJobCode,
-                        genderPostCode: data.genderPostCode,
-                    })
-                    await db.Post.create({
-                        statusCode: 'PS3',
-                        timeEnd: data.timeEnd,
-                        userId: data.userId,
-                        isHot: data.isHot,
-                        detailPostId: detailPost.id
-                    })
-                    resolve({
-                        errCode: 0,
-                        errMessage: 'Tạo bài tuyển dụng thành công hãy chờ quản trị viên duyệt'
-                    })
                 }
             }
         } catch (error) {
@@ -381,7 +390,7 @@ let handleAcceptPost = (data) => {
                         sendmail(note, user.email,`detail-job/${foundPost.id}`)
                     }
                     else {
-                        sendmail(data.note, user.email,`admin/list-post/${foundPost.id}`)
+                        sendmail(`Bài viết #${foundPost.id} của bạn đã bị từ chối`, user.email,`admin/list-post/${foundPost.id}`)
                     }
                     resolve({
                         errCode: 0,
@@ -725,7 +734,7 @@ let getFilterPost = (data) => {
                             exclude: ['userId']
                         },
                         include: [
-                            { model: db.Company, as: 'userCompanyData' },
+                            { model: db.Company, as: 'userCompanyData'},
                         ]
                     }
                 ],
@@ -813,7 +822,7 @@ let getListNoteByPost = (data) => {
                             }
                         }
                     ],
-                    order: [['createddAt', 'DESC']],
+                    order: [['createdAt', 'DESC']],
                     raw: true,
                     nest: true
                 })

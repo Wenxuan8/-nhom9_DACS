@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { getAllCompany, accecptCompanyService } from '../../../service/userService';
+import { getAllCompany, accecptCompanyService, banCompanyService, unbanCompanyService } from '../../../service/userService';
 import moment from 'moment';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
@@ -88,6 +88,42 @@ const ManageCompany = () => {
             setdataCompany(arrData.data)
         }
     }
+    let handleBanCompany = async(id) => {
+        let res = await banCompanyService({id: id})
+        if (res && res.errCode === 0) {
+            let arrData = await getAllCompany({
+                limit: PAGINATION.pagerow,
+                offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search),
+                censorCode: censorCode
+            })
+            if (arrData && arrData.errCode === 0) {
+                setdataCompany(arrData.data)
+            }
+            toast.success(res.errMessage)
+        } else {
+            toast.error(res.errMessage)
+        }
+    }
+
+    let handleUnBanCompany = async(id) => {
+        let res = await unbanCompanyService({id: id})
+        if (res && res.errCode === 0) {
+            let arrData = await getAllCompany({
+                limit: PAGINATION.pagerow,
+                offset: numberPage * PAGINATION.pagerow,
+                search: CommonUtils.removeSpace(search),
+                censorCode: censorCode
+            })
+            if (arrData && arrData.errCode === 0) {
+                setdataCompany(arrData.data)
+            }
+            toast.success(res.errMessage)
+        } else {
+            toast.error(res.errMessage)
+        }
+    }
+
     let handleAccecptCompany = async (id, note = 'null') => {
         let res = await accecptCompanyService({
             companyId: id,
@@ -110,12 +146,22 @@ const ManageCompany = () => {
             toast.error(res.errMessage)
         }
     }
-    const confirmPost = (id) => {
+    const confirmPost = (id,type) => {
+        let title = type === 'ban' ? `Bạn có chắc muốn dừng hoạt động công ty này` : (type === 'unban' ? `Bạn có chắc muốn mở lại hoạt động công ty này` : `Bạn có chắc muốn duyệt công ty này`)
         confirm({
-            title: 'Bạn có chắc muốn duyệt công ty này?',
+            title: title,
             icon: <ExclamationCircleOutlined />,
             onOk() {
-                handleAccecptCompany(id)
+                if (type === 'accept')
+                {
+                    handleAccecptCompany(id)
+                }
+                else if (type === 'ban') {
+                    handleBanCompany(id)
+                }
+                else {
+                    handleUnBanCompany(id)
+                }
             },
 
             onCancel() {
@@ -167,6 +213,9 @@ const ManageCompany = () => {
                                             Trạng thái
                                         </th>
                                         <th>
+                                            Kiểm duyệt
+                                        </th>
+                                        <th>
                                             Ngày khởi tạo
                                         </th>
                                         <th>
@@ -184,14 +233,25 @@ const ManageCompany = () => {
                                                     <td>{item.name}</td>
                                                     <td>{item.phonenumber}</td>
                                                     <td>{item.taxnumber}</td>
+                                                    <td><label className={item.statusCompanyData.code == 'S1' ? 'badge badge-success' : 'badge badge-danger'}>{item.statusCompanyData.value}</label></td>
                                                     <td><label className={item.censorData.code == 'CS1' ? 'badge badge-success' : (item.censorData.code == 'CS3'? 'badge badge-warning'  : 'badge badge-danger')}>{item.censorData.value}</label></td>
                                                     <td>{moment(item.createdAt).format('DD-MM-YYYY')}</td>
                                                     <td>
+                                                        {
+                                                            item.statusCompanyData.code === 'S1' ? (
+                                                            <>
+                                                            <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id,'ban')} >Dừng kích hoạt</a>
+                                                                    &nbsp; &nbsp;                           
+                                                            </>) : (<>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id,'unban')} >Kích hoạt</a>
+                                                                &nbsp; &nbsp;
+                                                            </>)
+                                                        }
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-company-admin/${item.id}`}>{user?.roleCode === "ADMIN" ? 'Xem chi tiết' : 'Sửa'}</Link>
                                                         &nbsp; &nbsp;
                                                         {item.censorData.code === 'CS3' &&
                                                             <>
-                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id)} >Duyệt</a>
+                                                                <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => confirmPost(item.id,'accept')} >Duyệt</a>
                                                                 &nbsp; &nbsp;
                                                                 <a style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={() => setPropsModal({
                                                                     isActive: true,

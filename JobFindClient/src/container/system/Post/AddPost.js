@@ -410,14 +410,18 @@ const AddPost = () => {
                                     </div>
 
                                 </div>
-
+                                {
+                                        user.roleCode !== "ADMIN" &&
+                                        <>
+                                            <button onClick={() => handleSavePost()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
+                                                <i class="ti-file btn1-icon-prepend"></i>
+                                                Lưu
+                                            </button>
+                                        </>
+                                }
                                 {
                                     id && user.roleCode !== "ADMIN" &&
                                     <>
-                                        <button onClick={() => handleSavePost()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
-                                            <i class="ti-file btn1-icon-prepend"></i>
-                                            Lưu
-                                        </button>
                                         <button onClick={() => setPropsModal({
                                             ...propsModal,
                                             isActive: true,

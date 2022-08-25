@@ -117,7 +117,7 @@ const AddCompany = () => {
                     toast.success("Tạo mới công ty thành công")
                     fetchCompany(user.id)
                     let userData = JSON.parse(localStorage.getItem("userData"))
-                    let newUser = { ...userData, rolde: "COMPANY" }
+                    let newUser = { ...userData, roleCode: "COMPANY" }
                     localStorage.setItem("userData", JSON.stringify(newUser))
                     setTimeout(() => {
                         window.location.reload()
@@ -296,10 +296,13 @@ const AddCompany = () => {
                                     </div>
 
                                 </div>
+                                {
+                                    user.roleCode !== "ADMIN" && 
                                 <button onClick={() => handleSaveCompany()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
                                     <i class="ti-file btn1-icon-prepend"></i>
                                     Lưu
                                 </button>
+                                }
                             </form>
                         </div>
                     </div>

@@ -21,7 +21,8 @@ let sendmail = (note, userMail, link = null) => {
     };
     if (link)
     {
-        mailOptions.html = note + ` xem thông tin công ty <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
+        mailOptions.html = note + `
+        xem thông tin công ty <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -199,43 +200,50 @@ let handleUpdateCompany = (data) => {
                         raw: false
                     })
                     if (res) {
-                        if (data.thumbnail) {
-                            let thumbnailUrl = ""
-                            const uploadedThumbnailResponse = await cloudinary.uploader.upload(data.thumbnail, {
-                                upload_preset: 'dev_setups'
+                        if (res.statusCode == "S1") {
+                            if (data.thumbnail) {
+                                let thumbnailUrl = ""
+                                const uploadedThumbnailResponse = await cloudinary.uploader.upload(data.thumbnail, {
+                                    upload_preset: 'dev_setups'
+                                })
+                                thumbnailUrl = uploadedThumbnailResponse.url
+                                res.thumbnail = thumbnailUrl
+                            }
+                            if (data.coverimage) {
+                                let coverImageUrl = ""
+                                const uploadedcoverImageResponse = await cloudinary.uploader.upload(data.coverimage, {
+                                    upload_preset: 'dev_setups'
+                                })
+                                coverImageUrl = uploadedcoverImageResponse.url
+                                res.coverimage = coverImageUrl
+                            }
+                            res.name = data.name
+                            res.descriptionHTML = data.descriptionHTML
+                            res.descriptionMarkdown = data.descriptionMarkdown
+                            res.website = data.website
+                            res.address = data.address
+                            res.amountEmployer = data.amountEmployer
+                            res.taxnumber = data.taxnumber
+                            res.phonenumber = data.phonenumber
+                            if (data.file) {
+                                res.file = data.file
+                                res.censorCode = 'CS3'
+                            }
+                            else if (res.censorCode !== 'CS2'){
+                                res.censorCode = 'CS2'
+                            }
+                            await res.save();
+                            resolve({
+                                errCode: 0,
+                                errMessage: 'Đã sửa thông tin công ty thành công'
                             })
-                            thumbnailUrl = uploadedThumbnailResponse.url
-                            res.thumbnail = thumbnailUrl
                         }
-                        if (data.coverimage) {
-                            let coverImageUrl = ""
-                            const uploadedcoverImageResponse = await cloudinary.uploader.upload(data.coverimage, {
-                                upload_preset: 'dev_setups'
+                        else {
+                            resolve({
+                                errCode: 2,
+                                errMessage: 'Công ty bạn đã bị chặn không thể thay đổi thông tin'
                             })
-                            coverImageUrl = uploadedcoverImageResponse.url
-                            res.coverimage = coverImageUrl
                         }
-
-                        res.name = data.name
-                        res.descriptionHTML = data.descriptionHTML
-                        res.descriptionMarkdown = data.descriptionMarkdown
-                        res.website = data.website
-                        res.address = data.address
-                        res.amountEmployer = data.amountEmployer
-                        res.taxnumber = data.taxnumber
-                        res.phonenumber = data.phonenumber
-                        if (data.file) {
-                            res.file = data.file
-                            res.censorCode = 'CS3'
-                        }
-                        else if (res.censorCode !== 'CS3'){
-                            res.censorCode = 'CS3'
-                        }
-                        await res.save();
-                        resolve({
-                            errCode: 0,
-                            errMessage: 'Đã sửa thông tin công ty thành công'
-                        })
                     }
                     else {
                         resolve({
@@ -350,7 +358,7 @@ let handleAccecptCompany = (data) => {
                         }
                     })
                     if (data.note != 'null') {
-                        sendmail(note, user.email,"admin/edit-company")
+                        sendmail(`Công ty bạn đã bị từ chối vì: ${note}`, user.email,"admin/edit-company")
                     }
                     resolve({
                         errCode: 0,
@@ -449,10 +457,13 @@ let getListCompany = (data) => {
             } else {
                 let objectFilter = {
                     offset: +data.offset,
-                    limit: +data.limit
+                    limit: +data.limit,
+                    where: {statusCode : 'S1'}
                 }
                 if (data.search) {
-                    objectFilter.where = {name: {[Op.like]: `%${data.search}%`}}
+                    objectFilter.where = { ...objectFilter.where,
+                        name: {[Op.like]: `%${data.search}%`}
+                    }
                 }
                 let company = await db.Company.findAndCountAll(objectFilter)
                 resolve({

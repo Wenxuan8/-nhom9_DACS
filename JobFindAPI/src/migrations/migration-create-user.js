@@ -42,9 +42,9 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 foreignKey: true
             },
-            file: {
-                type: Sequelize.BLOB('long')
-            }
+            // file: {
+            //     type: Sequelize.BLOB('long')
+            // }
         });
     },
     down: async (queryInterface, Sequelize) => {

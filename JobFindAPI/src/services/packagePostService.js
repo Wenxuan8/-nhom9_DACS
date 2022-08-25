@@ -4,8 +4,8 @@ import paypal from 'paypal-rest-sdk'
 require('dotenv').config();
 paypal.configure({
     'mode': 'sandbox',
-    'client_id': 'ARulk2xnPxfzBhbH4DrZsANY3Pm80t4Prbw4AfaEI1kgtCH3Nzz__h2Fa8FFph8DsD9ZPZpN8d6tdahJ',
-    'client_secret': 'EAcDSFu6gZjU52EhjvIGUYQz0d2XlEGk4PiJfTj8y23uTrZtesIPElfNKY9AcndkmtdSDCZQP7TaqcEn'
+    'client_id': process.env.CLIENT_ID,
+    'client_secret': process.env.CLIENT_SECRET
 });
 
 let getAllPackage = (data) => {

@@ -123,6 +123,15 @@ const getAllCompany = (data) => {
     return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}&search=${data.search}&censorCode=${data.censorCode}`)
 }
 
+const banCompanyService = (data) => {
+    return axios.put(`/api/ban-company`, data)
+}
+
+const unbanCompanyService = (data) => {
+    return axios.put(`/api/unban-company`, data)
+
+}
+
 const accecptCompanyService = (data) => {
     return axios.put(`/api/accecpt-company`, data)
 
@@ -227,5 +236,5 @@ export {
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
     setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
-    getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService
+    getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService, banCompanyService, unbanCompanyService
 }
