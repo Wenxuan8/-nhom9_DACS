@@ -13,7 +13,7 @@ const FeatureJob = (props) => {
                         <a href="job_details.html"><img src={props.data.userPostData.userCompanyData.thumbnail} alt="" style={{ width: "85px", height: "85px" }} /></a>
                     </div>
                     <div class="job-tittle">
-                        <a href="job_details.html"><h4>{props.data.postDetailData.jobTypePostData.value}</h4></a>
+                        <a href="job_details.html"><h4>{props.data.postDetailData.name}</h4></a>
                         <ul>
                             <li>{props.data.postDetailData.jobLevelPostData.value}</li>
                             <li><i class="fas fa-map-marker-alt"></i>{props.data.postDetailData.provincePostData.value}</li>

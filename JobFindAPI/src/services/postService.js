@@ -19,7 +19,7 @@ let sendmail = (note, userMail, link = null) => {
     };
     if (link)
     {
-        mailOptions.html = note + `
+        mailOptions.html = note + ` <br>
         xem thông tin bài viết <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
     }
 
@@ -286,7 +286,7 @@ let handleBanPost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note, user.email,`admin/list-post/${foundPost.id}`)
+                    sendmail(`Bài viết #${foundPost.id} của bạn đã bị chặn vì ${data.note}`, user.email,`admin/list-post/${foundPost.id}`)
 
                     resolve({
                         errCode: 0,
@@ -334,7 +334,7 @@ let handleActivePost = (data) => {
                             exclude: ['userId']
                         }
                     })
-                    sendmail(data.note, user.email,`admin/list-post/${foundPost.id}`)
+                    sendmail(`Bài viết #${foundPost.id} của bạn đã được mở lại vì: ${data.note}`, user.email,`admin/list-post/${foundPost.id}`)
                     resolve({
                         errCode: 0,
                         errMessage: 'Đã mở lại trạng thái chờ duyệt'

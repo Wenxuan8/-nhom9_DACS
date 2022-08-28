@@ -21,7 +21,7 @@ let sendmail = (note, userMail, link = null) => {
     };
     if (link)
     {
-        mailOptions.html = note + `
+        mailOptions.html = note + ` <br>
         xem thông tin công ty <a href='${process.env.URL_REACT}/${link}'>Tại đây</a> `
     }
 
@@ -160,7 +160,8 @@ let handleCreateNewCompany = (data) => {
                         await account.save()
                         resolve({
                             errCode: 0,
-                            errMessage: 'Đã tạo công ty thành công'
+                            errMessage: 'Đã tạo công ty thành công',
+                            companyId : company.id
                         })
                     }
                     else {
@@ -229,7 +230,10 @@ let handleUpdateCompany = (data) => {
                                 res.file = data.file
                                 res.censorCode = 'CS3'
                             }
-                            else if (res.censorCode !== 'CS2'){
+                            else if (res.file){
+                                res.censorCode = 'CS3'
+                            }
+                            else {
                                 res.censorCode = 'CS2'
                             }
                             await res.save();
@@ -359,6 +363,9 @@ let handleAccecptCompany = (data) => {
                     })
                     if (data.note != 'null') {
                         sendmail(`Công ty bạn đã bị từ chối vì: ${note}`, user.email,"admin/edit-company")
+                    }
+                    else {
+                        sendmail(`Công ty của bạn đã được kiểm duyệt thành công`,user.email,`detail-company/${foundCompany.id}`)
                     }
                     resolve({
                         errCode: 0,

@@ -245,7 +245,7 @@ const Home = () => {
                                                     <tr key={index}>
                                                         <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                         <td>{item.postDetailData.name}</td>
-                                                        <td>{item.postDetailData.id}</td>
+                                                        <td>{item.id}</td>
                                                         <td>{item.userPostData.firstName + " " + item.userPostData.lastName}</td>
                                                         <td>{item.total}</td>
                                                     </tr>

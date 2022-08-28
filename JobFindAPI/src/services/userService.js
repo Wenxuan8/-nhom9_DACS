@@ -69,6 +69,7 @@ let checkUserPhone = (userPhone) => {
 let handleCreateNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(data)
             if (!data.phonenumber || !data.lastName || !data.firstName ) {
                 resolve({
                     errCode: 2,

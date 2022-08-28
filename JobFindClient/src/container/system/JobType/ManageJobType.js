@@ -9,7 +9,10 @@ import { toast } from 'react-toastify';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import CommonUtils from '../../../util/CommonUtils';
-import {Input} from 'antd'
+import {Input, Modal} from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+const {confirm} = Modal
+
 const ManageJobType = () => {
     const [dataJobType, setdataJobType] = useState([])
     const [count, setCount] = useState('')
@@ -42,8 +45,7 @@ const ManageJobType = () => {
         setimgPreview(url);
         setisOpen(true);
     }
-    let handleDeleteJobType = async (event, id) => {
-        event.preventDefault();
+    let handleDeleteJobType = async (id) => {
         let res = await DeleteAllcodeService(id)
         if (res && res.errCode === 0) {
             toast.success(res.errMessage)
@@ -77,6 +79,18 @@ const ManageJobType = () => {
     }
     const handleSearch = (value) => {
         setSearch(value)
+    }
+    const confirmDelete = (id) => {
+        confirm({
+            title: 'Bạn có chắc muốn xóa khoảng kinh nghiệm này?',
+            icon: <ExclamationCircleOutlined />,    
+            onOk() {
+                handleDeleteJobType(id)
+            },
+        
+            onCancel() {
+            },
+          });
     }
     return (
         <div>
@@ -121,7 +135,7 @@ const ManageJobType = () => {
                                                     <td>
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-job-type/${item.code}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteJobType(event, item.code)} >Xóa</a>
+                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => confirmDelete(item.code)} >Xóa</a>
                                                     </td>
                                                 </tr>
                                             )

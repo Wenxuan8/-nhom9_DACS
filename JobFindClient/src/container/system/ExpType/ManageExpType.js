@@ -7,7 +7,10 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import CommonUtils from '../../../util/CommonUtils';
-import {Input} from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {Input, Modal} from 'antd'
+const {confirm} = Modal
+
 const ManageExpType = () => {
     const [dataExpType, setdataExpType] = useState([])
     const [count, setCount] = useState('')
@@ -37,8 +40,7 @@ const ManageExpType = () => {
         }
 
     }, [search])
-    let handleDeleteExpType = async (event, code) => {
-        event.preventDefault();
+    let handleDeleteExpType = async (code) => {
         let res = await DeleteAllcodeService(code)
         if (res && res.errCode === 0) {
             toast.success(res.errMessage)
@@ -76,6 +78,18 @@ const ManageExpType = () => {
     }
     const handleSearch = (value) => {
         setSearch(value)
+    }
+    const confirmDelete = (id) => {
+        confirm({
+            title: 'Bạn có chắc muốn xóa khoảng kinh nghiệm này?',
+            icon: <ExclamationCircleOutlined />,    
+            onOk() {
+                handleDeleteExpType(id)
+            },
+        
+            onCancel() {
+            },
+          });
     }
     return (
         <div>
@@ -117,7 +131,7 @@ const ManageExpType = () => {
                                                     <td>
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-exp-type/${item.code}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
-                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handleDeleteExpType(event, item.code)} >Xóa</a>
+                                                        <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => confirmDelete(item.code)} >Xóa</a>
                                                     </td>
                                                 </tr>
                                             )

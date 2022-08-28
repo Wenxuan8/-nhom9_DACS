@@ -75,10 +75,10 @@ const Register = () => {
                                 <div className="col-lg-4 mx-auto">
                                     <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                                         <div className="brand-logo">
-                                            <img src="/assetsAdmin/images/logo.svg" alt="logo" />
+                                            <img src="/assets/img/logo/logo.png" alt="logo" />
                                         </div>
-                                        <h4>New here?</h4>
-                                        <h6 className="font-weight-light">Signing up is easy. It only takes a few steps</h6>
+                                        <h4>Người mới?</h4>
+                                        <h6 className="font-weight-light">Đăng ký dễ dàng chỉ vài bước đơn giản</h6>
                                         <form className="pt-3">
                                             <div className="form-group">
                                                 <input type="text" value={inputValues.firstName} name="firstName" onChange={(event) => handleOnChange(event)} className="form-control form-control-lg" id="exampleInputUsername1" placeholder="Họ" />
