@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getDetailCvService } from '../../../service/cvService';
 
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
 
@@ -35,6 +35,7 @@ const UserCv = () => {
     }, [])
 
 
+    const history = useHistory()
 
     return (
 
@@ -43,6 +44,7 @@ const UserCv = () => {
             <div className="col-12 grid-margin">
                 <div className="card">
                     <div className="card-body">
+                    <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
                         <h4 className="card-title">Giới thiệu bản thân</h4>
                         <blockquote class="blockquote blockquote-primary">
                             <p>{dataCV.description}</p>

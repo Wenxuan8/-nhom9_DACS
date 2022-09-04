@@ -179,7 +179,7 @@ const ManageCompany = () => {
                         <h4 className="card-title">Danh sách công ty</h4>
                         <Row justify='space-around' className='mt-5 mb-5'>
                             <Col xs={12} xxl={12}>
-                                <Input.Search onSearch={handleSearch} placeholder="Nhập tên hoặc mã bài đăng" allowClear enterButton="Tìm kiếm">
+                                <Input.Search onSearch={handleSearch} placeholder="Nhập tên hoặc mã công ty" allowClear enterButton="Tìm kiếm">
                                 </Input.Search>
                             </Col>
                             <Col xs={8} xxl={8}>

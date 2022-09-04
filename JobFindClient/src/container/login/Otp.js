@@ -109,6 +109,7 @@ const Otp = (props) => {
 
 
             localStorage.setItem("userData", JSON.stringify(res.user))
+            localStorage.setItem("tokenUser", res.token)
             if (res.user.roleCode === "ADMIN" || res.user.roleCode === "EMPLOYER") {
                 window.location.href = "/admin/"
 

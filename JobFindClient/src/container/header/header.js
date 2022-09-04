@@ -82,6 +82,7 @@ const Header = () => {
                                                                 (match, location) => {
                                                                     if (match)
                                                                         localStorage.removeItem("userData")
+                                                                        localStorage.removeItem("tokenUser")
                                                                 }
                                                             }>
                                                                 <i className="ti-power-off text-primary" />

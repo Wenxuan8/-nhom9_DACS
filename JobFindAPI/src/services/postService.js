@@ -543,7 +543,7 @@ let getAllPostByAdmin = (data) => {
                         {
                             model: db.User, as: 'userPostData', attributes: { exclude: ['userId'] },
                             include: [
-                                { model: db.Company, as: 'companyUserData' }
+                                { model: db.Company, as: 'userCompanyData' }
                             ]
                         }
                     ],
@@ -566,7 +566,7 @@ let getAllPostByAdmin = (data) => {
                                     [Op.like]: `%${data.search}%`
                                 }
                             },
-                            db.Sequelize.where(db.sequelize.col('userPostData.companyUserData.name'),{
+                            db.Sequelize.where(db.sequelize.col('userPostData.userCompanyData.name'),{
                                 [Op.like]: `%${data.search}%`
                             }),
                         ]
@@ -780,7 +780,7 @@ let getStatisticalTypePost = (data) => {
                 ],
                 attributes: [[db.sequelize.fn('COUNT', db.sequelize.col('postDetailData.categoryJobCode')), 'amount']],
                 group: ['postDetailData.categoryJobCode'],
-                order: [[db.sequelize.literal('amount'), 'ASC']],
+                order: [[db.sequelize.literal('amount'), 'DESC']],
                 limit: +data.limit,
                 raw: true,
                 nest: true

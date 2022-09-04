@@ -26,6 +26,7 @@ const ManagePost = () => {
         handlePost: () => { },
         postId: ''
     })
+    console.log(search)
     const censorOptions = [
         {
             value: '',
@@ -51,7 +52,6 @@ const ManagePost = () => {
     useEffect(() => {
         try {
             const userData = JSON.parse(localStorage.getItem('userData'));
-            console.log(id)
             if (id && !isSearchBy) {
                 setIsSearchBy(true)
                 let fetchDataById = async () => {
@@ -63,6 +63,11 @@ const ManagePost = () => {
                         search: id,
                         censorCode: ''
                     })
+                    if (arrDataById && arrDataById.errCode === 0) {
+                        setdataPost(arrDataById.data)
+                        setnumberPage(0)
+                        setCount(Math.ceil(arrDataById.count / PAGINATION.pagerow))
+                    }
                 }
                 fetchDataById()
             }
@@ -258,7 +263,7 @@ const ManagePost = () => {
                         <h4 className="card-title">Danh sách bài đăng</h4>
                         <Row justify='space-around' className='mt-5 mb-5'>
                             <Col xs={12} xxl={12}>
-                        <Input.Search value={search} onSearch={handleSearch} placeholder={user?.roleCode === "ADMIN" ? "Nhập tên hoặc mã bài đăng, tên công ty" :"Nhập tên hoặc mã bài đăng"} allowClear enterButton="Tìm kiếm">
+                        <Input.Search  onSearch={handleSearch} placeholder={user?.roleCode === "ADMIN" ? "Nhập tên hoặc mã bài đăng, tên công ty" :"Nhập tên hoặc mã bài đăng"} allowClear enterButton="Tìm kiếm">
                         </Input.Search>
                             </Col>
                             <Col xs={8} xxl={8}>
@@ -313,7 +318,7 @@ const ManagePost = () => {
                                                     <td>{item.postDetailData.name}</td>
                                                     {
                                                     user?.roleCode === "ADMIN" &&
-                                                    <td>{item.userPostData.companyUserData.name}</td>
+                                                    <td>{item.userPostData.userCompanyData.name}</td>
                                                     }
                                                     <td>{`${item.userPostData.firstName} ${item.userPostData.lastName}`}</td>
                                                     <td>{date}</td>

@@ -1,6 +1,7 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 const { Op } = require("sequelize");
+import CommonUtils from '../utils/CommonUtils';
 const cloudinary = require('../utils/cloudinary');
 const salt = bcrypt.genSaltSync(10);
 require('dotenv').config();
@@ -366,6 +367,7 @@ let handleLogin = (data) => {
                                 userData.errMessage = 'Ok';
                                 userData.errCode = 0;
                                 userData.user= user;
+                                userData.token = CommonUtils.encodeToken(user.id)
                             }
                             else {
                                 userData.errCode = 1;

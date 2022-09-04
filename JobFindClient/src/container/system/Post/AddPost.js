@@ -133,48 +133,54 @@ const AddPost = () => {
     let handleSavePost = async () => {
         setIsLoading(true)
         if (inputValues.isActionADD === true) {
-            let res = await createPostService({
-                name: inputValues.name,
-                descriptionHTML: inputValues.descriptionHTML,
-                descriptionMarkdown: inputValues.descriptionMarkdown,
-                categoryJobCode: inputValues.categoryJobCode,
-                addressCode: inputValues.addressCode,
-                salaryJobCode: inputValues.salaryJobCode,
-                amount: inputValues.amount,
-                timeEnd: new Date(timeEnd).getTime(),
-                categoryJoblevelCode: inputValues.categoryJoblevelCode,
-                categoryWorktypeCode: inputValues.categoryWorktypeCode,
-                experienceJobCode: inputValues.experienceJobCode,
-                genderPostCode: inputValues.genderCode,
-                userId: user.id,
-                isHot: inputValues.isHot
-            })
-            setTimeout(() => {
-                setIsLoading(false)
-                if (res && res.errCode === 0) {
-                    fetchCompany(user.id)
-                    toast.success(res.errMessage)
-                    setInputValues({
-                        ...inputValues,
-                        ["name"]: '',
-                        ["descriptionHTML"]: '',
-                        ["descriptionMarkdown"]: '',
-                        ["categoryJobCode"]: '',
-                        ["addressCode"]: '',
-                        ["salaryJobCode"]: '',
-                        ["amount"]: '',
-                        ["timeEnd"]: '',
-                        ["categoryJoblevelCode"]: '',
-                        ["categoryWorktypeCode"]: '',
-                        ["experienceJobCode"]: '',
-                        ["genderCode"]: '',
-                        ["isHot"]: 0
-                    })
-                    settimeEnd('')
-                } else {
-                    toast.error(res.errMessage)
-                }
-            }, 1000);
+
+            if (new Date().getTime() >= new Date(timeEnd).getTime()) {
+                toast.error("Ngày kết thúc phải hơn ngày hiện tại")
+            }
+            else {
+                let res = await createPostService({
+                    name: inputValues.name,
+                    descriptionHTML: inputValues.descriptionHTML,
+                    descriptionMarkdown: inputValues.descriptionMarkdown,
+                    categoryJobCode: inputValues.categoryJobCode,
+                    addressCode: inputValues.addressCode,
+                    salaryJobCode: inputValues.salaryJobCode,
+                    amount: inputValues.amount,
+                    timeEnd: new Date(timeEnd).getTime(),
+                    categoryJoblevelCode: inputValues.categoryJoblevelCode,
+                    categoryWorktypeCode: inputValues.categoryWorktypeCode,
+                    experienceJobCode: inputValues.experienceJobCode,
+                    genderPostCode: inputValues.genderCode,
+                    userId: user.id,
+                    isHot: inputValues.isHot
+                })
+                setTimeout(() => { 
+                    setIsLoading(false)
+                    if (res && res.errCode === 0) {
+                        fetchCompany(user.id)
+                        toast.success(res.errMessage)
+                        setInputValues({
+                            ...inputValues,
+                            ["name"]: '',
+                            ["descriptionHTML"]: '',
+                            ["descriptionMarkdown"]: '',
+                            ["categoryJobCode"]: '',
+                            ["addressCode"]: '',
+                            ["salaryJobCode"]: '',
+                            ["amount"]: '',
+                            ["timeEnd"]: '',
+                            ["categoryJoblevelCode"]: '',
+                            ["categoryWorktypeCode"]: '',
+                            ["experienceJobCode"]: '',
+                            ["genderCode"]: '',
+                            ["isHot"]: 0
+                        })
+                        settimeEnd('')
+                    } else {
+                        toast.error(res.errMessage)
+                    }
+                }, 1000);
+            }
         } else {
             let res = await updatePostService({
                 name: inputValues.name,

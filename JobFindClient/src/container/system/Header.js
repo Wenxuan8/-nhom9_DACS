@@ -8,6 +8,7 @@ const Header = () => {
     const [user, setUser] = useState({})
     let handleLogout = () => {
         localStorage.removeItem("userData");
+        localStorage.removeItem("tokenUser")
         window.location.href = "/login"
     }
     useEffect(() => {
