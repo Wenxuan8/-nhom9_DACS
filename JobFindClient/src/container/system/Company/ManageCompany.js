@@ -23,6 +23,8 @@ const ManageCompany = () => {
         handleCompany: () => { },
         id: ''
     })
+    const [total, setTotal] = useState(0)
+
     const censorOptions = [
         {
             value: '',
@@ -60,6 +62,9 @@ const ManageCompany = () => {
                     })
                     if (arrData && arrData.errCode === 0) {
                         setdataCompany(arrData.data)
+                            setTotal(arrData.count)
+
+                        
                         setnumberPage(0)
                         setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                     }
@@ -86,6 +91,9 @@ const ManageCompany = () => {
         })
         if (arrData && arrData.errCode === 0) {
             setdataCompany(arrData.data)
+                            setTotal(arrData.count)
+
+            
         }
     }
     let handleBanCompany = async(id) => {
@@ -99,6 +107,9 @@ const ManageCompany = () => {
             })
             if (arrData && arrData.errCode === 0) {
                 setdataCompany(arrData.data)
+                            setTotal(arrData.count)
+
+                
             }
             toast.success(res.errMessage)
         } else {
@@ -117,6 +128,9 @@ const ManageCompany = () => {
             })
             if (arrData && arrData.errCode === 0) {
                 setdataCompany(arrData.data)
+                            setTotal(arrData.count)
+
+                
             }
             toast.success(res.errMessage)
         } else {
@@ -140,6 +154,9 @@ const ManageCompany = () => {
             })
             if (arrData && arrData.errCode === 0) {
                 setdataCompany(arrData.data)
+                            setTotal(arrData.count)
+
+                
             }
             toast.success(res.errMessage)
         } else {
@@ -183,13 +200,15 @@ const ManageCompany = () => {
                                 </Input.Search>
                             </Col>
                             <Col xs={8} xxl={8}>
-                                <label className='mr-2'>Loại trạng thái: </label>
+                                <label className='mr-2'>Loại kiểm duyệt: </label>
                                 <Select onChange={(value) => handleOnChangeCensor(value)} style={{ width: '50%' }} size='default' defaultValue={censorOptions[0].value} options={censorOptions}>
 
                                 </Select>
                             </Col>
 
                         </Row>
+                        <div>Số lượng công ty: {total}</div>
+
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>

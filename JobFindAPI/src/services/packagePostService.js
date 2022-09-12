@@ -1,6 +1,6 @@
 import db from "../models/index";
 const { Op, and } = require("sequelize");
-import paypal from 'paypal-rest-sdk'
+import paypal, { order } from 'paypal-rest-sdk'
 require('dotenv').config();
 paypal.configure({
     'mode': 'sandbox',
@@ -373,7 +373,7 @@ let getStatisticalPackage = (data) => {
                     where: {
                         createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
                     },
-                    attributes: ['packagePostId',[db.sequelize.literal('SUM(currentPrice * amount)'), 'total']],
+                    attributes: ['packagePostId',[db.sequelize.literal('SUM(amount)'), 'count'],[db.sequelize.literal('SUM(currentPrice * amount)'), 'total']],
                     order: [[db.Sequelize.literal('total'), 'DESC']],
                     group: ['packagePostId'],
                     nest: true,
@@ -388,6 +388,7 @@ let getStatisticalPackage = (data) => {
                     if (length == 0) {
                         return {
                             ...packagePost,
+                            count: 0,
                             total: 0
                         }
                     }
@@ -395,13 +396,15 @@ let getStatisticalPackage = (data) => {
                         if (order.packagePostId == packagePost.id) {
                             return {
                                 ...packagePost,
+                                count: order.count,
                                 total: order.total
                             }
                         }
                         else if (count == length) {
                             return {
                                 ...packagePost,
-                                total: 0
+                                total: 0,
+                                count: 0
                             }
                         }
                         count++

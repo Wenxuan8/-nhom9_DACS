@@ -15,6 +15,7 @@ const ManageUser = () => {
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState(0)
     const [search,setSearch] = useState('')
+    const [total, setTotal] = useState(0)
 
     let fetchAllUser = async () => {
         const userData = JSON.parse(localStorage.getItem('userData'));
@@ -29,6 +30,8 @@ const ManageUser = () => {
             setnumberPage(0)
             setdataUser(res.data);
             setCount(Math.ceil(res.count / PAGINATION.pagerow))
+            setTotal(res.count)
+
         }
     }
     useEffect(async () => {
@@ -43,6 +46,7 @@ const ManageUser = () => {
         })
         if (arrData && arrData.errCode === 0) {
             setdataUser(arrData.data)
+            setTotal(arrData.count)
         }
     }
     let handlebanUser = async (event, item) => {
@@ -64,6 +68,7 @@ const ManageUser = () => {
                 if (user && user.errCode === 0) {
     
                     setdataUser(user.data);
+                    setTotal(user.count)
                     setCount(Math.ceil(user.count / PAGINATION.pagerow))
                 }
             } else {
@@ -82,6 +87,8 @@ const ManageUser = () => {
                         <Input.Search onSearch={handleSearch} className='mt-5 mb-5' placeholder="Nhập tên hoặc số điện thoại" allowClear enterButton="Tìm kiếm">
                                     
                         </Input.Search>
+                        <div>Số lượng người dùng: {total}</div>
+
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>

@@ -26,7 +26,7 @@ const ManagePost = () => {
         handlePost: () => { },
         postId: ''
     })
-    console.log(search)
+    const [total, setTotal] = useState(0)
     const censorOptions = [
         {
             value: '',
@@ -67,6 +67,7 @@ const ManagePost = () => {
                         setdataPost(arrDataById.data)
                         setnumberPage(0)
                         setCount(Math.ceil(arrDataById.count / PAGINATION.pagerow))
+                        setTotal(arrDataById.count)
                     }
                 }
                 fetchDataById()
@@ -96,6 +97,7 @@ const ManagePost = () => {
                             setdataPost(arrData.data)
                             setnumberPage(0)
                             setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+                            setTotal(arrData.count)
                         }
                     }
                     fetchData();
@@ -132,6 +134,8 @@ const ManagePost = () => {
         }
         if (arrData && arrData.errCode === 0) {
             setdataPost(arrData.data)
+            setTotal(arrData.count)
+
         }
     }
     let handleOnChangeCensor = (value) => {
@@ -165,6 +169,8 @@ const ManagePost = () => {
             }
             if (arrData && arrData.errCode === 0) {
                 setdataPost(arrData.data)
+                setTotal(arrData.count)
+
             }
             toast.success(res.errMessage)
         } else {
@@ -199,6 +205,8 @@ const ManagePost = () => {
             }
             if (arrData && arrData.errCode === 0) {
                 setdataPost(arrData.data)
+                setTotal(arrData.count)
+
             }
             toast.success(res.errMessage)
         } else {
@@ -234,6 +242,8 @@ const ManagePost = () => {
             }
             if (arrData && arrData.errCode === 0) {
                 setdataPost(arrData.data)
+                setTotal(arrData.count)
+
             }
             toast.success(res.errMessage)
         } else {
@@ -274,6 +284,7 @@ const ManagePost = () => {
                             </Col>
 
                         </Row>
+                        <div>Số lượng bài viết: {total}</div>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>

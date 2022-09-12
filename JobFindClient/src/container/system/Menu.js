@@ -189,6 +189,8 @@ const Menu = () => {
                                 </div>
                             </li>
                         }
+                        {
+                            user.companyId && 
                         <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#post" aria-expanded="false" aria-controls="post">
                                 <i className="far fa-clock menu-icon"></i>
@@ -202,6 +204,7 @@ const Menu = () => {
                                 </ul>
                             </div>
                         </li>
+                        }
                     </>
                 }
 

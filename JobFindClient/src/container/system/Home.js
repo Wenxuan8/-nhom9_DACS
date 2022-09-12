@@ -316,6 +316,9 @@ const Home = () => {
                                                 Loại gói
                                             </th>
                                             <th>
+                                                Số lượng đã bán
+                                            </th>
+                                            <th>
                                                 Doanh thu
                                             </th>
                                         </tr>
@@ -330,6 +333,7 @@ const Home = () => {
                                                         <td>{item.name}</td>
                                                         <td>{item.id}</td>
                                                         <td>{item.isHot == 0 ? "Loại bình thường" : "Loại nổi bật"}</td>
+                                                        <td>{item.count}</td>
                                                         <td style={{ textAlign: 'right' }}>{item.total} USD</td>
                                                     </tr>
                                                 )

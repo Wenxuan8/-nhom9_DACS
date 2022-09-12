@@ -6,10 +6,10 @@ const instance = axios.create({
     baseURL: url,
     //  withCredentials: true
 });
-if(localStorage.getItem("tokenUser")){
+if(localStorage.getItem("token_user")){
     instance.interceptors.request.use(
         config =>{
-            config.headers.authorization = "Bearer " +localStorage.getItem("tokenUser")
+            config.headers.authorization = "Bearer " +localStorage.getItem("token_user")
             return config
         },
         error =>{

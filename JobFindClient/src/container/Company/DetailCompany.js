@@ -9,7 +9,6 @@ import moment from 'moment';
 const DetailCompany = () => {
     const [dataCompany, setdataCompany] = useState({})
     const { id } = useParams();
-    console.log(dataCompany)
     useEffect(() => {
         if (id) {
 
@@ -43,7 +42,7 @@ const DetailCompany = () => {
                     <div className="company-detail-overview">
                         <div id="company-logo">
                             <div className="company-image-logo">
-                                <img src={dataCompany.thumbnail} alt="Công ty Cổ phần Tập đoàn Hoa Sen" className="img-responsive" />
+                                <img style={{width: '100%', height: '100%'}} src={dataCompany.thumbnail} alt="Công ty Cổ phần Tập đoàn Hoa Sen" className="img-responsive" />
                             </div>
                         </div>
                         <div className="company-info">
@@ -62,7 +61,7 @@ const DetailCompany = () => {
                         <div className="box-follow">
                             
                                 
-                                <a style={{background: dataCompany.censorData && (dataCompany.censorData.code === 'CS2' ? 'yellow' : dataCompany.censorData.code!=='CS1' ? 'red' : '' )}} className="btn btn-follow btn-primary-hover">{dataCompany.censorData && dataCompany.censorData.value}</a>
+                                <a style={{background: dataCompany.censorData && (dataCompany.censorData.code === 'CS2' ? 'yellow' : dataCompany.censorData.code!=='CS1' ? 'red' : '' ), color: 'black'}} className="btn btn-follow btn-primary-hover">{dataCompany.censorData && dataCompany.censorData.value}</a>
                             
                         </div>
                     </div>

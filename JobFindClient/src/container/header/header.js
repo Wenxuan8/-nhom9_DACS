@@ -17,6 +17,12 @@ const Header = () => {
         // }
         setUser(userData)
     }, [])
+    let handleLogout = () => {
+        console.log("hello")
+        localStorage.removeItem("userData");
+        localStorage.removeItem("token_user")
+        window.location.href = "/login"
+    }
 
     let scrollHeader = () => {
         window.addEventListener("scroll", function () {
@@ -78,16 +84,10 @@ const Header = () => {
                                                                 <i className="ti-settings text-primary" />
                                                                 Đổi mật khẩu
                                                             </Link>
-                                                            <NavLink to='/login' className="dropdown-item" isActive={
-                                                                (match, location) => {
-                                                                    if (match)
-                                                                        localStorage.removeItem("userData")
-                                                                        localStorage.removeItem("tokenUser")
-                                                                }
-                                                            }>
-                                                                <i className="ti-power-off text-primary" />
-                                                                Đăng xuất
-                                                            </NavLink>
+                                                            <a onClick={() => handleLogout()} className="dropdown-item">
+                                <i className="ti-power-off text-primary" />
+                                Đăng xuất
+                            </a>
                                                         </div>
                                                     </li>
                                                 </ul>
