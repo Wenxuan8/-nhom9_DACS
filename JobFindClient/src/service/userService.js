@@ -85,6 +85,38 @@ const DeleteAllcodeService = (allcodeId) => {
         }
     })
 }
+
+const getListSkill = (data) => {
+    return axios.get(`/api/get-list-skill?categoryJobCode=${data.categoryJobCode}&limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+
+}
+
+const getAllSkillByJobCode = (categoryJobCode) => {
+    return axios.get(`/api/get-all-skill-by-job-code?categoryJobCode=${categoryJobCode}`)
+
+}
+
+const createSkilleService = (data) => {
+    return axios.post(`/api/create-new-skill`, data)
+
+}
+
+const UpdateSkillService = (data) => {
+    return axios.put(`/api/update-skill`, data)
+
+}
+const DeleteSkillService = (skillId) => {
+    return axios.delete(`/api/delete-skill`, {
+        data: {
+            id: skillId
+        }
+    })
+}
+
+const getDetailSkillById = (id) => {
+    return axios.get(`/api/get-detail-skill-by-id?id=${id}`)
+
+}
 //================================== COMPANY ============================
 const createCompanyService = (data) => {
     return axios.post(`/api/create-new-company`, data)
@@ -236,5 +268,6 @@ export {
     createPostService, updatePostService, banPostService,acceptPostService, getAllPostByAdminService,getAllPostByRoleAdminService, getDetailPostByIdService, activePostService, checkUserPhoneService, getListPostService,
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
     setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
-    getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService, banCompanyService, unbanCompanyService
+    getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService, banCompanyService, unbanCompanyService,
+    getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById
 }

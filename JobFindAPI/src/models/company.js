@@ -37,6 +37,8 @@ module.exports = (sequelize, DataTypes) => {
         file: DataTypes.BLOB('long'),
         allowPost: DataTypes.INTEGER,
         allowHotPost: DataTypes.INTEGER,
+        allowCvFree: DataTypes.INTEGER,
+        allowCv: DataTypes.INTEGER,
     }, 
     {
         sequelize,

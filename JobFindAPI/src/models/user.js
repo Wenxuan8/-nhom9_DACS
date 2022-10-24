@@ -35,6 +35,12 @@ module.exports = (sequelize, DataTypes) => {
 
             //Note
             User.hasMany(models.Note,{foreignKey:'userId',as:'userNoteData'})
+
+            //UserSetting
+            User.hasOne(models.UserSetting, { foreignKey: 'userId', as: 'userSettingData' })
+
+            //UserSkill - Skill
+            User.belongsToMany(models.Skill, { through: models.UserSkill});
         }
     };
     User.init({
@@ -46,7 +52,6 @@ module.exports = (sequelize, DataTypes) => {
         image: DataTypes.STRING,
         dob: DataTypes.STRING,
         companyId: DataTypes.INTEGER,
-        // file: DataTypes.BLOB('long'),
     }, 
     {
         sequelize,

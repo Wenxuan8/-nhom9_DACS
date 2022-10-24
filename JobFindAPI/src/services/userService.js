@@ -5,9 +5,9 @@ import CommonUtils from '../utils/CommonUtils';
 const cloudinary = require('../utils/cloudinary');
 const salt = bcrypt.genSaltSync(10);
 require('dotenv').config();
-var nodemailer = require('nodemailer');
+let nodemailer = require('nodemailer');
 let sendmail = (note, userMail, link = null) => {
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: process.env.EMAIL_APP,
@@ -15,7 +15,7 @@ let sendmail = (note, userMail, link = null) => {
         }
     });
 
-    var mailOptions = {
+    let mailOptions = {
         from: process.env.EMAIL_APP,
         to: userMail,
         subject: 'Thông báo từ trang Job Finder',
@@ -28,6 +28,7 @@ let sendmail = (note, userMail, link = null) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
+            console.log(error.message)
         } else {
         }
     });
@@ -493,20 +494,99 @@ let getDetailUserById = (userid) => {
                     include: [
                         { model: db.Allcode, as: 'roleData', attributes: ['value', 'code'] },
                         { model: db.User, as: 'userAccountData', attributes: {
-                            exclude: ['userId']
+                            exclude: ['userId'],
                         },
                             include: [
                                 { model: db.Allcode, as: 'genderData', attributes: ['value', 'code'] },
+                                { model: db.UserSetting, as: 'userSettingData'},
                             ]
-                    }
+                        },
                     ],
                     raw: true,
                     nest: true
                 })
+                let listSkills = await db.UserSkill.findAll({
+                    where: {userId: res.userAccountData.id},
+                    include: db.Skill,
+                    raw: true,
+                    nest: true
+                })
+                res.listSkills= listSkills
                 resolve({
                     errCode: 0,
-                    data: res
+                    data: res,
                 })
+            }
+        } catch (error) {
+            reject(error.message)
+        }
+    })
+}
+
+let setDataUserSetting = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.userId && !data.data) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters!'
+                })
+            } else {
+                let user = await db.User.findOne({
+                    where: {id: data.userId},
+                    attributes: {
+                        exclude: ['userId']
+                    },
+                })
+                if (user) {
+                    let userSetting = await db.UserSetting.findOne({
+                        where: {userId: user.id},
+                        raw: false,
+                    })
+                    if (userSetting) {
+                        userSetting.categoryJobCode = data.data.categoryJobCode
+                        userSetting.addressCode = data.data.addressCode
+                        userSetting.experienceJobCode = data.data.experienceJobCode
+                        userSetting.isTakeMail = data.data.isTakeMail
+                        userSetting.isFindJob = data.data.isFindJob
+                        userSetting.file = data.data.file
+                        await userSetting.save()
+                    }
+                    else {
+                        let params = {
+                            categoryJobCode : data.data.categoryJobCode,
+                            addressCode : data.data.addressCode,
+                            experienceJobCode : data.data.experienceJobCode,
+                            isTakeMail : data.data.isTakeMail,
+                            isFindJob : data.data.isFindJob,
+                            file : data.data.file,
+                            userId: user.id
+                        }
+                        await db.User.create(params)
+                    }
+                    if (data.data.listSkills && Array.isArray(data.data.listSkills)) {
+                        await db.UserSkill.destroy({
+                            where: {userId: user.id}
+                        })
+                        let objUserSkill = data.data.listSkills.map(item=>{
+                            return {
+                                userId: user.id,
+                                skillId: item
+                            }
+                        })
+                        await db.UserSkill.bulkCreate(objUserSkill)
+                    }
+                    resolve({
+                        errCode: 0,
+                        errMessage: "Hệ thống đã ghi nhận lựa chọn"
+                    })
+                }
+                else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: "Không tồn tại người dùng này"
+                    })
+                }
             }
         } catch (error) {
             reject(error.message)
@@ -524,5 +604,6 @@ module.exports = {
     handleChangePassword: handleChangePassword,
     getAllUser: getAllUser,
     getDetailUserById: getDetailUserById,
-    checkUserPhone: checkUserPhone, changePaswordByPhone
+    checkUserPhone: checkUserPhone, changePaswordByPhone,
+    setDataUserSetting
 }

@@ -75,6 +75,14 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 defaultValue: 0
             },
+            allowCvFree: {
+                type: Sequelize.INTEGER,
+                defaultValue: 5
+            },
+            allowCV: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

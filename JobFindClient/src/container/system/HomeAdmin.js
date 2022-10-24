@@ -36,6 +36,8 @@ import AddpackagePost from './PackagePost/AddPackagePost';
 import ManagePackagePost from './PackagePost/ManagePackagePost';
 import NotePost from './Post/NotePost';
 import ManageCompany from './Company/ManageCompany';
+import AddJobSkill from './JobSkill/AddJobSkill';
+import ManageJobSkill from './JobSkill/ManageJobSkill';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -240,6 +242,15 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/edit-job-type/:code">
                                     <AddJobType />
+                                </Route>
+                                <Route exact path="/admin/add-job-skill">
+                                    <AddJobSkill />
+                                </Route>
+                                <Route exact path="/admin/list-job-skill">
+                                    <ManageJobSkill />
+                                </Route>
+                                <Route exact path="/admin/edit-job-skill/:code">
+                                    <AddJobSkill />
                                 </Route>
                                 <Route exact path="/admin/add-job-level">
                                     <AddJobLevel />

@@ -225,21 +225,45 @@ let handleUpdatePost = (data) => {
                     raw: false
                 })
                 if (post) {
-                    let detailPost = await db.DetailPost.create({
-                        name: data.name,
-                        descriptionHTML: data.descriptionHTML,
-                        descriptionMarkdown: data.descriptionMarkdown,
-                        categoryJobCode: data.categoryJobCode,
-                        addressCode: data.addressCode,
-                        salaryJobCode: data.salaryJobCode,
-                        amount: data.amount,
-                        categoryJoblevelCode: data.categoryJoblevelCode,
-                        categoryWorktypeCode: data.categoryWorktypeCode,
-                        experienceJobCode: data.experienceJobCode,
-                        genderPostCode: data.genderPostCode,
+                    let otherPost = await db.Post.findOne({
+                        where: {detailPostId: post.detailPostId,id: {
+                            [Op.ne]: post.id
+                        }}
                     })
+                    if (otherPost) {
+                        let newDetailPost = await db.DetailPost.create({
+                            name: data.name,
+                            descriptionHTML: data.descriptionHTML,
+                            descriptionMarkdown: data.descriptionMarkdown,
+                            categoryJobCode: data.categoryJobCode,
+                            addressCode: data.addressCode,
+                            salaryJobCode: data.salaryJobCode,
+                            amount: data.amount,
+                            categoryJoblevelCode: data.categoryJoblevelCode,
+                            categoryWorktypeCode: data.categoryWorktypeCode,
+                            experienceJobCode: data.experienceJobCode,
+                            genderPostCode: data.genderPostCode,
+                        })
+                        post.detailPostId = newDetailPost.id
+                    }
+                    else {
+                        let detailPost = await db.Post.findOne({
+                            where: {id: post.detailPostId}
+                        })
+                        detailPost.name =  data.name,
+                        detailPost.descriptionHTML =  data.descriptionHTML,
+                        detailPost.descriptionMarkdown =  data.descriptionMarkdown,
+                        detailPost.categoryJobCode =  data.categoryJobCode,
+                        detailPost.addressCode =  data.addressCode,
+                        detailPost.salaryJobCode =  data.salaryJobCode,
+                        detailPost.amount =  data.amount,
+                        detailPost.categoryJoblevelCode =  data.categoryJoblevelCode,
+                        detailPost.categoryWorktypeCode =  data.categoryWorktypeCode,
+                        detailPost.experienceJobCode =  data.experienceJobCode,
+                        detailPost.genderPostCode =  data.genderPostCode,
+                        await detailPost.save()
+                    }
                     post.userId = data.userId
-                    post.detailPostId = detailPost.id
                     post.statusCode = 'PS3'
                     await post.save()
                     resolve({

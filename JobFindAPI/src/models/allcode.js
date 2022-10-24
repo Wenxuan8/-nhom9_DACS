@@ -36,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
             Allcode.hasMany(models.Company, { foreignKey: 'statusCode', as: 'statusCompanyData' })
             Allcode.hasMany(models.Company, { foreignKey: 'censorCode', as: 'censorData' })
 
+            //userSetting
+            Allcode.hasMany(models.UserSetting, { foreignKey: 'categoryJobCode', as: 'jobTypeSettingData' })
+            Allcode.hasMany(models.UserSetting, { foreignKey: 'salaryJobCode', as: 'salaryTypeSettingData' })
+            Allcode.hasMany(models.UserSetting, { foreignKey: 'experienceJobCode', as: 'expTypeSettingData' })
+            Allcode.hasMany(models.UserSetting, { foreignKey: 'addressCode', as: 'provinceSettingData' })
+
+            //skill
+            Allcode.hasMany(models.Skill, { foreignKey: 'categoryJobCode', as: 'jobTypeSkillData' })
         }
     };
     Allcode.init({

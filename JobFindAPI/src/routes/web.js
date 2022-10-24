@@ -18,18 +18,27 @@ let initWebRoutes = (app) => {
     router.post('/api/login', userController.handleLogin)
     router.post('/api/changepassword', middlewareControllers.verifyTokenUser,userController.handleChangePassword)
     router.get('/api/get-all-user', middlewareControllers.verifyTokenUser,userController.getAllUser)
-    router.get('/api/get-detail-user-by-id', userController.getDetailUserById)
+    router.get('/api/get-detail-user-by-id', middlewareControllers.verifyTokenUser,userController.getDetailUserById)
     router.get('/api/check-phonenumber-user', userController.checkUserPhone)
     router.post('/api/changepasswordbyPhone', userController.changePaswordByPhone)
+    router.post('/api/setDataUserSetting', userController.setDataUserSetting)
 
     //===================API ALLCODE========================//
-    router.post('/api/create-new-all-code', allcodeController.handleCreateNewAllCode)
-    router.put('/api/update-all-code', allcodeController.handleUpdateAllCode)
-    router.delete('/api/delete-all-code', allcodeController.handleDeleteAllCode)
+    router.post('/api/create-new-all-code',middlewareControllers.verifyTokenAdmin ,allcodeController.handleCreateNewAllCode)
+    router.put('/api/update-all-code', middlewareControllers.verifyTokenAdmin,allcodeController.handleUpdateAllCode)
+    router.delete('/api/delete-all-code', middlewareControllers.verifyTokenAdmin,allcodeController.handleDeleteAllCode)
     router.get('/api/get-all-code', allcodeController.getAllCodeService)
     router.get('/api/get-list-allcode', allcodeController.getListAllCodeService)
     router.get('/api/get-detail-all-code-by-code', allcodeController.getDetailAllcodeByCode)
     router.get('/api/get-list-job-count-post', allcodeController.getListJobTypeAndCountPost)
+    router.post('/api/create-new-skill',middlewareControllers.verifyTokenAdmin ,allcodeController.handleCreateNewSkill)
+    router.delete('/api/delete-skill',middlewareControllers.verifyTokenAdmin ,allcodeController.handleDeleteSkill)
+    router.get('/api/get-all-skill-by-job-code', allcodeController.getAllSkillByJobCode)
+    router.get('/api/get-list-skill', allcodeController.getListSkill)
+    router.put('/api/update-skill', middlewareControllers.verifyTokenAdmin,allcodeController.handleUpdateSkill)
+    router.get('/api/get-detail-skill-by-id',middlewareControllers.verifyTokenAdmin ,allcodeController.getDetailSkillById)
+
+
     //==================API COMPANY=========================//
     router.post('/api/create-new-company', middlewareControllers.verifyTokenUser,companyController.handleCreateNewCompany)
     router.put('/api/update-company', middlewareControllers.verifyTokenUser,companyController.handleUpdateCompany)
@@ -45,7 +54,7 @@ let initWebRoutes = (app) => {
     router.put('/api/accecpt-company', middlewareControllers.verifyTokenAdmin ,companyController.handleAccecptCompany)
     //==================API CV==========================//
     router.post('/api/create-new-cv', middlewareControllers.verifyTokenUser,cvController.handleCreateNewCV)
-    router.get('/api/get-all-list-cv-by-post', middlewareControllers.verifyTokenUser,cvController.getAllListCvByPost)
+    router.get('/api/get-all-list-cv-by-post',cvController.getAllListCvByPost)
     router.get('/api/get-detail-cv-by-id', middlewareControllers.verifyTokenUser,cvController.getDetailCvById)
     router.get('/api/get-all-cv-by-userId', middlewareControllers.verifyTokenUser,cvController.getAllCvByUserId)
     router.get('/api/get-statistical-cv', middlewareControllers.verifyTokenUser,cvController.getStatisticalCv)    

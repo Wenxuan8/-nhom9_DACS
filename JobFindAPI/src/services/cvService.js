@@ -1,6 +1,34 @@
 import db from "../models/index";
+import CommonUtils from '../utils/CommonUtils';
 const { Op, and } = require("sequelize");
-
+let caculatePercentCv = async(file,mapRequired) => {
+    let myMapRequired = new Map(mapRequired)
+    let maxRequired =  myMapRequired.size
+    if (maxRequired === 0) {
+        return 0
+    }
+    let match = 0
+    let cvData = await CommonUtils.pdfToString(file)
+    cvData = cvData.pages
+    cvData.forEach(item=> {
+        item.content.forEach(data => {
+            for (let key of myMapRequired.keys()) {
+                if(data.str.toLowerCase().includes(myMapRequired.get(key).toLowerCase())) {
+                    myMapRequired.delete(key)
+                    match++
+                }
+            }
+        })
+    })
+    return Math.round((match/maxRequired + Number.EPSILON) * 100)
+}
+let getMapRequiredSkill = (mapRequired,post) => {
+    for (let key of mapRequired.keys()) {
+        if(!post.postDetailData.descriptionHTML.toLowerCase().includes(mapRequired.get(key).toLowerCase())) {
+            mapRequired.delete(key)
+        }
+    }
+}
 let handleCreateCv = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -50,9 +78,6 @@ let getAllListCvByPost = (data) => {
                     offset: +data.offset,
                     nest: true,
                     raw: true,
-                    attributes: {
-                        exclude: ['file']
-                    },
                     include: [
                         {
                             model: db.User, as: 'userCvData', attributes: {
@@ -68,10 +93,41 @@ let getAllListCvByPost = (data) => {
                         }
                     ]
                 })
+                let postInfo = await db.Post.findOne({
+                    where: {id:data.postId},
+                    include: [
+                        {
+                            model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
+                                include: [
+                                    { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                                    { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
+                                ]
+                        }
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                let listSkills = await db.Skill.findAll({
+                    where: {categoryJobCode: postInfo.postDetailData.jobTypePostData.code}
+                })
+                let mapRequired = new Map()
+                listSkills = listSkills.map(item => {
+                    mapRequired.set(item.id,item.name)
+                })
+                getMapRequiredSkill(mapRequired,postInfo)
+                for (let i= 0; i< cv.rows.length; i++) {
+                    let percent = await caculatePercentCv(cv.rows[i].file,mapRequired)
+                    cv.rows[i].file = percent + '%'
+                }
                 resolve({
                     errCode: 0,
                     data: cv.rows,
-                    count: cv.count
+                    count: cv.count,
                 })
             }
         } catch (error) {
@@ -107,16 +163,15 @@ let getDetailCvById = (data) => {
                     await cv.save()
                 }
                 if (cv.file) {
-                    cv.file = new Buffer(cv.file, 'base64').toString('binary');
+                    cv.file = new Buffer.from(cv.file, 'base64').toString('binary');
                 }
-
                 resolve({
                     errCode: 0,
                     data: cv,
                 })
             }
         } catch (error) {
-            reject(error)
+            reject(error.message)
         }
     })
 }

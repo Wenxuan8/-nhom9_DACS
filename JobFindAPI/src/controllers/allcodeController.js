@@ -85,6 +85,84 @@ let getListJobTypeAndCountPost = async (req, res) => {
         })
     }
 }
+
+let handleCreateNewSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.handleCreateNewSkill(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let handleDeleteSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.handleDeleteSkill(req.body.id);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getAllSkillByJobCode = async (req, res) => {
+    try {
+        let data = await allcodeService.getAllSkillByJobCode(req.query.categoryJobCode);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getListSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.getListSkill(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let handleUpdateSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.handleUpdateSkill(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let getDetailSkillById = async (req, res) => {
+    try {
+        let data = await allcodeService.getDetailSkillById(req.query.id);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
 module.exports = {
     handleCreateNewAllCode: handleCreateNewAllCode,
     getAllCodeService: getAllCodeService,
@@ -92,5 +170,8 @@ module.exports = {
     getDetailAllcodeByCode: getDetailAllcodeByCode,
     handleDeleteAllCode: handleDeleteAllCode,
     getListAllCodeService: getListAllCodeService,
-    getListJobTypeAndCountPost: getListJobTypeAndCountPost
+    getListJobTypeAndCountPost: getListJobTypeAndCountPost,
+    handleCreateNewSkill, handleDeleteSkill,
+    getAllSkillByJobCode, getListSkill,
+    handleUpdateSkill, getDetailSkillById
 }

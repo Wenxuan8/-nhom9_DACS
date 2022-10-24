@@ -48,6 +48,19 @@ const Menu = () => {
                             </div>
                         </li>
                         <li className="nav-item relative">
+                            <a className="nav-link" data-toggle="collapse" href="#jobskill" aria-expanded="false" aria-controls="jobskill">
+                                <i className="far fa-building menu-icon"></i>
+                                <span className="menu-title">Quản lý kĩ năng</span>
+                                <i className="menu-arrow" />
+                            </a>
+                            <div className="collapse" id="jobskill">
+                                <ul className="nav flex-column sub-menu">
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/list-job-skill/">Danh sách các kĩ năng</Link ></li>
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/add-job-skill/">Thêm kĩ năng</Link ></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#joblevel" aria-expanded="false" aria-controls="joblevel">
                                 <i className="fas fa-level-up-alt menu-icon"></i>
                                 <span className="menu-title">Quản lý cấp bậc</span>
