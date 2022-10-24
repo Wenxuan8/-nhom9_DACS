@@ -247,8 +247,12 @@ let handleUpdatePost = (data) => {
                         post.detailPostId = newDetailPost.id
                     }
                     else {
-                        let detailPost = await db.Post.findOne({
-                            where: {id: post.detailPostId}
+                        let detailPost = await db.DetailPost.findOne({
+                            where: {id: post.detailPostId},
+                            attributes: {
+                                exclude: ['statusCode']
+                            },
+                            raw: false
                         })
                         detailPost.name =  data.name,
                         detailPost.descriptionHTML =  data.descriptionHTML,
