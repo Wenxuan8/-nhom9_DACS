@@ -10,6 +10,7 @@ import UserCv from '../system/Cv/UserCv';
 import ChangePassword from '../system/User/ChangePassword';
 import CandidateInfo from './CandidateInfo';
 import ManageCvCandidate from './ManageCvCandidate';
+import SettingUser from './SettingUser';
 const HomeCandidate = () => {
     return (
 
@@ -32,6 +33,11 @@ const HomeCandidate = () => {
                                 <Route exact path="/candidate/info" component={CandidateInfo}>
 
                                 </Route>
+
+                                <Route exact path="/candidate/usersetting" component={SettingUser}>
+
+                                </Route>
+
                                 <Route exact path="/candidate/changepassword" component={ChangePassword}>
 
                                 </Route>

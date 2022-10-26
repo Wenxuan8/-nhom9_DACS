@@ -76,6 +76,10 @@ const Header = () => {
                                                                 <i className="far fa-user text-primary" />
                                                                 Thông tin
                                                             </Link>
+                                                            <Link to='/candidate/usersetting' className="dropdown-item">
+                                                                <i className="far fa-solid fa-bars text-primary" />
+                                                                Cài đặt nâng cao
+                                                            </Link>
                                                             <Link to="/candidate/cv-post/" className="dropdown-item">
                                                                 <i className="far fa-file-word text-primary"></i>
                                                                 Công việc đã nộp

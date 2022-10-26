@@ -352,20 +352,23 @@ let getAllSkillByJobCode = (categoryJobCode) => {
                 })
             }
             else {
-                let skills = await db.Skill.findAll({
+                let objectFilter = {
                     include: [
                         { model: db.Allcode, as: 'jobTypeSkillData', attributes: ['value', 'code'] }
                     ],
-                    where: {
+                    raw: true,
+                    nest: true
+                }
+                if (categoryJobCode !== 'getAll') {
+                    objectFilter.where = {
                         [Op.and]: [
                             db.Sequelize.where(db.sequelize.col('jobTypeSkillData.code'),{
                                 [Op.eq]: categoryJobCode
                             }),
                         ]
-                    },
-                    raw: true,
-                    nest: true,
-                })
+                    }
+                }
+                let skills = await db.Skill.findAll(objectFilter)
                 resolve({
                     errCode: 0,
                     data: skills

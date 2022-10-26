@@ -71,7 +71,6 @@ let checkUserPhone = (userPhone) => {
 let handleCreateNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(data)
             if (!data.phonenumber || !data.lastName || !data.firstName ) {
                 resolve({
                     errCode: 2,
@@ -505,6 +504,9 @@ let getDetailUserById = (userid) => {
                     raw: true,
                     nest: true
                 })
+                if (res.userAccountData.userSettingData.file) {
+                    res.userAccountData.userSettingData.file = new Buffer.from(res.userAccountData.userSettingData.file, 'base64').toString('binary');
+                }
                 let listSkills = await db.UserSkill.findAll({
                     where: {userId: res.userAccountData.id},
                     include: db.Skill,
@@ -526,14 +528,14 @@ let getDetailUserById = (userid) => {
 let setDataUserSetting = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.userId && !data.data) {
+            if (!data.id || !data.data) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters!'
                 })
             } else {
                 let user = await db.User.findOne({
-                    where: {id: data.userId},
+                    where: {id: data.id},
                     attributes: {
                         exclude: ['userId']
                     },
@@ -544,6 +546,7 @@ let setDataUserSetting = (data) => {
                         raw: false,
                     })
                     if (userSetting) {
+                        userSetting.salaryJobCode = data.data.salaryJobCode
                         userSetting.categoryJobCode = data.data.categoryJobCode
                         userSetting.addressCode = data.data.addressCode
                         userSetting.experienceJobCode = data.data.experienceJobCode
@@ -554,6 +557,7 @@ let setDataUserSetting = (data) => {
                     }
                     else {
                         let params = {
+                            salaryJobCode: data.data.salaryJobCode,
                             categoryJobCode : data.data.categoryJobCode,
                             addressCode : data.data.addressCode,
                             experienceJobCode : data.data.experienceJobCode,
@@ -570,8 +574,8 @@ let setDataUserSetting = (data) => {
                         })
                         let objUserSkill = data.data.listSkills.map(item=>{
                             return {
-                                userId: user.id,
-                                skillId: item
+                                UserId: user.id,
+                                SkillId: item
                             }
                         })
                         await db.UserSkill.bulkCreate(objUserSkill)

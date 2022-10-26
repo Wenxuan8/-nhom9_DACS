@@ -168,7 +168,7 @@ const AddCompany = () => {
                     <div className="card">
                         <div className="card-body">
                             <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
-                            <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới công ty' :(user?.roleCode === 'ADMIN' ? 'Xem thông tin công ty' : 'Cập nhật công ty')}</h4>
+                            <h4 className="card-title">{inputValues.isActionADD === true ? 'Thêm mới công ty' : (user?.roleCode === 'ADMIN' ? 'Xem thông tin công ty' : 'Cập nhật công ty')}</h4>
                             <br></br>
                             <form className="form-sample">
 
@@ -231,7 +231,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ảnh đại diện</label>
                                             <div className="col-sm-9">
-                                                <input                                                 disabled={user?.roleCode === "ADMIN" ? true : false} name='image' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} name='image' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
                                             </div>
                                         </div>
                                     </div>
@@ -249,7 +249,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Ảnh bìa</label>
                                             <div className="col-sm-9">
-                                                <input                                                 disabled={user?.roleCode === "ADMIN" ? true : false} name='coverImage' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} name='coverImage' onChange={(event) => handleOnChangeImage(event)} accept='image/*' type="file" className="form-control form-file" />
                                             </div>
                                         </div>
                                     </div>
@@ -267,7 +267,7 @@ const AddCompany = () => {
                                         <div className="form-group row">
                                             <label className="col-sm-3 col-form-label">Hồ sơ chứng nhận</label>
                                             <div className="col-sm-9">
-                                                <input                                                 disabled={user?.roleCode === "ADMIN" ? true : false} name='coverImage' onChange={(event) => handleOnChangeFile(event)} accept='.pdf' type="file" className="form-control form-file" />
+                                                <input disabled={user?.roleCode === "ADMIN" ? true : false} name='coverImage' onChange={(event) => handleOnChangeFile(event)} accept='.pdf' type="file" className="form-control form-file" />
                                             </div>
                                         </div>
                                     </div>
@@ -297,11 +297,11 @@ const AddCompany = () => {
 
                                 </div>
                                 {
-                                    user.roleCode !== "ADMIN" && 
-                                <button onClick={() => handleSaveCompany()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
-                                    <i class="ti-file btn1-icon-prepend"></i>
-                                    Lưu
-                                </button>
+                                    user.roleCode !== "ADMIN" &&
+                                    <button onClick={() => handleSaveCompany()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
+                                        <i class="ti-file btn1-icon-prepend"></i>
+                                        Lưu
+                                    </button>
                                 }
                             </form>
                         </div>

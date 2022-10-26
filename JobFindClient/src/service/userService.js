@@ -50,6 +50,11 @@ const handleChangePassword = (data) => {
     return axios.post(`/api/changepassword`, data)
 }
 
+const UpdateUserSettingService = (data) => {
+    return axios.put(`/api/setDataUserSetting`, data)
+
+}
+
 //===============ALL CODE========================//
 const getAllCodeService = (type) => {
     return axios.get(`/api/get-all-code?type=${type}`)
@@ -269,5 +274,6 @@ export {
     getListJobTypeAndCountPost, getListCompany, getDetailCompanyById,changePasswordByphone,getStatisticalTypePost , getPackageByType, getPaymentLink , paymentOrderSuccessService , getAllPackage ,
     setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
     getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService, banCompanyService, unbanCompanyService,
-    getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById
+    getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById,
+    UpdateUserSettingService
 }
