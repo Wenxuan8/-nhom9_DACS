@@ -2,21 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Spinner } from 'reactstrap';
 import { createNewCv } from '../../service/cvService';
+import { getDetailUserById } from '../../service/userService';
 import CommonUtils from '../../util/CommonUtils';
 import './modal.css'
 function SendCvModal(props) {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [isLoading, setIsLoading] = useState(false)
     const [inputValue, setInputValue] = useState({
-        userId: '', postId: '', file: '', description: '', linkFile: ''
+        userId: '', postId: '', file: '', description: '', linkFile: '', linkFileUser: '', fileUser: ''
     })
+    const [typeCv,setTypeCv] = useState('pcCv')
+    let getFileCv= async(id) => {
+        let res = await getDetailUserById(id)
+        setInputValue({
+            ...inputValue,
+            ["userId"]: id,
+            ["postId"]: props.postId,
+            ['linkFileUser']: res.data.userAccountData.userSettingData.file ? URL.createObjectURL(dataURLtoFile(res.data.userAccountData.userSettingData.file,'yourCV')) : '',
+            ['fileUser'] : res.data.userAccountData.userSettingData.file ? res.data.userAccountData.userSettingData.file : ''
+        })
+    }
     useEffect(() => {
         if (userData)
-            setInputValue({
-                ...inputValue,
-                ["userId"]: userData.id,
-                ["postId"]: props.postId
-            })
+        getFileCv(userData.id)
     }, [])
     const handleChange = (event) => {
         const { name, value } = event.target
@@ -24,6 +32,31 @@ function SendCvModal(props) {
             ...inputValue,
             [name]: value
         })
+    }
+
+    const radioOnChange = (e) => {
+        const {value} = e.target
+        if (value==='userCv' && !inputValue.linkFileUser) {
+            toast.error('Hiện chưa đăng CV online cho chúng tôi')
+        }
+        else {
+            setTypeCv(value)
+        }
+    }
+
+    let dataURLtoFile = (dataurl, filename) => {
+ 
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), 
+            n = bstr.length, 
+            u8arr = new Uint8Array(n);
+            
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        
+        return new File([u8arr], filename, {type:mime});
     }
 
     const handleOnChangeFile = async (event) => {
@@ -45,9 +78,16 @@ function SendCvModal(props) {
     }
     const handleSendCV = async () => {
         setIsLoading(true)
+        let cvSend = ''
+        if (typeCv === 'userCv') {
+            cvSend = inputValue.fileUser
+        }
+        else {
+            cvSend = inputValue.file
+        }
         let kq = await createNewCv({
             userId: inputValue.userId,
-            file: inputValue.file,
+            file: cvSend,
             postId: inputValue.postId,
             description: inputValue.description
         })
@@ -76,11 +116,27 @@ function SendCvModal(props) {
                     <div>
                     <textarea placeholder='Giới thiệu sơ lược về bản thân để tăng sự yêu thích đối với nhà tuyển dụng' 
                     name='description' className='mt-2' style={{ width: "100%" }} rows='5' onChange={(event) => handleChange(event)}></textarea>
-
-                    <input type="file" className='mt-2' accept='.pdf'
-                    onChange={(event) => handleOnChangeFile(event)}></input>
+                    <div className='d-flex' style={{justifyContent:'space-between'}}>
+                        <div>
+                        <input onChange={radioOnChange} type="radio" checked={typeCv === 'pcCv'} value="pcCv" name="typeCV"></input>
+                        <label className='ml-2'>Tự chọn CV</label>
+                        </div>
+                        <div>
+                        <input onChange={radioOnChange} type="radio" checked={typeCv === 'userCv'} value="userCv" name="typeCV"></input>
+                        <label className='ml-2'>CV online</label>
+                        </div>
+                    </div>
                     {
-                        inputValue.linkFile && <div><a href={inputValue.linkFile} style={{ color: 'blue' }} target='_blank'>Nhấn vào đây để xem lại CV của bạn </a></div>
+                        typeCv === 'pcCv' &&
+                        <input type="file" className='mt-2' accept='.pdf'
+                        onChange={(event) => handleOnChangeFile(event)}></input>
+
+                    }
+                    {
+                        typeCv === 'pcCv' && inputValue.linkFile && <div><a href={inputValue.linkFile} style={{ color: 'blue' }} target='_blank'>Nhấn vào đây để xem lại CV của bạn </a></div>
+                    }
+                                        {
+                        typeCv === 'userCv' && inputValue.linkFileUser && <div><a href={inputValue.linkFileUser} style={{ color: 'blue' }} target='_blank'>Nhấn vào đây để xem lại CV của bạn </a></div>
                     }
                     </div>
                 </ModalBody>
