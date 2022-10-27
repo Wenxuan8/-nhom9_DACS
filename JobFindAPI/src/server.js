@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
 import initwebRoutes from "./routes/web";
 import connectDB from "./config/connectDB";
+import {sendJobMail,updateFreeViewCv} from "./utils/schedule"
 require('dotenv').config();
 
 let app = express();
@@ -28,7 +29,8 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-
+sendJobMail();
+updateFreeViewCv()
 viewEngine(app);
 initwebRoutes(app);
 
