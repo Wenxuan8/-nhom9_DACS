@@ -214,6 +214,7 @@ const SettingUser = () => {
                                         <label className="col-sm-3 col-form-label">Kĩ năng</label>
                                         <div className="col-sm-9 mt-3" style={{ marginLeft: '-115px' }}>
                                             <Select
+                                                disabled={!inputValues.jobType}
                                                 mode="multiple"
                                                 allowClear
                                                 style={{

@@ -38,6 +38,7 @@ let sendmail = async(mailTemplate, userMail) => {
 
 let getTemplateMail = async(infoUser) => {
     try {
+        console.log("infoUser",infoUser)
         let listDetailPost = await db.DetailPost.findAll({
             limit: 5,
             offset: 0,
@@ -55,13 +56,16 @@ let getTemplateMail = async(infoUser) => {
         })
         if (listDetailPost.length >0) {
             let listIdDetail = listDetailPost.map(item=>item.id)
+        console.log("listIdDetail",listIdDetail)
+
             let listpost = await db.Post.findAll({
                 limit: 5,
                 offset: 0,
                 where: {
-                    id: {
+                    detailPostId: {
                         [Op.or]: listIdDetail
-                    }
+                    },
+                    statusCode: 'PS1'
                 },
                 include: [
                     { model: db.DetailPost, as: 'postDetailData', attributes: {
@@ -111,7 +115,7 @@ let getTemplateMail = async(infoUser) => {
 }
 
 const sendJobMail = () => {
-    schedule.scheduleJob(rule, async function(){
+    schedule.scheduleJob(myRuleSecond, async function(){
         try {
             let listUserGetMail = await db.UserSetting.findAll({
                 where: {

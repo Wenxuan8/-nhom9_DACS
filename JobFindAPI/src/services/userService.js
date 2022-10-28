@@ -566,7 +566,7 @@ let setDataUserSetting = (data) => {
                             file : data.data.file,
                             userId: user.id
                         }
-                        await db.User.create(params)
+                        await db.UserSetting.create(params)
                     }
                     if (data.data.listSkills && Array.isArray(data.data.listSkills)) {
                         await db.UserSkill.destroy({
@@ -593,7 +593,7 @@ let setDataUserSetting = (data) => {
                 }
             }
         } catch (error) {
-            reject(error.message)
+            reject(error)
         }
     })
 }
