@@ -551,7 +551,7 @@ let setDataUserSetting = (data) => {
                         userSetting.addressCode = data.data.addressCode
                         userSetting.experienceJobCode = data.data.experienceJobCode
                         userSetting.isTakeMail = data.data.isTakeMail
-                        userSetting.isFindJob = data.data.isFindJob
+                        userSetting.isFindJob = data.data.isFindJob 
                         userSetting.file = data.data.file
                         await userSetting.save()
                     }
@@ -561,11 +561,11 @@ let setDataUserSetting = (data) => {
                             categoryJobCode : data.data.categoryJobCode,
                             addressCode : data.data.addressCode,
                             experienceJobCode : data.data.experienceJobCode,
-                            isTakeMail : data.data.isTakeMail,
-                            isFindJob : data.data.isFindJob,
                             file : data.data.file,
                             userId: user.id
                         }
+                        if (data.data.isTakeMail) params.isTakeMail = data.data.isTakeMail
+                        if (data.data.isFindJob) params.isFindJob = data.data.isFindJob
                         await db.UserSetting.create(params)
                     }
                     if (data.data.listSkills && Array.isArray(data.data.listSkills)) {

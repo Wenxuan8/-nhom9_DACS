@@ -37,8 +37,21 @@ let getAllKeyWords = (text) => {
     }
     return mapListKeyWord
 }
+
+let flatAllString= (string) => {
+    let output = string.toLocaleLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+      output = output.replace(/[đĐ]/g, (m) =>
+      m === "đ" ? "d" : "D"
+    );
+    output= output.replace(/[^a-zA-Z]/g, "")
+    return output;
+}
+  
 module.exports = {
     encodeToken:encodeToken,
     pdfToString:pdfToString,
-    getAllKeyWords: getAllKeyWords
+    getAllKeyWords: getAllKeyWords,
+    flatAllString: flatAllString
 }

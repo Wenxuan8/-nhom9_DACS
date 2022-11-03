@@ -1,10 +1,9 @@
 import db from "../models/index";
 import CommonUtils from '../utils/CommonUtils';
 const { Op, and } = require("sequelize");
-let caculatePercentCv = async(file,mapRequired) => {
+let caculateMatchCv = async(file,mapRequired) => {
     let myMapRequired = new Map(mapRequired)
-    let maxRequired =  myMapRequired.size
-    if (maxRequired === 0) {
+    if (myMapRequired.size === 0) {
         return 0
     }
     let match = 0
@@ -13,14 +12,34 @@ let caculatePercentCv = async(file,mapRequired) => {
     cvData.forEach(item=> {
         item.content.forEach(data => {
             for (let key of myMapRequired.keys()) {
-                if(data.str.toLowerCase().includes(myMapRequired.get(key).toLowerCase())) {
+                if(CommonUtils.flatAllString(data.str).includes(CommonUtils.flatAllString(myMapRequired.get(key)))) {
                     myMapRequired.delete(key)
                     match++
                 }
             }
         })
     })
-    return Math.round((match/maxRequired + Number.EPSILON) * 100)
+    return match
+}
+let caculateMatchUserWithFilter = async(userData,listSkillRequired) => {
+    let match = 0
+    let myListSkillRequired = new Map()
+    listSkillRequired.forEach(item=> {myListSkillRequired.set(item.id,item.name)})
+    let userskill = await db.UserSkill.findAll({
+        where: {userId: userData.userId},
+    })
+    for (let key of myListSkillRequired.keys()) {
+        let temp = [...userskill]
+        temp.forEach((item,index)=> {
+            if (item.SkillId === key) {
+                userskill.splice(index,1)
+                myListSkillRequired.delete(key)
+                match++
+            } 
+        })
+    }
+    let matchFromCV = await caculateMatchCv(userData.file,myListSkillRequired)
+    return match + matchFromCV
 }
 let getMapRequiredSkill = (mapRequired,post) => {
     for (let key of mapRequired.keys()) {
@@ -121,8 +140,8 @@ let getAllListCvByPost = (data) => {
                 })
                 getMapRequiredSkill(mapRequired,postInfo)
                 for (let i= 0; i< cv.rows.length; i++) {
-                    let percent = await caculatePercentCv(cv.rows[i].file,mapRequired)
-                    cv.rows[i].file = percent + '%'
+                    let match = await caculateMatchCv(cv.rows[i].file,mapRequired)
+                    cv.rows[i].file = Math.round((match/mapRequired.size + Number.EPSILON) * 100) + '%'
                 }
                 resolve({
                     errCode: 0,
@@ -330,10 +349,75 @@ let getStatisticalCv = (data) => {
         }
     })
 }
+
+let fillterCVBySelection = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.limit || !data.offset) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let objectFillter = {
+                    where: {
+                        isFindJob: 1,
+                        file: {
+                            [Op.ne]: null
+                        },
+                    },
+                    include: [
+                        {model: db.User, as: 'userSettingData' , attributes: {
+                            exclude: ['userId']
+                        }},
+                        {model: db.Allcode, as:'jobTypeSettingData', attributes: ['value','code']},
+                        {model: db.Allcode, as:'expTypeSettingData', attributes: ['value','code']}
+                    ],
+                    limit: +data.limit,
+                    offset: +data.offset,
+                    raw: true,
+                    nest: true
+                }
+                if (data.categoryJobCode) objectFillter.where = {...objectFillter.where, categoryJobCode: data.categoryJobCode}
+                if (data.experienceJobCode) objectFillter.where = {...objectFillter.where, experienceJobCode: data.experienceJobCode}
+                let isHiddenPercent = false
+                let listUserSetting = await db.UserSetting.findAndCountAll(objectFillter)
+                if (data.listSkills)
+                {
+                    data.listSkills = data.listSkills.split(',')
+                    let listSkillRequired = await db.Skill.findAll({
+                        where: {id: data.listSkills}
+                    })
+                    for (let i=0;i<listUserSetting.rows.length;i++) {
+                        let match = await caculateMatchUserWithFilter(listUserSetting.rows[i],listSkillRequired)
+                        listUserSetting.rows[i].file = Math.round((match/listSkillRequired.length + Number.EPSILON) * 100)+"%"
+                    }
+                }
+                else {
+                    isHiddenPercent= true
+                    listUserSetting.rows = listUserSetting.rows.map(item => {
+                        delete item.file
+                        return item
+                    })
+                }
+                resolve({
+                    errCode: 0,
+                    data: listUserSetting.rows,
+                    count: listUserSetting.count,
+                    isHiddenPercent: isHiddenPercent
+                })
+
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     handleCreateCv: handleCreateCv,
     getAllListCvByPost: getAllListCvByPost,
     getDetailCvById: getDetailCvById,
     getAllCvByUserId: getAllCvByUserId,
-    getStatisticalCv: getStatisticalCv
+    getStatisticalCv: getStatisticalCv,
+    fillterCVBySelection: fillterCVBySelection
 }

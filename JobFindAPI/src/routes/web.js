@@ -57,7 +57,8 @@ let initWebRoutes = (app) => {
     router.get('/api/get-all-list-cv-by-post',cvController.getAllListCvByPost)
     router.get('/api/get-detail-cv-by-id', middlewareControllers.verifyTokenUser,cvController.getDetailCvById)
     router.get('/api/get-all-cv-by-userId', middlewareControllers.verifyTokenUser,cvController.getAllCvByUserId)
-    router.get('/api/get-statistical-cv', middlewareControllers.verifyTokenUser,cvController.getStatisticalCv)    
+    router.get('/api/get-statistical-cv', middlewareControllers.verifyTokenUser,cvController.getStatisticalCv)
+    router.get('/api/fillter-cv-by-selection', cvController.fillterCVBySelection)    
     //==================API POST==========================//
     router.post('/api/create-new-post', middlewareControllers.verifyTokenUser,postController.handleCreateNewPost)
     router.post('/api/create-reup-post', middlewareControllers.verifyTokenUser,postController.handleReupPost)
