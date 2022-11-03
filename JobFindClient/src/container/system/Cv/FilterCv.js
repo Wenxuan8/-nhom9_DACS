@@ -42,22 +42,22 @@ const FilterCv = () => {
     }, [inputValue])
 
     let { data: dataExp } = useFetchAllcode('EXPTYPE')
-    let { data: dataJobType} = useFetchAllcode('JOBTYPE')
+    let { data: dataJobType } = useFetchAllcode('JOBTYPE')
 
-    dataExp = dataExp.map(item=>({
+    dataExp = dataExp.map(item => ({
         value: item.code,
         label: item.value,
         type: 'experienceJobCode'
     }))
 
 
-    dataJobType = dataJobType.map(item=>({
+    dataJobType = dataJobType.map(item => ({
         value: item.code,
         label: item.value,
         type: 'categoryJobCode'
     }))
 
-    const handleChange = async(value,detail) => {
+    const handleChange = async (value, detail) => {
         if (Array.isArray(detail)) {
             setInputValue({
                 ...inputValue,
@@ -67,7 +67,7 @@ const FilterCv = () => {
         else {
             if (detail.type === 'categoryJobCode') {
                 let res = await getAllSkillByJobCode(value)
-                let listSkills =  res.data.map(item=>({
+                let listSkills = res.data.map(item => ({
                     value: item.id,
                     label: item.name
                 }))
@@ -112,12 +112,22 @@ const FilterCv = () => {
                         <Row justify='space-around' className='mt-5 mb-5 ml-3'>
                             <Col xs={12} xxl={12}>
                                 <label className='mr-2'>Lĩnh vực: </label>
-                                <Select style={{ width: '70%' }} size='default' onChange={handleChange} value={inputValue.categoryJobCode} options={dataJobType}>
+                                <Select
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                    }
+                                    showSearch
+                                    style={{ width: '70%' }} size='default' onChange={handleChange} value={inputValue.categoryJobCode} options={dataJobType}>
                                 </Select>
                             </Col>
                             <Col xs={12} xxl={12}>
                                 <label className='mr-2'>Kinh nghiệm: </label>
-                                <Select style={{ width: '70%' }} size='default' onChange={handleChange} value={inputValue.experienceJobCode} options={dataExp}>
+                                <Select
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                    }
+                                    showSearch
+                                    style={{ width: '70%' }} size='default' onChange={handleChange} value={inputValue.experienceJobCode} options={dataExp}>
 
                                 </Select>
                             </Col>
@@ -133,9 +143,13 @@ const FilterCv = () => {
                                         width: '89%',
                                     }}
                                     placeholder="Chọn kĩ năng của bạn"
-                                onChange={handleChange}
-                                options={listSkills}
-                                value={inputValue.listSkills}
+                                    onChange={handleChange}
+                                    options={listSkills}
+                                    value={inputValue.listSkills}
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                    }
+                                    showSearch
                                 >
                                 </Select>
                             </Col>

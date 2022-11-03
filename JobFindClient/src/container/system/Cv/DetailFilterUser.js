@@ -142,6 +142,7 @@ const DetailFilterUser = () => {
                                                 placeholder="Chọn kĩ năng của bạn"
                                                 options={listSkills}
                                                 value={inputValues.skills}
+                                                
                                             >
                                             </Select>
                                         </div>

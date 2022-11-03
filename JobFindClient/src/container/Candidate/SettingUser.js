@@ -161,6 +161,9 @@ const SettingUser = () => {
             toast.error(res.errMessage)
         }
     }
+    let handleSearchMulti = (input,option) => {
+        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+    }
     return (
         <div className=''>
             <div className="col-12 grid-margin">
@@ -184,6 +187,10 @@ const SettingUser = () => {
                                                 onChange={handleChange}
                                                 options={dataJobType}
                                                 value={inputValues.jobType}
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                showSearch
                                             >
                                             </Select>
                                         </div>
@@ -202,6 +209,10 @@ const SettingUser = () => {
                                                 onChange={handleChange}
                                                 options={dataSalary}
                                                 value={inputValues.salary}
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                showSearch
                                             >
                                             </Select>
                                         </div>
@@ -224,6 +235,10 @@ const SettingUser = () => {
                                                 onChange={handleChange}
                                                 options={listSkills}
                                                 value={inputValues.skills}
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                showSearch
                                             >
                                             </Select>
                                         </div>
@@ -244,6 +259,10 @@ const SettingUser = () => {
                                                 onChange={handleChange}
                                                 options={dataProvince}
                                                 value={inputValues.jobProvince}
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                showSearch
                                             >
                                             </Select>
                                         </div>
@@ -262,6 +281,10 @@ const SettingUser = () => {
                                                 onChange={handleChange}
                                                 options={dataExp}
                                                 value={inputValues.exp}
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                showSearch
                                             >
                                             </Select>
                                         </div>
