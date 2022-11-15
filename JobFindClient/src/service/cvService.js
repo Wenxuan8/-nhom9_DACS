@@ -20,9 +20,13 @@ const getStatisticalCv = (data) => {
 }
 
 const getFilterCv = (data) => {
-    return axios.get(`/api/fillter-cv-by-selection?limit=${data.limit}&offset=${data.offset}&experienceJobCode=${data.experienceJobCode}&categoryJobCode=${data.categoryJobCode}&listSkills=${data.listSkills}`)
+    return axios.get(`/api/fillter-cv-by-selection?limit=${data.limit}&offset=${data.offset}&experienceJobCode=${data.experienceJobCode}&categoryJobCode=${data.categoryJobCode}&listSkills=${data.listSkills}&otherSkills=${data.otherSkills}`)
+}
+
+const checkSeeCandiate = (data)=> {
+    return axios.get(`/api/check-see-candiate?userId=${data.userId}&companyId=${data.companyId}`)
 }
 export {
     createNewCv, getAllListCvByPostService, getDetailCvService, getAllListCvByUserIdService, getStatisticalCv,
-    getFilterCv
+    getFilterCv, checkSeeCandiate
 }

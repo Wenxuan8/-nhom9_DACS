@@ -266,6 +266,43 @@ const getStatisticalPackagePost = (data) => {
     return axios.get(`/api/get-statistical-package?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}`)
 }
 
+//======================== PACKAGE CV ====================================//
+const getPackageByIdCv = (id) => {
+    return axios.get(`/api/get-package-cv-by-id?id=${id}`)
+}
+
+const getPaymentLinkCv = (id,amount) => {
+    return axios.get(`/api/get-payment-cv-link?id=${id}&amount=${amount}`)
+}
+
+const paymentOrderSuccessServiceCv = (data) => {
+    return axios.post(`/api/payment-cv-success`, data)
+}
+
+const getAllPackageCv = (data) => {
+    return axios.get(`/api/get-all-package-cv?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+}
+
+const getAllToSelect = () => {
+    return axios.get(`/api/get-all-package-cv-select`)
+}
+
+const setActiveTypePackageCv= (data) => {
+    return axios.put(`/api/set-active-package-cv`, data)
+}
+
+const createPackageCv= (data) => {
+    return axios.post(`/api/create-package-cv`, data)
+}
+
+const updatePackageCv = (data) => {
+    return axios.put(`/api/update-package-cv`, data)
+}
+
+const getStatisticalPackageCv = (data) => {
+    return axios.get(`/api/get-statistical-package-cv?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}`)
+}
+
 export {
     DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeByCode, createAllCodeService, getListAllCodeService, getAllCodeService,
     getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
@@ -275,5 +312,6 @@ export {
     setActiveTypePackage , createPackagePost , getPackageById , updatePackagePost , getStatisticalPackagePost,
     getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService, banCompanyService, unbanCompanyService,
     getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById,
-    UpdateUserSettingService
+    UpdateUserSettingService,
+    getPackageByIdCv, getAllPackageCv, getPaymentLinkCv, paymentOrderSuccessServiceCv, setActiveTypePackageCv, createPackageCv, updatePackageCv,getStatisticalPackageCv, getAllToSelect
 }

@@ -126,6 +126,19 @@ const Menu = () => {
                             </div>
                         </li>
                         <li className="nav-item relative">
+                            <a className="nav-link" data-toggle="collapse" href="#packagecv" aria-expanded="false" aria-controls="packagecv">
+                                <i class="fa-solid fa-cube menu-icon"></i>
+                                <span className="menu-title">Quản lý các gói xem ứng viên</span>
+                                <i className="menu-arrow" />
+                            </a>
+                            <div className="collapse" id="packagecv">
+                                <ul className="nav flex-column sub-menu">
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/list-package-cv/">Danh sách các gói tìm ứng viên</Link ></li>
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/add-package-cv/">Thêm gói tìm ứng viên</Link ></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#company" aria-expanded="false" aria-controls="company">
                                 <i class="fa-solid fa-clipboard menu-icon"></i>
                                 <span className="menu-title">Quản lý các công ty</span>
@@ -183,14 +196,14 @@ const Menu = () => {
                             </div>
                         </li>
                         <li className="nav-item relative">
-                            <a className="nav-link" data-toggle="collapse" href="#post" aria-expanded="false" aria-controls="post">
+                            <a className="nav-link" data-toggle="collapse" href="#findCandiate" aria-expanded="false" aria-controls="findCandiate">
                                 <i className="far fa-clock menu-icon"></i>
                                 <span className="menu-title">Tìm kiếm ứng viên</span>
                                 <i className="menu-arrow" />
                             </a>
-                            <div className="collapse" id="post">
+                            <div className="collapse" id="findCandiate">
                                 <ul className="nav flex-column sub-menu">
-                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/buy-seen-candiate/">Mua thêm lượt xem ứng viên</Link ></li>
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/buy-cv/">Mua thêm lượt xem ứng viên</Link ></li>
                                     <li className="nav-item relative"> <Link className="nav-link" to="/admin/list-candiate/">Danh sách ứng viên</Link ></li>
                                 </ul>
                             </div>

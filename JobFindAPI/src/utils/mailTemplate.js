@@ -160,7 +160,7 @@ const getHeadMailTemplate = (userInfo) => {
                                   </tr>
                                   <tr>
                                     <td align="left" style="font-size:0px;padding:0px 0px;word-break:break-word;">
-                                      <div style="font-family:SF Pro Display;font-size:20px;line-height:1;text-align:left;color:#000000;">
+                                      <div style="font-family:SF Pro Display;font-size:16px;line-height:1;text-align:left;color:#000000;">
                                         <p> Bạn nhận được danh sách công việc phù hợp </p>
                                       </div>
                                     </td>
@@ -210,7 +210,7 @@ const getHeadMailTemplate = (userInfo) => {
                                 <tbody>
                                   <tr>
                                     <td align="left" style="font-size:0px;padding:10px 25px;padding-top:20px;word-break:break-word;">
-                                      <div style="font-family:SF Pro Display;font-size:20px;font-style:normal;font-weight:600;line-height:20px;text-align:left;color:#000000;">
+                                      <div style="font-family:SF Pro Display;font-size:16px;font-style:normal;font-weight:600;line-height:20px;text-align:left;color:#000000;">
                                         <div>
                                           <span>${userInfo.userSettingData.firstName+ " " + userInfo.userSettingData.lastName}</span>
                                         </div>
@@ -264,10 +264,10 @@ const getPostTemplate = (postInfo) => {
                 <tbody>
                   <tr>
                     <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                      <div style="font-family:SF Pro Display;font-size:20px;font-style:normal;line-height:1;text-align:left;color:#000000;">
+                      <div style="font-family:SF Pro Display;font-size:16px;font-style:normal;line-height:1;text-align:left;color:#000000;">
                         <div>
-                          <h3>${postInfo.postDetailData.name}</h3>
-                          <h3>${postInfo.companyData.name}</h3>
+                          <h3 style="color: blue">${postInfo.postDetailData.name}</h3>
+                          <h4>${postInfo.companyData.name}</h4>
                           <div>Địa điểm: ${postInfo.postDetailData.provincePostData.value}</div>
                           <div>Hình thức làm việc: ${postInfo.postDetailData.workTypePostData.value} </div>
                           <div>Lương: ${postInfo.postDetailData.salaryTypePostData.value}</div>

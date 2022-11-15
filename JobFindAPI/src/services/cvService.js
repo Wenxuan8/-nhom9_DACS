@@ -33,7 +33,6 @@ let caculateMatchUserWithFilter = async(userData,listSkillRequired) => {
         temp.forEach((item,index)=> {
             if (item.SkillId === key) {
                 userskill.splice(index,1)
-                myListSkillRequired.delete(key)
                 match++
             } 
         })
@@ -382,15 +381,29 @@ let fillterCVBySelection = (data) => {
                 if (data.experienceJobCode) objectFillter.where = {...objectFillter.where, experienceJobCode: data.experienceJobCode}
                 let isHiddenPercent = false
                 let listUserSetting = await db.UserSetting.findAndCountAll(objectFillter)
+                let listSkillRequired = []
                 if (data.listSkills)
                 {
                     data.listSkills = data.listSkills.split(',')
-                    let listSkillRequired = await db.Skill.findAll({
-                        where: {id: data.listSkills}
+                    listSkillRequired = await db.Skill.findAll({
+                        where: {id: data.listSkills},
+                        attributes: ['id','name']
                     })
+
+                }
+                if (data.otherSkills) {
+                    data.otherSkills = data.otherSkills.split(',')
+                    data.otherSkills.forEach(item=> {
+                        listSkillRequired.push({
+                            id: item,
+                            name: item
+                        })
+                    })
+                }
+                if (listSkillRequired.length > 0) {
                     for (let i=0;i<listUserSetting.rows.length;i++) {
                         let match = await caculateMatchUserWithFilter(listUserSetting.rows[i],listSkillRequired)
-                        listUserSetting.rows[i].file = Math.round((match/listSkillRequired.length + Number.EPSILON) * 100)+"%"
+                        listUserSetting.rows[i].file = Math.round((match/(listSkillRequired.length*2) + Number.EPSILON) * 100)+"%"
                     }
                 }
                 else {
@@ -413,11 +426,80 @@ let fillterCVBySelection = (data) => {
         }
     })
 }
+
+let checkSeeCandiate = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.userId && !data.companyId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let company
+                if (data.userId !== 'null') {
+                    let user = await db.User.findOne({
+                        where: {id: data.userId},
+                        attributes: {
+                            exclude: ['userId']
+                        }
+                    })
+                    company = await db.Company.findOne({
+                        where : {id: user.companyId},
+                        attributes: ['id','allowCV','allowCvFree'],
+                        raw: false
+                    })
+                }
+                else {
+                    company = await db.Company.findOne({
+                        where: { id: data.companyId },
+                        attributes: ['id','allowCV','allowCvFree'],
+                        raw: false
+                    })
+                }
+                if (!company) {
+                    resolve({
+                        errCode: 2,
+                        errMessage: "Không tìm thấy công ty người dùng sở hữu"
+                    })
+                }
+                else {
+                    if (company.allowCvFree > 0) {
+                        company.allowCvFree -= 1
+                        await company.save()
+                        resolve({
+                            errCode: 0,
+                            errMessage: "Ok"
+                        })
+                    }
+                    else if (company.allowCV > 0) {
+                        company.allowCV -= 1
+                        await company.save()
+                        resolve({
+                            errCode: 0,
+                            errMessage: "Ok"
+                        })
+                    }
+                    else {
+                        resolve({
+                            errCode: 1,
+                            errMessage: "Công ty bạn đã hết lượt xem"
+                        })
+                    }
+                    
+                }
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     handleCreateCv: handleCreateCv,
     getAllListCvByPost: getAllListCvByPost,
     getDetailCvById: getDetailCvById,
     getAllCvByUserId: getAllCvByUserId,
     getStatisticalCv: getStatisticalCv,
-    fillterCVBySelection: fillterCVBySelection
+    fillterCVBySelection: fillterCVBySelection,
+    checkSeeCandiate: checkSeeCandiate
 }

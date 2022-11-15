@@ -24,11 +24,11 @@ let getAllPackage = (data) => {
                 if (data.search) {
                     objectFilter.where = {name: {[Op.like]: `%${data.search}%`}}
                 }
-                let packagePosts = await db.PackagePost.findAndCountAll(objectFilter)
+                let packageCvs = await db.PackageCv.findAndCountAll(objectFilter)
                 resolve({
                     errCode: 0,
-                    data: packagePosts.rows,
-                    count: packagePosts.count
+                    data: packageCvs.rows,
+                    count: packageCvs.count
                 })
             }
         } catch (error) {
@@ -37,24 +37,14 @@ let getAllPackage = (data) => {
     })
 }
 
-let getPackageByType = (data) => {
+let getAllToSelect = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (data.isHot === '') {
-                resolve({
-                    errCode: 1,
-                    errMessage: `Missing required parameters !`
-                })
-            } else {
-                let packagePost = await db.PackagePost.findAll({
-                    where: { isHot: data.isHot }
-                })
+                let packageCvs = await db.PackageCv.findAll()
                 resolve({
                     errCode: 0,
-                    data: packagePost
+                    data: packageCvs
                 })
-            }
-
         } catch (error) {
             reject(error)
         }
@@ -70,13 +60,13 @@ let getPackageById = (data) => {
                     errMessage: `Missing required parameters !`
                 })
             } else {
-                let packagePost = await db.PackagePost.findOne({
+                let packageCvs = await db.PackageCv.findOne({
                     where: { id: data.id }
                 })
-                if (packagePost) {
+                if (packageCvs) {
                     resolve({
                         errCode: 0,
-                        data: packagePost
+                        data: packageCvs
                     })
                 }
                 else {
@@ -104,7 +94,7 @@ let getPaymentLink = (data) => {
                 })
             }
             else {
-                let infoItem = await db.PackagePost.findOne({
+                let infoItem = await db.PackageCv.findOne({
                     where: { id: data.id }
                 })
                 let item = [{
@@ -121,8 +111,8 @@ let getPaymentLink = (data) => {
                         "payment_method": "paypal"
                     },
                     "redirect_urls": {
-                        "return_url": `${process.env.URL_REACT}/admin/payment/success`,
-                        "cancel_url": `${process.env.URL_REACT}/admin/payment/cancel`
+                        "return_url": `${process.env.URL_REACT}/admin/paymentCv/success`,
+                        "cancel_url": `${process.env.URL_REACT}/admin/paymentCv/cancel`
                     },
                     "transactions": [{
                         "item_list": {
@@ -161,14 +151,14 @@ let getPaymentLink = (data) => {
 let paymentOrderSuccess = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.PayerID || !data.paymentId || !data.token) {
+            if (!data.PayerID || !data.paymentId || !data.token || !data.packageCvId) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameter !'
                 })
             } else {
-                let infoItem = await db.PackagePost.findOne({
-                    where: { id: data.packageId }
+                let infoItem = await db.PackageCv.findOne({
+                    where: { id: data.packageCvId }
                 })
                 let execute_payment_json = {
                     "payer_id": data.PayerID,
@@ -189,13 +179,13 @@ let paymentOrderSuccess = (data) => {
                             errMessage: error
                         })
                     } else {
-                        let orderPackage = await db.OrderPackage.create({
-                            packagePostId: data.packageId,
+                        let OrderPackageCV = await db.OrderPackageCV.create({
+                            packageCvId: data.packageCvId,
                             userId: data.userId,
                             currentPrice: infoItem.price,
                             amount: +data.amount
                         })
-                        if (orderPackage) {
+                        if (OrderPackageCV) {
                             let user = await db.User.findOne({
                                 where: { id: data.userId },
                                 attributes: {
@@ -207,14 +197,8 @@ let paymentOrderSuccess = (data) => {
                                 raw: false
                             })
                             if (company) {
-                                if (infoItem.isHot == 0) {
-                                    company.allowPost += +infoItem.value * +data.amount
-                                }
-                                else {
-                                    company.allowHotPost += +infoItem.value * +data.amount
-                                }
-                                await company.save({silent: true})
-
+                                company.allowCv += +infoItem.value * +data.amount
+                                company.save({silent: true})
                             }
                         }
                         resolve({
@@ -240,19 +224,19 @@ let setActiveTypePackage = (data) => {
                     errMessage: `Missing required parameters !`
                 })
             } else {
-                let packagePost = await db.PackagePost.findOne({
+                let packageCv = await db.PackageCv.findOne({
                     where: { id: data.id },
                     raw: false
                 })
-                if (!packagePost) {
+                if (!packageCv) {
                     resolve({
                         errCode: 2,
                         errMessage: `Gói sản phẩm không tồn tại`
                     })
                 }
                 else {
-                    packagePost.isActive = data.isActive
-                    await packagePost.save()
+                    packageCv.isActive = data.isActive
+                    await packageCv.save()
                     resolve({
                         errCode: 0,
                         errMessage: data.isActive == 0 ? `Gói sản phẩm đã ngừng kích hoạt` : `Gói sản phẩm đã hoạt động`
@@ -267,23 +251,22 @@ let setActiveTypePackage = (data) => {
     })
 }
 
-let creatNewPackagePost = (data) => {
+let creatNewPackageCv = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.price || !data.value || data.isHot === '') {
+            if (!data.name || !data.price || !data.value) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                let packagePost = await db.PackagePost.create({
+                let packageCv = await db.PackageCv.create({
                     name: data.name,
                     value: data.value,
-                    isHot: data.isHot,
                     price: data.price,
                     isActive: 1
                 })
-                if (packagePost) {
+                if (packageCv) {
                     resolve({
                         errCode: 0,
                         errMessage: 'Tạo gói sản phẩm thành công'
@@ -310,25 +293,24 @@ let creatNewPackagePost = (data) => {
     })
 }
 
-let updatePackagePost = (data) => {
+let updatePackageCv = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.price || !data.value || data.isHot === '' || !data.id) {
+            if (!data.name || !data.price || !data.value || !data.id) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
                 })
             } else {
-                let packagePost = await db.PackagePost.findOne({
+                let packageCv = await db.PackageCv.findOne({
                     where: { id: data.id },
                     raw: false
                 })
-                if (packagePost) {
-                    packagePost.name = data.name
-                    packagePost.price = data.price
-                    packagePost.value = data.value
-                    packagePost.isHot = data.isHot
-                    await packagePost.save()
+                if (packageCv) {
+                    packageCv.name = data.name
+                    packageCv.price = data.price
+                    packageCv.value = data.value
+                    await packageCv.save()
                     resolve({
                         errCode: 0,
                         errMessage: 'Cập nhật thành công'
@@ -365,44 +347,44 @@ let getStatisticalPackage = (data) => {
                 })
             }
             else {
-                let listPackage = await db.PackagePost.findAndCountAll({
+                let listPackage = await db.PackageCv.findAndCountAll({
                     limit: +data.limit,
-                    offset: +data.offset,
+                    offset: +data.offset, 
                 })
-                let listOrderPackage = await db.OrderPackage.findAll({
+                let listOrderPackage = await db.OrderPackageCV.findAll({
                     where: {
                         createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
                     },
-                    attributes: ['packagePostId',[db.sequelize.literal('SUM(amount)'), 'count'],[db.sequelize.literal('SUM(currentPrice * amount)'), 'total']],
+                    attributes: ['packageCvId',[db.sequelize.literal('SUM(amount)'), 'count'],[db.sequelize.literal('SUM(currentPrice * amount)'), 'total']],
                     order: [[db.Sequelize.literal('total'), 'DESC']],
-                    group: ['packagePostId'],
+                    group: ['packageCvId'],
                     nest: true,
                 })
                 const sum = listOrderPackage.reduce(
                     (previousValue, currentValue) => previousValue + currentValue.total,
                     0
                   );
-                listPackage.rows = listPackage.rows.map(packagePost => {
+                listPackage.rows = listPackage.rows.map(packageCv => {
                     let count = 1
                     let length = listOrderPackage.length
                     if (length == 0) {
                         return {
-                            ...packagePost,
+                            ...packageCv,
                             count: 0,
                             total: 0
                         }
                     }
                     for (let order of listOrderPackage) {
-                        if (order.packagePostId == packagePost.id) {
+                        if (order.packageCvId == packageCv.id) {
                             return {
-                                ...packagePost,
+                                ...packageCv,
                                 count: order.count,
                                 total: order.total
                             }
                         }
                         else if (count == length) {
                             return {
-                                ...packagePost,
+                                ...packageCv,
                                 total: 0,
                                 count: 0
                             }
@@ -425,6 +407,6 @@ let getStatisticalPackage = (data) => {
     })
 }
 module.exports = {
-    getPackageByType, getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
-    getPackageById, creatNewPackagePost, updatePackagePost, getStatisticalPackage
+    getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
+    getPackageById, creatNewPackageCv, updatePackageCv, getStatisticalPackage, getAllToSelect
 }

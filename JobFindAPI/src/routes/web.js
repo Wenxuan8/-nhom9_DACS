@@ -5,6 +5,8 @@ import companyController from '../controllers/companyController';
 import postController from '../controllers/postController';
 import cvController from '../controllers/cvController'
 import packageController from '../controllers/packagePostController'
+import packageCvController from '../controllers/packageCvController'
+
 import middlewareControllers from '../middlewares/jwtVerify'
 let router = express.Router();
 
@@ -58,7 +60,8 @@ let initWebRoutes = (app) => {
     router.get('/api/get-detail-cv-by-id', middlewareControllers.verifyTokenUser,cvController.getDetailCvById)
     router.get('/api/get-all-cv-by-userId', middlewareControllers.verifyTokenUser,cvController.getAllCvByUserId)
     router.get('/api/get-statistical-cv', middlewareControllers.verifyTokenUser,cvController.getStatisticalCv)
-    router.get('/api/fillter-cv-by-selection', cvController.fillterCVBySelection)    
+    router.get('/api/fillter-cv-by-selection', cvController.fillterCVBySelection)
+    router.get('/api/check-see-candiate', middlewareControllers.verifyTokenUser,cvController.checkSeeCandiate)    
     //==================API POST==========================//
     router.post('/api/create-new-post', middlewareControllers.verifyTokenUser,postController.handleCreateNewPost)
     router.post('/api/create-reup-post', middlewareControllers.verifyTokenUser,postController.handleReupPost)
@@ -82,6 +85,17 @@ let initWebRoutes = (app) => {
     router.post('/api/create-package-post', middlewareControllers.verifyTokenAdmin ,packageController.creatNewPackagePost)
     router.put('/api/update-package-post',middlewareControllers.verifyTokenAdmin , packageController.updatePackagePost)
     router.get('/api/get-statistical-package',middlewareControllers.verifyTokenAdmin ,packageController.getStatisticalPackage)
+    
+    //==================API PACKAGE CV==========================//
+    router.get('/api/get-package-cv-by-id', middlewareControllers.verifyTokenUser,packageCvController.getPackageById)
+    router.get('/api/get-payment-cv-link', middlewareControllers.verifyTokenUser,packageCvController.getPaymentLink)
+    router.get('/api/get-all-package-cv',middlewareControllers.verifyTokenUser,packageCvController.getAllPackage)
+    router.post('/api/payment-cv-success',middlewareControllers.verifyTokenUser  ,packageCvController.paymentOrderSuccess)
+    router.put('/api/set-active-package-cv', middlewareControllers.verifyTokenAdmin ,packageCvController.setActiveTypePackage)
+    router.post('/api/create-package-cv', middlewareControllers.verifyTokenAdmin ,packageCvController.creatNewPackageCv)
+    router.put('/api/update-package-cv',middlewareControllers.verifyTokenAdmin , packageCvController.updatePackageCv)
+    router.get('/api/get-statistical-package-cv',middlewareControllers.verifyTokenAdmin ,packageCvController.getStatisticalPackageCv)
+    router.get('/api/get-all-package-cv-select',middlewareControllers.verifyTokenUser,packageCvController.getAllToSelect)
     return app.use("/", router);
 }
 

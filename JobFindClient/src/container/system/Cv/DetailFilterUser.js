@@ -1,6 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { getDetailUserById, UpdateUserSettingService, getAllSkillByJobCode } from '../../../service/userService';
+import { checkSeeCandiate } from '../../../service/cvService';
+
 import { useFetchAllcode } from '../../../util/fetch';
 import { toast } from 'react-toastify';
 import 'react-image-lightbox/style.css';
@@ -43,9 +45,21 @@ const DetailFilterUser = () => {
     useEffect(() => {
         if (id) {
             let fetchUser = async () => {
-                let user = await getDetailUserById(id)
-                if (user && user.errCode === 0) {
-                    setStateUser(user.data)
+                let userData = JSON.parse(localStorage.getItem("userData"))
+                let check = await checkSeeCandiate({
+                    userId: userData.id,
+                    companyId: userData.companyId
+                })
+                if (check.errCode ===0 ) {
+                    let user = await getDetailUserById(id)
+                    if (user && user.errCode === 0) {
+                        setStateUser(user.data)
+                    }
+                } else {
+                    toast.error(check.errMessage)
+                    setTimeout(()=> {
+                        history.push('/admin/list-candiate/')
+                    },1000)
                 }
             }
             fetchUser()

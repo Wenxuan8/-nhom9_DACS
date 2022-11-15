@@ -1,13 +1,16 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { getFilterCv } from '../../../service/cvService';
-import { getAllSkillByJobCode } from '../../../service/userService';
+import { getAllSkillByJobCode, getDetailCompanyByUserId } from '../../../service/userService';
 import { useFetchAllcode } from '../../../util/fetch';
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
 import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
-import { Col, Row, Select } from 'antd';
+import { Col, Row, Select, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+
+const {confirm} = Modal
 
 
 const FilterCv = () => {
@@ -19,15 +22,51 @@ const FilterCv = () => {
     })
     const [listSkills, setListSkills] = useState([])
     const [isHiddenPercent, setIsHiddenPercent] = useState(true)
+    const [companySeeAllow,setCompanySeeAllow] = useState({
+        free:0,
+        notFree: 0
+    })
+    let fetchCompany = async (userId, companyId = null) => {
+        let res = await getDetailCompanyByUserId(userId, companyId)
+        if (res && res.errCode === 0) {
+            setCompanySeeAllow({
+                free: res.data.allowCvFree,
+                notFree: res.data.allowCv
+            })
+        }
+    }
+    let history = useHistory()
+    const confirmSeeCandiate = (id) => {
+        confirm({
+            title: 'Khi xem bạn sẽ mất 1 lần xem thông tin ứng viên',
+            icon: <ExclamationCircleOutlined />,    
+            onOk() {
+                history.push(`/admin/candiate/${id}/`)
+            },
+        
+            onCancel() {
+            },
+          });
+    }
     useEffect(() => {
         try {
             let fetchData = async () => {
+                let listSkills = []
+                let otherSkills = [] 
+                inputValue.listSkills.forEach(item=> {
+                    if (typeof item === 'number') {
+                        listSkills.push(item)
+                    }else {
+                        otherSkills.push(item)
+                    }
+                })
                 let arrData = await getFilterCv({
                     limit: PAGINATION.pagerow,
                     offset: 0,
                     categoryJobCode: inputValue.categoryJobCode,
                     experienceJobCode: inputValue.experienceJobCode,
-                    listSkills: inputValue.listSkills
+                    listSkills: listSkills,
+                    otherSkills: otherSkills
                 })
                 if (arrData && arrData.errCode === 0) {
                     setdataCv(arrData.data)
@@ -35,7 +74,9 @@ const FilterCv = () => {
                     setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
                 }
             }
+            let userData = JSON.parse(localStorage.getItem("userData"))
             fetchData();
+            fetchCompany(userData.id,userData.companyId)
         } catch (error) {
             console.log(error)
         }
@@ -109,6 +150,11 @@ const FilterCv = () => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách ứng viên</h4>
+                        <div>
+                            
+                            <p>{`Số lượt xem miễn phí: ${companySeeAllow.free}`}</p>
+                            <p>{`Số lượt xem: ${companySeeAllow.notFree}`}</p>
+                        </div>
                         <Row justify='space-around' className='mt-5 mb-5 ml-3'>
                             <Col xs={12} xxl={12}>
                                 <label className='mr-2'>Lĩnh vực: </label>
@@ -137,7 +183,7 @@ const FilterCv = () => {
                                 <label className='mr-2'>Kỹ năng: </label>
                                 <Select
                                     disabled={!inputValue.categoryJobCode}
-                                    mode="multiple"
+                                    mode="tags"
                                     allowClear
                                     style={{
                                         width: '89%',
@@ -196,7 +242,7 @@ const FilterCv = () => {
                                                         <td>{item.file}</td>
                                                     }
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/admin/candiate/${item.userId}/`}>Xem chi tiết ứng viên</Link>
+                                                        <span style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={()=>confirmSeeCandiate(item.userId)}>Xem chi tiết ứng viên</span>
                                                         &nbsp; &nbsp;
                                                     </td>
                                                 </tr>

@@ -40,6 +40,10 @@ import ManageCompany from './Company/ManageCompany';
 import AddJobSkill from './JobSkill/AddJobSkill';
 import ManageJobSkill from './JobSkill/ManageJobSkill';
 import DetailFilterUser from './Cv/DetailFilterUser';
+import AddpackageCv from './PackageCv/AddPackageCv';
+import ManagePackageCv from './PackageCv/ManagePackageCv';
+import PaymentSuccessCv from './PackageCv/BuySuccesCv';
+import BuyCv from './PackageCv/BuyCv';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -299,6 +303,15 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/edit-package-post/:id">
                                     <AddpackagePost />
                                 </Route>
+                                <Route exact path="/admin/add-package-cv">
+                                    <AddpackageCv />
+                                </Route>
+                                <Route exact path="/admin/list-package-cv">
+                                    <ManagePackageCv />
+                                </Route>
+                                <Route exact path="/admin/edit-package-cv/:id">
+                                    <AddpackageCv />
+                                </Route>
                                 <Route exact path="/admin/add-company">
                                     <AddCompany />
                                 </Route>
@@ -331,6 +344,12 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/payment/success">
                                     <PaymentSuccess />
+                                </Route>
+                                <Route exact path="/admin/buy-cv/">
+                                    <BuyCv />
+                                </Route>
+                                <Route exact path="/admin/paymentCv/success">
+                                    <PaymentSuccessCv />
                                 </Route>
                                 <Route exact path="/admin/list-post-admin/">
                                     <ManagePost />

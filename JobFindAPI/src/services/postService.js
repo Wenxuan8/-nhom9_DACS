@@ -62,7 +62,7 @@ let handleCreateNewPost = (data) => {
                         if (data.isHot == '1') {
                             if (company.allowHotPost > 0) {
                                 company.allowHotPost -= 1
-                                await company.save()
+                                await company.save({silent: true})
                             }
                             else {
                                 resolve({
@@ -75,7 +75,7 @@ let handleCreateNewPost = (data) => {
                         else {
                             if (company.allowPost > 0) {
                                 company.allowPost -= 1
-                                await company.save()
+                                await company.save({silent: true})
                             }
                             else {
                                 resolve({
