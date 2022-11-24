@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getStatisticalTypePost, getStatisticalPackagePost } from '../../service/userService';
+import { getStatisticalTypePost, getStatisticalPackagePost, getStatisticalPackageCv } from '../../service/userService';
 import { getStatisticalCv } from '../../service/cvService';
 import { PAGINATION } from '../../util/constant';
 import { PieChart } from 'react-minimal-pie-chart';
@@ -21,10 +21,17 @@ const Home = () => {
     const [user, setUser] = useState({})
     const [dataStatisticalTypePost, setDataStatisticalTypePost] = useState([])
     const [dataStatisticalPackagePost, setDataStatisticalPackagePost] = useState([])
+    const [dataStatisticalPackageCv, setDataStatisticalPackageCv] = useState([])
     const [dataSum,setDataSum] = useState(0)
+    const [dataSumCv,setDataSumCv] = useState(0)
+
     const [dataCv, setDataCv] = useState([])
     const [count, setCount] = useState('')
+    const [countCv, setCountCv] = useState('')
+
     const [numberPage, setnumberPage] = useState('')
+    const [numberPageCv, setnumberPageCv] = useState('')
+
     let sendParams = {
         limit: PAGINATION.pagerow,
         offset: 0,
@@ -33,7 +40,36 @@ const Home = () => {
         companyId: user.companyId
     }
 
-    let onDatePicker = async (values) => {
+    let getStatistical = async(fromDate,toDate,type='packageCv') => {
+        let arrData = []
+        if (type==='packagePost') {
+            arrData = await getStatisticalPackagePost({
+                fromDate,
+                toDate,
+                limit: PAGINATION.pagerow,
+                offset: 0,
+            })
+            if (arrData && arrData.errCode === 0) {
+                setDataStatisticalPackagePost(arrData.data)
+                setDataSum(arrData.sum)
+                setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+            }
+        } else {
+            arrData = await getStatisticalPackageCv({
+                fromDate,
+                toDate,
+                limit: PAGINATION.pagerow,
+                offset: 0,
+            })
+            if (arrData && arrData.errCode === 0) {
+                setDataStatisticalPackageCv(arrData.data)
+                setDataSumCv(arrData.sum)
+                setCountCv(Math.ceil(arrData.count / PAGINATION.pagerow))
+            }
+        }
+    }
+
+    let onDatePicker = async (values,type='') => {
         let fromDate = formattedToday
         let toDate = formattedToday
         if (values) {
@@ -53,22 +89,43 @@ const Home = () => {
             }
         }
         else {
-            let arrData = await getStatisticalPackagePost({
-                fromDate,
-                toDate,
+            getStatistical(fromDate,toDate,type)
+        }
+    }
+    let getStatisticalChangePage= async(type,number) => {
+        let arrData = []
+        if (type ==='packagePost') {
+            setnumberPage(number.selected)
+            arrData = await getStatisticalPackagePost({
+                fromDate: formattedToday,
+                toDate: formattedToday,
                 limit: PAGINATION.pagerow,
-                offset: 0,
+                offset: number.selected * PAGINATION.pagerow
             })
             if (arrData && arrData.errCode === 0) {
                 setDataStatisticalPackagePost(arrData.data)
                 setDataSum(arrData.sum)
+    
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+            }
+        } else {
+            setnumberPageCv(number.selected)
+            arrData = await getStatisticalPackageCv({
+                fromDate: formattedToday,
+                toDate: formattedToday,
+                limit: PAGINATION.pagerow,
+                offset: number.selected * PAGINATION.pagerow
+            })
+            if (arrData && arrData.errCode === 0) {
+                setDataStatisticalPackageCv(arrData.data)
+                setDataSumCv(arrData.sum)
+                setCountCv(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
         }
     }
-    let handleChangePage = async (number) => {
-        setnumberPage(number.selected)
+    let handleChangePage = async (number,type='') => {
         if (user.roleCode !== "ADMIN") {
+            setnumberPage(number.selected)
             let arrData = await getStatisticalCv({
                 ...sendParams,
                 limit: PAGINATION.pagerow,
@@ -79,18 +136,7 @@ const Home = () => {
             }
         }
         else {
-            let arrData = await getStatisticalPackagePost({
-                fromDate: formattedToday,
-                toDate: formattedToday,
-                limit: PAGINATION.pagerow,
-                offset: number.selected * PAGINATION.pagerow
-            })
-            if (arrData && arrData.errCode === 0) {
-                setDataStatisticalPackagePost(arrData.data)
-                setDataSum(arrData.sum)
-
-                setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
-            }
+            getStatisticalChangePage(type,number)
         }
     }
 
@@ -139,18 +185,8 @@ const Home = () => {
                     }
                 }
                 else {
-                    let arrData = await getStatisticalPackagePost({
-                        fromDate: formattedToday,
-                        toDate: formattedToday,
-                        limit: PAGINATION.pagerow,
-                        offset: 0,
-                    })
-                    if (arrData && arrData.errCode === 0) {
-                        setDataStatisticalPackagePost(arrData.data)
-                setDataSum(arrData.sum)
-
-                        setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
-                    }
+                    getStatistical(formattedToday,formattedToday,'packagePost')
+                    getStatistical(formattedToday,formattedToday,'packageCv')
                 }
             }
             fetchData();
@@ -215,7 +251,7 @@ const Home = () => {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Bảng thông kê số lượng CV</h4>
-                            <RangePicker onChange={onDatePicker}></RangePicker>
+                            <RangePicker onChange={(values)=>onDatePicker(values)}></RangePicker>
                             <div className="table-responsive pt-2">
                                 <table className="table table-bordered">
                                     <thead>
@@ -281,7 +317,7 @@ const Home = () => {
                             breakLinkClassName={"page-link"}
                             breakClassName={"page-item"}
                             activeClassName={"active"}
-                            onPageChange={handleChangePage}
+                            onPageChange={(number) => handleChangePage(number)}
                         />
                     </div>
 
@@ -289,12 +325,13 @@ const Home = () => {
             }
             {
                 user.roleCode === 'ADMIN' &&
+                <>
                 <div className="col-12 grid-margin">
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title">Bảng thống kê doanh thu các gói</h4>
+                            <h4 className="card-title">Bảng thống kê doanh thu các gói bài đăng</h4>
 
-                            <RangePicker onChange={onDatePicker}
+                            <RangePicker onChange={(values)=>onDatePicker(values,'packagePost')}
                                 format={'DD/MM/YYYY'}
                             ></RangePicker>
 
@@ -372,11 +409,97 @@ const Home = () => {
                             breakLinkClassName={"page-link"}
                             breakClassName={"page-item"}
                             activeClassName={"active"}
-                            onPageChange={handleChangePage}
+                            onPageChange={(number) => handleChangePage(number,'packagePost')}
                         />
                     </div>
 
                 </div>
+                <div className="col-12 grid-margin">
+                    <div className="card">
+                        <div className="card-body">
+                            <h4 className="card-title">Bảng thống kê doanh thu các gói mua lượt xem ứng viên</h4>
+
+                            <RangePicker onChange={(values)=>onDatePicker(values,'packageCv')}
+                                format={'DD/MM/YYYY'}
+                            ></RangePicker>
+
+
+                            <div className="table-responsive pt-2">
+                                <table className="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                STT
+                                            </th>
+                                            <th>
+                                                Tên gói
+                                            </th>
+                                            <th>
+                                                Mã gói
+                                            </th>
+                                            <th>
+                                                Số lượng đã bán
+                                            </th>
+                                            <th>
+                                                Doanh thu
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {dataStatisticalPackageCv && dataStatisticalPackageCv.length > 0 &&
+                                            dataStatisticalPackageCv.map((item, index) => {
+
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{index + 1 + numberPageCv * PAGINATION.pagerow}</td>
+                                                        <td>{item.name}</td>
+                                                        <td>{item.id}</td>
+                                                        <td>{item.count}</td>
+                                                        <td style={{ textAlign: 'right' }}>{item.total} USD</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                                        {
+                                            dataStatisticalPackageCv && dataStatisticalPackageCv.length == 0 && (
+                                                <div style={{ textAlign: 'center'}}>
+
+                                                    Không có dữ liệu
+
+                                                </div>
+                                            )
+                                        }
+                            </div>
+                        </div>
+                        {
+                        dataStatisticalPackageCv && dataStatisticalPackageCv.length > 0 &&
+                        <div class='mr-4' style={{display:'flex', justifyContent:'end'}}>Tổng doanh thu: {dataSumCv} USD</div>
+                        }
+                        <ReactPaginate
+                            previousLabel={'Quay lại'}
+                            nextLabel={'Tiếp'}
+                            breakLabel={'...'}
+                            pageCount={countCv}
+                            marginPagesDisplayed={3}
+                            containerClassName={"pagination justify-content-center pb-3"}
+                            pageClassName={"page-item"}
+                            pageLinkClassName={"page-link"}
+                            previousLinkClassName={"page-link"}
+                            previousClassName={"page-item"}
+                            nextClassName={"page-item"}
+                            nextLinkClassName={"page-link"}
+                            breakLinkClassName={"page-link"}
+                            breakClassName={"page-item"}
+                            activeClassName={"active"}
+                            onPageChange={(number)=>handleChangePage(number,'packageCv')}
+                        />
+                    </div>
+
+                </div>
+                </>
+
             }
         </>
     )

@@ -51,6 +51,8 @@ const AddpackageCv = () => {
                     setInputValues({
                         ...inputValues,
                         ["value"]: '',
+                        price: '',
+                        name: ''
                     })
                 }
                 else if (res && res.errCode === 2) {
@@ -85,7 +87,7 @@ const AddpackageCv = () => {
                     <div className="card-body">
                     <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
 
-                        <h4 className="card-title">{isActionADD === true ? 'Thêm mới gói bài viết' : 'Cập nhật gói bài viết'}</h4>
+                        <h4 className="card-title">{isActionADD === true ? 'Thêm mới gói xem ứng viên' : 'Cập nhật gói xem ứng viên'}</h4>
                         <br></br>
                         <form className="form-sample">
 

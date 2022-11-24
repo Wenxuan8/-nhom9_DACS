@@ -266,6 +266,7 @@ const getStatisticalPackagePost = (data) => {
     return axios.get(`/api/get-statistical-package?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}`)
 }
 
+
 //======================== PACKAGE CV ====================================//
 const getPackageByIdCv = (id) => {
     return axios.get(`/api/get-package-cv-by-id?id=${id}`)

@@ -53,6 +53,8 @@ const AddpackagePost = () => {
                         ...inputValues,
                         ["value"]: '',
                         ["code"]: '',
+                        price: '',
+                        name: ''
                     })
                 }
                 else if (res && res.errCode === 2) {
