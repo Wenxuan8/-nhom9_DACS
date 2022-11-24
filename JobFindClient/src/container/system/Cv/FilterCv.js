@@ -17,8 +17,9 @@ const FilterCv = () => {
     const [dataCv, setdataCv] = useState([])
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
+    const [isFirstTime, setIsFirstTime] = useState(true)
     const [inputValue, setInputValue] = useState({
-        categoryJobCode: '', experienceJobCode: '', listSkills: []
+        categoryJobCode: '', experienceJobCode: '', listSkills: [], provinceCode: '', salaryCode: ''
     })
     const [listSkills, setListSkills] = useState([])
     const [isHiddenPercent, setIsHiddenPercent] = useState(true)
@@ -48,57 +49,82 @@ const FilterCv = () => {
             },
           });
     }
+    let fetchData = async () => {
+        let listSkills = []
+        let otherSkills = [] 
+        inputValue.listSkills.forEach(item=> {
+            if (typeof item === 'number') {
+                listSkills.push(item)
+            }else {
+                otherSkills.push(item)
+            }
+        })
+        let arrData = await getFilterCv({
+            limit: PAGINATION.pagerow,
+            offset: 0,
+            categoryJobCode: inputValue.categoryJobCode,
+            experienceJobCode: inputValue.experienceJobCode,
+            salaryCode: inputValue.salaryCode,
+            provinceCode: inputValue.provinceCode,
+            listSkills: listSkills,
+            otherSkills: otherSkills
+        })
+        if (arrData && arrData.errCode === 0) {
+            setdataCv(arrData.data)
+            setIsHiddenPercent(arrData.isHiddenPercent)
+            setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+        }
+    }
     useEffect(() => {
         try {
-            let fetchData = async () => {
-                let listSkills = []
-                let otherSkills = [] 
-                inputValue.listSkills.forEach(item=> {
-                    if (typeof item === 'number') {
-                        listSkills.push(item)
-                    }else {
-                        otherSkills.push(item)
-                    }
-                })
-                let arrData = await getFilterCv({
-                    limit: PAGINATION.pagerow,
-                    offset: 0,
-                    categoryJobCode: inputValue.categoryJobCode,
-                    experienceJobCode: inputValue.experienceJobCode,
-                    listSkills: listSkills,
-                    otherSkills: otherSkills
-                })
-                if (arrData && arrData.errCode === 0) {
-                    setdataCv(arrData.data)
-                    setIsHiddenPercent(arrData.isHiddenPercent)
-                    setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
-                }
-            }
             let userData = JSON.parse(localStorage.getItem("userData"))
             fetchData();
-            fetchCompany(userData.id,userData.companyId)
+            if (isFirstTime) {
+                fetchCompany(userData.id,userData.companyId)
+                setIsFirstTime(false)
+            }
         } catch (error) {
             console.log(error)
         }
     }, [inputValue])
 
+    let { data: dataProvince } = useFetchAllcode('PROVINCE');
     let { data: dataExp } = useFetchAllcode('EXPTYPE')
-    let { data: dataJobType } = useFetchAllcode('JOBTYPE')
+    let { data: dataSalary} = useFetchAllcode('SALARYTYPE')
+    let { data: dataJobType} = useFetchAllcode('JOBTYPE')
 
-    dataExp = dataExp.map(item => ({
+
+    dataProvince = dataProvince.map(item=>({
+        value: item.code,
+        label: item.value,
+        type: 'provinceCode'
+    }))
+
+    dataExp = dataExp.map(item=>({
         value: item.code,
         label: item.value,
         type: 'experienceJobCode'
     }))
 
+    dataSalary = dataSalary.map(item=>({
+        value: item.code,
+        label: item.value,
+        type: 'salaryCode'
+    }))
 
-    dataJobType = dataJobType.map(item => ({
+    dataJobType = dataJobType.map(item=>({
         value: item.code,
         label: item.value,
         type: 'categoryJobCode'
     }))
 
-    const handleChange = async (value, detail) => {
+    const handleChange = async (value, detail,type) => {
+        if (!value && !detail) {
+            setInputValue({
+                ...inputValue,
+                [type]: ''
+            })
+        }
         if (Array.isArray(detail)) {
             setInputValue({
                 ...inputValue,
@@ -157,36 +183,73 @@ const FilterCv = () => {
                         </div>
                         <Row justify='space-around' className='mt-5 mb-5 ml-3'>
                             <Col xs={12} xxl={12}>
-                                <label className='mr-2'>Lĩnh vực: </label>
+                                <div>
+                                    <label className='mr-2'>Lĩnh vực: <span style={{color: 'red'}}>*</span></label>
+                                </div>
                                 <Select
                                     filterOption={(input, option) =>
                                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                     }
                                     showSearch
-                                    style={{ width: '70%' }} size='default' onChange={handleChange} value={inputValue.categoryJobCode} options={dataJobType}>
+                                    allowClear
+                                    style={{ width: '90%' }} size='default' onChange={(value,detail) => handleChange(value,detail,'categoryJobCode')} value={inputValue.categoryJobCode} options={dataJobType}>
                                 </Select>
                             </Col>
                             <Col xs={12} xxl={12}>
-                                <label className='mr-2'>Kinh nghiệm: </label>
+                                <div>
+                                    <label className='mr-2'>Kinh nghiệm: </label>
+                                </div>
                                 <Select
                                     filterOption={(input, option) =>
                                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                     }
                                     showSearch
-                                    style={{ width: '70%' }} size='default' onChange={handleChange} value={inputValue.experienceJobCode} options={dataExp}>
+                                    allowClear
+                                    style={{ width: '90%' }} size='default' onChange={(value,detail) => handleChange(value,detail,'experienceJobCode')} value={inputValue.experienceJobCode} options={dataExp}>
+
+                                </Select>
+                            </Col>
+                        </Row>
+                        <Row justify='space-around' className='mt-5 mb-5 ml-3'>
+                            <Col xs={12} xxl={12}>
+                                <div>
+                                    <label className='mr-2'>Khoảng lương: </label>
+                                </div>
+                                <Select
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                    }
+                                    showSearch
+                                    allowClear
+                                    style={{ width: '90%' }} size='default' onChange={(value,detail) => handleChange(value,detail,'salaryCode')} value={inputValue.salaryCode} options={dataSalary}>
+                                </Select>
+                            </Col>
+                            <Col xs={12} xxl={12}>
+                                <div>
+                                    <label className='mr-2'>Khu vực làm việc: </label>
+                                </div>
+                                <Select
+                                    filterOption={(input, option) =>
+                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                    }
+                                    showSearch
+                                    allowClear
+                                    style={{ width: '90%' }} size='default' onChange={(value,detail) => handleChange(value,detail,'provinceCode')} value={inputValue.provinceCode} options={dataProvince}>
 
                                 </Select>
                             </Col>
                         </Row>
                         <Row justify='space-around' className='mt-5 mb-5 ml-3'>
                             <Col xs={24} xxl={24}>
-                                <label className='mr-2'>Kỹ năng: </label>
+                                <div>
+                                    <label className='mr-2'>Kỹ năng: </label>
+                                </div>
                                 <Select
                                     disabled={!inputValue.categoryJobCode}
                                     mode="tags"
                                     allowClear
                                     style={{
-                                        width: '89%',
+                                        width: '100%',
                                     }}
                                     placeholder="Chọn kĩ năng của bạn"
                                     onChange={handleChange}

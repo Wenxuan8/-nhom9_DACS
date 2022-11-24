@@ -370,7 +370,9 @@ let fillterCVBySelection = (data) => {
                             exclude: ['userId']
                         }},
                         {model: db.Allcode, as:'jobTypeSettingData', attributes: ['value','code']},
-                        {model: db.Allcode, as:'expTypeSettingData', attributes: ['value','code']}
+                        {model: db.Allcode, as:'expTypeSettingData', attributes: ['value','code']},
+                        {model: db.Allcode, as:'salaryTypeSettingData', attributes: ['value','code']},
+                        {model: db.Allcode, as:'provinceSettingData', attributes: ['value','code']}
                     ],
                     limit: +data.limit,
                     offset: +data.offset,
@@ -378,10 +380,33 @@ let fillterCVBySelection = (data) => {
                     nest: true
                 }
                 if (data.categoryJobCode) objectFillter.where = {...objectFillter.where, categoryJobCode: data.categoryJobCode}
-                if (data.experienceJobCode) objectFillter.where = {...objectFillter.where, experienceJobCode: data.experienceJobCode}
                 let isHiddenPercent = false
                 let listUserSetting = await db.UserSetting.findAndCountAll(objectFillter)
                 let listSkillRequired = []
+                let bonus = 0
+                if (data.experienceJobCode) {
+                    bonus++
+                }
+                if (data.salaryCode) {
+                    bonus++
+                }
+                if (data.provinceCode) {
+                    bonus++
+                }
+                if (bonus > 0) {
+                    listUserSetting.rows.map(item=> {
+                        item.bonus = 0
+                        if (item.expTypeSettingData.code === data.experienceJobCode) {
+                            item.bonus++
+                        }
+                        if (item.salaryTypeSettingData.code === data.salaryCode) {
+                            item.bonus++
+                        }
+                        if (item.provinceSettingData.code === data.provinceCode) {
+                            item.bonus++
+                        }
+                    })
+                }
                 if (data.listSkills)
                 {
                     data.listSkills = data.listSkills.split(',')
@@ -400,10 +425,15 @@ let fillterCVBySelection = (data) => {
                         })
                     })
                 }
-                if (listSkillRequired.length > 0) {
+                if (listSkillRequired.length > 0 || bonus > 0) {
                     for (let i=0;i<listUserSetting.rows.length;i++) {
                         let match = await caculateMatchUserWithFilter(listUserSetting.rows[i],listSkillRequired)
-                        listUserSetting.rows[i].file = Math.round((match/(listSkillRequired.length*2) + Number.EPSILON) * 100)+"%"
+                        if (bonus > 0) {
+                            listUserSetting.rows[i].file = Math.round(((match+listUserSetting.rows[i].bonus)/(listSkillRequired.length*2+bonus)+ Number.EPSILON) * 100)+"%"
+                        }
+                        else {
+                            listUserSetting.rows[i].file = Math.round((match/(listSkillRequired.length*2) + Number.EPSILON) * 100)+"%"
+                        }
                     }
                 }
                 else {
