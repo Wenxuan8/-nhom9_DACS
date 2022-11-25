@@ -347,10 +347,12 @@ let getStatisticalPackage = (data) => {
                 })
             }
             else {
-                let listPackage = await db.PackageCv.findAndCountAll({
-                    limit: +data.limit,
-                    offset: +data.offset, 
-                })
+                let filterListPackage = {}
+                if (data.limit && data.offset) {
+                    filterListPackage.limit = +data.limit
+                    filterListPackage.offset = +data.offset
+                }
+                let listPackage = await db.PackageCv.findAndCountAll(filterListPackage)
                 let listOrderPackage = await db.OrderPackageCV.findAll({
                     where: {
                         createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }

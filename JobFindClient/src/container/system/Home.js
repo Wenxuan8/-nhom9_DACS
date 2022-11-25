@@ -8,7 +8,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import ReactPaginate from 'react-paginate';
 import moment from 'moment';
 import { DatePicker } from 'antd';
-
+import CommonUtils from '../../util/CommonUtils';
 const Home = () => {
     const { RangePicker } = DatePicker;
     const today = new Date();
@@ -24,6 +24,11 @@ const Home = () => {
     const [dataStatisticalPackageCv, setDataStatisticalPackageCv] = useState([])
     const [dataSum,setDataSum] = useState(0)
     const [dataSumCv,setDataSumCv] = useState(0)
+    const [formDatePost,setFormDatePost] = useState(formattedToday)
+    const [formDateCv,setFormDateCv] = useState(formattedToday)
+    const [toDatePost,setToDatePost] = useState(formattedToday)
+    const [toDateCv,setToDateCv] = useState(formattedToday)
+
 
     const [dataCv, setDataCv] = useState([])
     const [count, setCount] = useState('')
@@ -43,6 +48,7 @@ const Home = () => {
     let getStatistical = async(fromDate,toDate,type='packageCv') => {
         let arrData = []
         if (type==='packagePost') {
+            setFormDatePost(fromDate)
             arrData = await getStatisticalPackagePost({
                 fromDate,
                 toDate,
@@ -55,6 +61,7 @@ const Home = () => {
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
             }
         } else {
+            setFormDateCv(fromDate)
             arrData = await getStatisticalPackageCv({
                 fromDate,
                 toDate,
@@ -138,6 +145,44 @@ const Home = () => {
         else {
             getStatisticalChangePage(type,number)
         }
+    }
+    let handleOnClickExport =async (type) =>{
+        let res = []
+        if (type === 'packagePost') {
+            res = await getStatisticalPackagePost({
+                fromDate: formDatePost,
+                toDate: toDatePost,
+                limit: '',
+                offset: ''
+            })
+        }
+        else {
+            res = await getStatisticalPackageCv({
+                fromDate: formDateCv,
+                toDate: toDateCv,
+                limit: '',
+                offset: ''
+            })
+        }
+        if(res.errCode === 0){
+            let formatData = res.data.map(item=> {
+                let obj = {
+                    'Mã gói': item.id,
+                    'Tên gói': item.name,
+                    'Số lượng': +item.count,
+                    'Tổng': +item.total
+                }
+                if (type === 'packagePost') obj['Loại gói'] =  item.isHot === 1 ? 'Loại nổi bật' : 'Loại bình thường'
+                return obj
+            })
+            if (type === 'packagePost') {
+                await CommonUtils.exportExcel(formatData,"Statistical Package Post","Statistical Package Post")
+            }
+            else {
+                await CommonUtils.exportExcel(formatData,"Statistical Package Candiate","Statistical Package Candiate")
+            }
+        }
+        
     }
 
 
@@ -330,7 +375,7 @@ const Home = () => {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Bảng thống kê doanh thu các gói bài đăng</h4>
-
+                            <button  style={{float:'right'}} onClick={() => handleOnClickExport('packagePost')} >Xuất excel <i class="fa-solid fa-file-excel"></i></button>
                             <RangePicker onChange={(values)=>onDatePicker(values,'packagePost')}
                                 format={'DD/MM/YYYY'}
                             ></RangePicker>
@@ -418,7 +463,7 @@ const Home = () => {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Bảng thống kê doanh thu các gói mua lượt xem ứng viên</h4>
-
+                            <button  style={{float:'right'}} onClick={() => handleOnClickExport('packageCv')} >Xuất excel <i class="fa-solid fa-file-excel"></i></button>
                             <RangePicker onChange={(values)=>onDatePicker(values,'packageCv')}
                                 format={'DD/MM/YYYY'}
                             ></RangePicker>

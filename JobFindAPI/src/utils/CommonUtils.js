@@ -48,10 +48,10 @@ let flatAllString= (string) => {
     output= output.replace(/[^a-zA-Z]/g, "")
     return output;
 }
-  
+
 module.exports = {
     encodeToken:encodeToken,
     pdfToString:pdfToString,
     getAllKeyWords: getAllKeyWords,
-    flatAllString: flatAllString
+    flatAllString: flatAllString,
 }
