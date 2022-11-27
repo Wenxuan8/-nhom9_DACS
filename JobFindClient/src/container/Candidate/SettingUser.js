@@ -11,7 +11,6 @@ const SettingUser = () => {
     const [inputValues, setInputValues] = useState({
         jobType: '', salary: '', skills: [], jobProvince: '', exp: '', isFindJob: 0, isTakeMail: 0, file: ''
     });
-
     let handleOnChangeFile = async (event) => {
         let data = event.target.files;
         let file = data[0];
@@ -72,14 +71,14 @@ const SettingUser = () => {
         }
         setInputValues({
             ...inputValues,
-            jobType: data.userAccountData.userSettingData.categoryJobCode,
-            salary: data.userAccountData.userSettingData.salaryJobCode,
+            jobType: data.userAccountData.userSettingData.categoryJobCode ?? '',
+            salary: data.userAccountData.userSettingData.salaryJobCode ?? '',
             skills: listSkills,
-            jobProvince: data.userAccountData.userSettingData.addressCode,
-            exp: data.userAccountData.userSettingData.experienceJobCode,
-            isFindJob: data.userAccountData.userSettingData.isFindJob,
-            isTakeMail: data.userAccountData.userSettingData.isTakeMail,
-            file: data.userAccountData.userSettingData.file
+            jobProvince: data.userAccountData.userSettingData.addressCode ?? '',
+            exp: data.userAccountData.userSettingData.experienceJobCode ?? '',
+            isFindJob: data.userAccountData.userSettingData.isFindJob ?? 0,
+            isTakeMail: data.userAccountData.userSettingData.isTakeMail ?? 0,
+            file: data.userAccountData.userSettingData.file ?? ''
         })
     }
     useEffect(() => {
@@ -129,6 +128,8 @@ const SettingUser = () => {
         const {name,checked} = e.target
         if (name === 'isFindJob' && !inputValues.file) {
             toast.error('Bạn cần đăng tải CV trước khi chọn tính năng này')
+        } else if (name === 'isTakeMail' && !inputValues.jobType && !inputValues.jobProvince) {
+            toast.error('Bạn cần chọn lĩnh vực và khu vực làm việc trước khi chọn tính năng này')
         }
         else {
             setInputValues({
@@ -179,7 +180,7 @@ const SettingUser = () => {
                                         <label className="col-sm-3 col-form-label">Lĩnh vực</label>
                                         <div className="col-sm-9 mt-3">
                                         <Select
-                                                allowClear
+                                
                                                 style={{
                                                     width: '100%',
                                                 }}
@@ -201,7 +202,7 @@ const SettingUser = () => {
                                         <label className="col-sm-3 col-form-label">Mức lương</label>
                                         <div className="col-sm-9 mt-3">
                                         <Select
-                                                allowClear
+                                
                                                 style={{
                                                     width: '100%',
                                                 }}
@@ -227,7 +228,7 @@ const SettingUser = () => {
                                             <Select
                                                 disabled={!inputValues.jobType}
                                                 mode="multiple"
-                                                allowClear
+                                
                                                 style={{
                                                     width: 'calc(100% + 115px)',
                                                 }}
@@ -251,7 +252,7 @@ const SettingUser = () => {
                                         <label className="col-sm-3 col-form-label">Khu vực làm việc</label>
                                         <div className="col-sm-9 mt-3">
                                             <Select
-                                                allowClear
+                                
                                                 style={{
                                                     width: '100%',
                                                 }}
@@ -273,7 +274,7 @@ const SettingUser = () => {
                                         <label className="col-sm-3 col-form-label">Kinh nghiệm làm việc</label>
                                         <div className="col-sm-9 mt-3">
                                         <Select
-                                                allowClear
+                                
                                                 style={{
                                                     width: '100%',
                                                 }}
