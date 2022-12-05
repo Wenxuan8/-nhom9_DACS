@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { getAllListCvByPostService } from '../../../service/cvService';
+import { getDetailPostByIdService } from '../../../service/userService';
 
 import { PAGINATION } from '../../../util/constant';
 import ReactPaginate from 'react-paginate';
@@ -13,6 +14,13 @@ const ManageCv = () => {
     const [count, setCount] = useState('')
     const [numberPage, setnumberPage] = useState('')
     const { id } = useParams();
+    const [post,setPost] = useState('')
+    let fetchPost = async (id) => {
+        let res = await getDetailPostByIdService(id)
+        if (res && res.errCode === 0) {
+            setPost(res.data)
+        }
+    }
     useEffect(() => {
         if (id) {
             try {
@@ -28,6 +36,7 @@ const ManageCv = () => {
                     }
                 }
                 fetchData();
+                fetchPost(id)
             } catch (error) {
                 console.log(error)
             }
@@ -61,7 +70,9 @@ const ManageCv = () => {
                     <div className="card-body">
                         <h4 className="card-title">Danh sách CV</h4>
                         <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
-
+                        <div className='text-center'>
+                            <h3>{post && post.postDetailData.name}</h3>
+                        </div>
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>

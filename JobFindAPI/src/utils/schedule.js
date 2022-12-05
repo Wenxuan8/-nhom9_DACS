@@ -38,10 +38,15 @@ let sendmail = async (mailTemplate, userMail) => {
 
 let getTemplateMail = async (infoUser) => {
     try {
+        const timeStampOfMonthAgo = 2592000000
         let listpost = await db.Post.findAll({
             limit: 5,
             offset: 0,
             where: {
+                timePost: {
+                    [Op.gte] : new Date().getTime() - timeStampOfMonthAgo,
+                },
+                statusCode: 'PS1',
                 [Op.and]: [
                     db.Sequelize.where(db.sequelize.col('postDetailData.jobTypePostData.code'), {
                         [Op.like]: `%${infoUser.categoryJobCode}%`
@@ -49,8 +54,16 @@ let getTemplateMail = async (infoUser) => {
                     db.Sequelize.where(db.sequelize.col('postDetailData.provincePostData.code'), {
                         [Op.like]: `%${infoUser.addressCode}%`
                     }),
+                    db.Sequelize.where(db.sequelize.col('postDetailData.salaryTypePostData.code'), {
+                        [Op.like]: `%${infoUser.salaryJobCode}%`
+                    }),
+                    db.Sequelize.where(db.sequelize.col('postDetailData.expTypePostData.code'), {
+                        [Op.like]: `%${infoUser.experienceJobCode}%`
+                    }),
+                    db.Sequelize.where(db.sequelize.col('postDetailData.descriptionHTML'), {
+                        [Op.or]: infoUser.listSkills
+                    }),
                 ],
-                statusCode: 'PS1'
             },
             include: [
                 {
@@ -65,12 +78,12 @@ let getTemplateMail = async (infoUser) => {
                         { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
                         { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] }
-                    ]
+                    ],
                 },
             ],
             order: [['updatedAt', 'DESC']],
             raw: true,
-            nest: true
+            nest: true,
         })
         if (listpost && listpost.length > 0) {
             for (let post of listpost) {
@@ -115,11 +128,22 @@ const sendJobMail = () => {
                 nest: true
             })
             for (let user of listUserGetMail) {
+                let listSkills = await db.UserSkill.findAll({
+                    where: {userId: user.userId},
+                    include: db.Skill,
+                    raw: true,
+                    nest: true
+                })
+                user.listSkills = listSkills.map(item => {
+                    return {
+                        [Op.like] : `%${item.Skill.name}%`
+                    }
+                })
                 let mailTemplate = await getTemplateMail(user)
                 if (mailTemplate !== 0) {
-                    sendmail(mailTemplate, user.userSettingData.email)
+                        sendmail(mailTemplate, user.userSettingData.email)
+                    }
                 }
-            }
         } catch (error) {
             console.log(error)
         }

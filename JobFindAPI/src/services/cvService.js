@@ -42,7 +42,7 @@ let caculateMatchUserWithFilter = async(userData,listSkillRequired) => {
 }
 let getMapRequiredSkill = (mapRequired,post) => {
     for (let key of mapRequired.keys()) {
-        if(!post.postDetailData.descriptionHTML.toLowerCase().includes(mapRequired.get(key).toLowerCase())) {
+        if(!CommonUtils.flatAllString(post.postDetailData.descriptionHTML).includes(CommonUtils.flatAllString(mapRequired.get(key).toLowerCase()))) {
             mapRequired.delete(key)
         }
     }
@@ -407,9 +407,12 @@ let fillterCVBySelection = (data) => {
                         }
                     })
                 }
+                let lengthSkill = 0
+                let lengthOtherSkill = 0
                 if (data.listSkills)
                 {
                     data.listSkills = data.listSkills.split(',')
+                    lengthSkill = data.listSkills.length
                     listSkillRequired = await db.Skill.findAll({
                         where: {id: data.listSkills},
                         attributes: ['id','name']
@@ -418,10 +421,11 @@ let fillterCVBySelection = (data) => {
                 }
                 if (data.otherSkills) {
                     data.otherSkills = data.otherSkills.split(',')
+                    lengthOtherSkill = data.otherSkills.length
                     data.otherSkills.forEach(item=> {
                         listSkillRequired.push({
                             id: item,
-                            name: item
+                            name: item,
                         })
                     })
                 }
@@ -429,10 +433,10 @@ let fillterCVBySelection = (data) => {
                     for (let i=0;i<listUserSetting.rows.length;i++) {
                         let match = await caculateMatchUserWithFilter(listUserSetting.rows[i],listSkillRequired)
                         if (bonus > 0) {
-                            listUserSetting.rows[i].file = Math.round(((match+listUserSetting.rows[i].bonus)/(listSkillRequired.length*2+bonus)+ Number.EPSILON) * 100)+"%"
+                            listUserSetting.rows[i].file = Math.round(((match+listUserSetting.rows[i].bonus)/(lengthSkill*2+bonus+lengthOtherSkill)+ Number.EPSILON) * 100)+"%"
                         }
                         else {
-                            listUserSetting.rows[i].file = Math.round((match/(listSkillRequired.length*2) + Number.EPSILON) * 100)+"%"
+                            listUserSetting.rows[i].file = Math.round((match/(lengthSkill*2+lengthOtherSkill) + Number.EPSILON) * 100)+"%"
                         }
                     }
                 }
