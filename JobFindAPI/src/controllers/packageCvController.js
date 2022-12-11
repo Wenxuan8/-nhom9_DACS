@@ -118,6 +118,32 @@ let getStatisticalPackageCv = async (req, res) => {
     }
 }
 
+let getHistoryTrade = async (req, res) => {
+    try {
+        let data = await packageService.getHistoryTrade(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getSumByYear = async (req, res) => {
+    try {
+        let data = await packageService.getSumByYear(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
 module.exports = {
     getPaymentLink: getPaymentLink,
     paymentOrderSuccess: paymentOrderSuccess,
@@ -127,5 +153,7 @@ module.exports = {
     creatNewPackageCv: creatNewPackageCv,
     updatePackageCv: updatePackageCv,
     getStatisticalPackageCv: getStatisticalPackageCv,
-    getAllToSelect: getAllToSelect
+    getAllToSelect: getAllToSelect,
+    getHistoryTrade: getHistoryTrade,
+    getSumByYear: getSumByYear
 }

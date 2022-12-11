@@ -21,6 +21,19 @@ const Menu = () => {
                 </li>
                 {user && user.roleCode === "ADMIN" &&
                     <>
+                       <li className="nav-item relative">
+                            <a className="nav-link" data-toggle="collapse" href="#chart" aria-expanded="false" aria-controls="chart">
+                                <i className="icon-head menu-icon" />
+                                <span className="menu-title">Đồ thị</span>
+                                <i className="menu-arrow" />
+                            </a>
+                            <div className="collapse" id="chart">
+                                <ul className="nav flex-column sub-menu">
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/sum-by-year-post/"> Đồ thị doanh thu gói bài viết </Link ></li>
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/sum-by-year-cv/"> Đồ thị doanh thu gói xem ứng viên </Link ></li>                                
+                                </ul>
+                            </div>
+                        </li>
                         <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
                                 <i className="icon-head menu-icon" />
@@ -168,7 +181,7 @@ const Menu = () => {
                     <>
                         <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#company" aria-expanded="false" aria-controls="company">
-                                <i className="far fa-clock menu-icon"></i>
+                            <i class="fa-solid fa-clipboard menu-icon"></i>
                                 <span className="menu-title">Quản lý công ty</span>
                                 <i className="menu-arrow" />
                             </a>
@@ -183,7 +196,7 @@ const Menu = () => {
                         </li>
                         <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#post" aria-expanded="false" aria-controls="post">
-                                <i className="far fa-clock menu-icon"></i>
+                            <i class="fa-solid fa-clipboard menu-icon"></i>
                                 <span className="menu-title">Quản lý bài đăng</span>
                                 <i className="menu-arrow" />
                             </a>
@@ -197,7 +210,7 @@ const Menu = () => {
                         </li>
                         <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#findCandiate" aria-expanded="false" aria-controls="findCandiate">
-                                <i className="far fa-clock menu-icon"></i>
+                                <i className="icon-head menu-icon"></i>
                                 <span className="menu-title">Tìm kiếm ứng viên</span>
                                 <i className="menu-arrow" />
                             </a>
@@ -205,6 +218,19 @@ const Menu = () => {
                                 <ul className="nav flex-column sub-menu">
                                     <li className="nav-item relative"> <Link className="nav-link" to="/admin/buy-cv/">Mua thêm lượt xem ứng viên</Link ></li>
                                     <li className="nav-item relative"> <Link className="nav-link" to="/admin/list-candiate/">Danh sách ứng viên</Link ></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li className="nav-item relative">
+                            <a className="nav-link" data-toggle="collapse" href="#historyTrade" aria-expanded="false" aria-controls="historyTrade">
+                                <i className="fas fa-money-check-alt menu-icon"></i>
+                                <span className="menu-title">Lịch sử giao dịch</span>
+                                <i className="menu-arrow" />
+                            </a>
+                            <div className="collapse" id="historyTrade">
+                                <ul className="nav flex-column sub-menu">
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/history-post/">Lịch sử gói bài đăng</Link ></li>
+                                    <li className="nav-item relative"> <Link className="nav-link" to="/admin/history-cv/">Lịch sử gói xem ứng viên</Link ></li>
                                 </ul>
                             </div>
                         </li>
@@ -248,7 +274,7 @@ const Menu = () => {
                             user.companyId && 
                             <li className="nav-item relative">
                             <a className="nav-link" data-toggle="collapse" href="#post" aria-expanded="false" aria-controls="post">
-                                <i className="far fa-clock menu-icon"></i>
+                            <i class="icon-head menu-icon"></i>
                                 <span className="menu-title">Tìm kiếm ứng viên</span>
                                 <i className="menu-arrow" />
                             </a>

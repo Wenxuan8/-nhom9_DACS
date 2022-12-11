@@ -426,7 +426,119 @@ let getStatisticalPackage = (data) => {
         }
     })
 }
+
+let getHistoryTrade = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.companyId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let company = await db.Company.findOne({
+                    where: { id: data.companyId }
+                })
+                if (!company) {
+                    resolve({
+                        errCode: 2,
+                        errorMessage: 'Không tồn tại công ty',
+                    })
+                }
+                else {
+                    let listUserOfCompany = await db.User.findAll({
+                        where: { companyId: company.id },
+                        attributes: ['id'],
+                    })
+                    listUserOfCompany = listUserOfCompany.map(item => {
+                        return {
+                            userId: item.id
+                        }
+                    })
+                    let objectFilter = {
+                        attributes: {
+                            exclude: ['packageCvId']
+                        },
+                        where: {
+                            [Op.and]: [{ [Op.or]: listUserOfCompany }]
+                        },
+                        order: [['updatedAt', 'DESC']],
+                        nest: true,
+                        raw: true,
+                        include: [
+                            { model: db.User, as: 'userOrderData',
+                                attributes: {
+                                    exclude: ['userId']
+                                },
+                            },
+                            { model: db.PackagePost, as: 'packageOrderData'}
+                        ]
+                    }
+
+                    if (data.limit && data.offset) {
+                        objectFilter = {
+                            ...objectFilter,
+                            limit: +data.limit,
+                            offset: +data.offset
+                        }
+                    }
+
+                    if (data.fromDate && data.toDate) {
+                        objectFilter.where = {
+                            ...objectFilter.where,
+                            createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
+                        }
+                    }
+
+                    let res = await db.OrderPackage.findAndCountAll(objectFilter)
+
+                    resolve({
+                        errCode: 0,
+                        data: res.rows,
+                        count: res.count
+                    })
+                }
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+let getSumByYear = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.year) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                    let objectFilter = {
+                        attributes: [[db.sequelize.literal('SUM(currentPrice * amount)'), 'total'], [db.sequelize.fn('MONTH', db.sequelize.col('createdAt')),'month']],
+                        where: {
+                            [Op.and]: [
+                                db.sequelize.where(db.sequelize.fn('YEAR', db.sequelize.col('createdAt')), data.year),
+                            ],
+                        },
+                        group: db.sequelize.fn('MONTH', db.sequelize.col('createdAt'))
+                    }
+
+                    let res = await db.OrderPackage.findAll(objectFilter)
+
+                    resolve({
+                        errCode: 0,
+                        data: res
+                    })
+                
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     getPackageByType, getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
-    getPackageById, creatNewPackagePost, updatePackagePost, getStatisticalPackage
+    getPackageById, creatNewPackagePost, updatePackagePost, getStatisticalPackage, getHistoryTrade,
+    getSumByYear
 }

@@ -44,6 +44,10 @@ import AddpackageCv from './PackageCv/AddPackageCv';
 import ManagePackageCv from './PackageCv/ManagePackageCv';
 import PaymentSuccessCv from './PackageCv/BuySuccesCv';
 import BuyCv from './PackageCv/BuyCv';
+import HistoryTradePost from './HistoryTrade/HistoryTradePost';
+import HistoryTradeCv from './HistoryTrade/HistoryTradeCv';
+import ChartPost from './Chart/ChartPost';
+import ChartCv from './Chart/ChartCv';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -377,6 +381,18 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/list-company-admin/">
                                     <ManageCompany />
+                                </Route>
+                                <Route exact path="/admin/history-post/">
+                                    <HistoryTradePost />
+                                </Route>
+                                <Route exact path="/admin/history-cv/">
+                                    <HistoryTradeCv />
+                                </Route>
+                                <Route exact path="/admin/sum-by-year-post/">
+                                    <ChartPost />
+                                </Route>
+                                <Route exact path="/admin/sum-by-year-cv/">
+                                    <ChartCv />
                                 </Route>
                             </div>
                             {/* content-wrapper ends */}

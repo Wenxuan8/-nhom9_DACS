@@ -85,6 +85,9 @@ let initWebRoutes = (app) => {
     router.post('/api/create-package-post', middlewareControllers.verifyTokenAdmin ,packageController.creatNewPackagePost)
     router.put('/api/update-package-post',middlewareControllers.verifyTokenAdmin , packageController.updatePackagePost)
     router.get('/api/get-statistical-package',middlewareControllers.verifyTokenAdmin ,packageController.getStatisticalPackage)
+    router.get('/api/get-history-trade-post',middlewareControllers.verifyTokenUser,packageController.getHistoryTrade)
+    router.get('/api/get-sum-by-year-post',middlewareControllers.verifyTokenAdmin,packageController.getSumByYear)
+
     
     //==================API PACKAGE CV==========================//
     router.get('/api/get-package-cv-by-id', middlewareControllers.verifyTokenUser,packageCvController.getPackageById)
@@ -96,6 +99,10 @@ let initWebRoutes = (app) => {
     router.put('/api/update-package-cv',middlewareControllers.verifyTokenAdmin , packageCvController.updatePackageCv)
     router.get('/api/get-statistical-package-cv',middlewareControllers.verifyTokenAdmin ,packageCvController.getStatisticalPackageCv)
     router.get('/api/get-all-package-cv-select',middlewareControllers.verifyTokenUser,packageCvController.getAllToSelect)
+    router.get('/api/get-history-trade-cv',middlewareControllers.verifyTokenUser,packageCvController.getHistoryTrade)
+    router.get('/api/get-sum-by-year-cv',middlewareControllers.verifyTokenAdmin,packageCvController.getSumByYear)
+
+
     return app.use("/", router);
 }
 

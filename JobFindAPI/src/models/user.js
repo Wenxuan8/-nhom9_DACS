@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
             //OrderPackage
             User.hasMany(models.User,{foreignKey:'userId',as: 'userOrderData'})
 
+            //OrderPackageCv
+            User.hasMany(models.User,{foreignKey:'userId',as: 'userOrderCvData'})
+
+
 
             //Post
             User.hasMany(models.Post,{foreignKey: 'userId', as: 'userPostData' })

@@ -304,6 +304,22 @@ const getStatisticalPackageCv = (data) => {
     return axios.get(`/api/get-statistical-package-cv?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}`)
 }
 
+const getHistoryTradeCv = (data) => {
+    return axios.get(`/api/get-history-trade-cv?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}&companyId=${data.companyId}`)
+}
+
+const getHistoryTradePost = (data) => {
+    return axios.get(`/api/get-history-trade-post?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}&companyId=${data.companyId}`)
+}
+
+const getSumByYearPost = (year) => {
+    return axios.get(`/api/get-sum-by-year-post?year=${year}`)
+}
+
+const getSumByYearCv = (year) => {
+    return axios.get(`/api/get-sum-by-year-cv?year=${year}`)
+}
+
 export {
     DeleteAllcodeService, UpdateAllcodeService, getDetailAllcodeByCode, createAllCodeService, getListAllCodeService, getAllCodeService,
     getAllUsers, createNewUser, UpdateUserService, BanUserService,UnbanUserService, getDetailUserById, handleChangePassword, handleLoginService,
@@ -314,5 +330,6 @@ export {
     getListNoteByPost , getAllCompany , accecptCompanyService, reupPostService, banCompanyService, unbanCompanyService,
     getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById,
     UpdateUserSettingService,
-    getPackageByIdCv, getAllPackageCv, getPaymentLinkCv, paymentOrderSuccessServiceCv, setActiveTypePackageCv, createPackageCv, updatePackageCv,getStatisticalPackageCv, getAllToSelect
+    getPackageByIdCv, getAllPackageCv, getPaymentLinkCv, paymentOrderSuccessServiceCv, setActiveTypePackageCv, createPackageCv, updatePackageCv,getStatisticalPackageCv, getAllToSelect,
+    getHistoryTradeCv, getHistoryTradePost, getSumByYearCv, getSumByYearPost
 }

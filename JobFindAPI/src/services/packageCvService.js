@@ -340,7 +340,7 @@ let updatePackageCv = (data) => {
 let getStatisticalPackage = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.fromDate || !data.toDate) {
+            if (!data.fromDate || !data.toDate ) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameters !'
@@ -408,7 +408,117 @@ let getStatisticalPackage = (data) => {
         }
     })
 }
+
+let getHistoryTrade = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.companyId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                let company = await db.Company.findOne({
+                    where: { id: data.companyId }
+                })
+                if (!company) {
+                    resolve({
+                        errCode: 2,
+                        errorMessage: 'Không tồn tại công ty',
+                    })
+                }
+                else {
+                    let listUserOfCompany = await db.User.findAll({
+                        where: { companyId: company.id },
+                        attributes: ['id'],
+                    })
+                    listUserOfCompany = listUserOfCompany.map(item => {
+                        return {
+                            userId: item.id
+                        }
+                    })
+                    let objectFilter = {
+                        where: {
+                            [Op.and]: [{ [Op.or]: listUserOfCompany }]
+                        },
+                        order: [['updatedAt', 'DESC']],
+                        nest: true,
+                        raw: true,
+                        include: [
+                            { model: db.User, as: 'userOrderCvData',
+                                attributes: {
+                                    exclude: ['userId']
+                                },
+                            },
+                            { model: db.PackageCv, as: 'packageOrderCvData'}
+                        ]
+                    }
+
+                    if (data.limit && data.offset) {
+                        objectFilter = {
+                            ...objectFilter,
+                            limit: +data.limit,
+                            offset: +data.offset
+                        }
+                    }
+
+                    if (data.fromDate && data.toDate) {
+                        objectFilter.where = {
+                            ...objectFilter.where,
+                            createdAt: { [Op.and]: [{ [Op.gte]: `${data.fromDate} 00:00:00` }, { [Op.lte]: `${data.toDate} 23:59:59` }] }
+                        }
+                    }
+
+                    let res = await db.OrderPackageCV.findAndCountAll(objectFilter)
+
+                    resolve({
+                        errCode: 0,
+                        data: res.rows,
+                        count: res.count
+                    })
+                }
+            }
+        } catch (error) {
+            reject(error.message)
+        }
+    })
+
+}
+
+let getSumByYear = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.year) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            } else {
+                    let objectFilter = {
+                        attributes: [[db.sequelize.literal('SUM(currentPrice * amount)'), 'total'], [db.sequelize.fn('MONTH', db.sequelize.col('createdAt')),'month']],
+                        where: {
+                            [Op.and]: [
+                                db.sequelize.where(db.sequelize.fn('YEAR', db.sequelize.col('createdAt')), data.year),
+                            ],
+                        },
+                        group: db.sequelize.fn('MONTH', db.sequelize.col('createdAt'))
+                    }
+
+                    let res = await db.OrderPackageCV.findAll(objectFilter)
+
+                    resolve({
+                        errCode: 0,
+                        data: res
+                    })
+                
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
-    getPackageById, creatNewPackageCv, updatePackageCv, getStatisticalPackage, getAllToSelect
+    getPackageById, creatNewPackageCv, updatePackageCv, getStatisticalPackage, getAllToSelect,
+    getHistoryTrade, getSumByYear
 }
