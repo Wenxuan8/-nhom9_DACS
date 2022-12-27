@@ -44,7 +44,7 @@ const AddJobType = () => {
                 ...inputValues,
                 value: CommonUtils.removeSpace(inputValues.value)
             })
-        }, 1000)
+        }, 50)
     
         return () => clearTimeout(delayDebounceFn)
       }, [inputValues.value])
@@ -55,7 +55,7 @@ const AddJobType = () => {
             setInputValues({
                 ...inputValues,
                 value: value,
-                code: CommonUtils.replaceCode(value)
+                code: isActionADD ? CommonUtils.replaceCode(value) : inputValues.code
             })
         }
         else {
@@ -104,7 +104,7 @@ const AddJobType = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Thêm loại công việc thất bại")
-            }, 1000);
+            }, 50);
         } else {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
@@ -121,7 +121,7 @@ const AddJobType = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Cập nhật loại công việc thất bại")
-            }, 1000);
+            }, 50);
         }
     }
     const history = useHistory()

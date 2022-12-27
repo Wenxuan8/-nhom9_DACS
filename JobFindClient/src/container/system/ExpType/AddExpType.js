@@ -40,7 +40,7 @@ const AddExpType = () => {
                 ...inputValues,
                 value: CommonUtils.removeSpace(inputValues.value)
             })
-        }, 1000)
+        }, 50)
     
         return () => clearTimeout(delayDebounceFn)
       }, [inputValues.value])
@@ -51,7 +51,7 @@ const AddExpType = () => {
             setInputValues({
                 ...inputValues,
                 value: value,
-                code: CommonUtils.replaceCode(value)
+                code: isActionADD ? CommonUtils.replaceCode(value) : inputValues.code
             })
         }
         else {
@@ -83,7 +83,7 @@ const AddExpType = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Thêm khoảng kinh nghiệm thất bại")
-            }, 1000);
+            }, 50);
         } else {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
@@ -99,7 +99,7 @@ const AddExpType = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Cập nhật khoảng kinh nghiệm thất bại")
-            }, 1000);
+            }, 50);
         }
     }
     const history = useHistory()

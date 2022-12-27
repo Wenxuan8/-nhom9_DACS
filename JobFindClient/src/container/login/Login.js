@@ -27,7 +27,7 @@ const Login = () => {
             localStorage.setItem("userData", JSON.stringify(res.user))
             localStorage.setItem("token_user", res.token)
             if (res.user.roleCode === "ADMIN" || res.user.roleCode === "EMPLOYER" || res.user.roleCode === "COMPANY") {
-                window.location.href = "/admin"
+                window.location.href = "/admin/"
             }
             else {
                 const lastUrl = localStorage.getItem("lastUrl")

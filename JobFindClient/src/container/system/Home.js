@@ -169,10 +169,11 @@ const Home = () => {
                 let obj = {
                     'Mã gói': item.id,
                     'Tên gói': item.name,
+                    'Loại gói':item.isHot === 1 ? 'Loại nổi bật' : 'Loại bình thường',
                     'Số lượng': +item.count,
-                    'Tổng': +item.total
+                    'Tổng': +item.total+'USD'
                 }
-                if (type === 'packagePost') obj['Loại gói'] =  item.isHot === 1 ? 'Loại nổi bật' : 'Loại bình thường'
+                if (type !== 'packagePost') delete obj['Loại gói']
                 return obj
             })
             if (type === 'packagePost') {

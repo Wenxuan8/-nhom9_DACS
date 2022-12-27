@@ -81,7 +81,7 @@ const ManageWorkType = () => {
     }
     const confirmDelete = (id) => {
         confirm({
-            title: 'Bạn có chắc muốn xóa khoảng kinh nghiệm này?',
+            title: 'Bạn có chắc muốn xóa hình thức làm việc này?',
             icon: <ExclamationCircleOutlined />,    
             onOk() {
                 handleDeleteWorkType(id)

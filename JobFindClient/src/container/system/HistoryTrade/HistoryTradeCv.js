@@ -70,7 +70,6 @@ const HistoryTradeCv = () => {
             fromDate: fromDatePost,
             toDate: toDatePost
         })
-        console.log(res)
         if(res.errCode === 0){
             let formatData = res.data.map((item)=> {
                 let obj = {

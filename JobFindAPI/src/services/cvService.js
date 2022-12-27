@@ -137,6 +137,7 @@ let getAllListCvByPost = (data) => {
                 listSkills = listSkills.map(item => {
                     mapRequired.set(item.id,item.name)
                 })
+                console.log(mapRequired)
                 getMapRequiredSkill(mapRequired,postInfo)
                 for (let i= 0; i< cv.rows.length; i++) {
                     let match = await caculateMatchCv(cv.rows[i].file,mapRequired)

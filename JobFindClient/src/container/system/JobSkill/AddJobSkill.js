@@ -76,7 +76,7 @@ const AddJobSkill = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Thêm kĩ năng thất bại")
-            }, 1000);
+            }, 50);
         } else {
             let res = await UpdateSkillService({
                 name: inputValues.name,
@@ -93,7 +93,7 @@ const AddJobSkill = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Cập nhật loại công việc thất bại")
-            }, 1000);
+            }, 50);
         }
     }
     const history = useHistory()

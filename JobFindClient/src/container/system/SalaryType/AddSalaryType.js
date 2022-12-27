@@ -39,7 +39,7 @@ const AddSalaryType = () => {
                 ...inputValues,
                 value: CommonUtils.removeSpace(inputValues.value)
             })
-        }, 1000)
+        }, 50)
     
         return () => clearTimeout(delayDebounceFn)
       }, [inputValues.value])
@@ -50,7 +50,7 @@ const AddSalaryType = () => {
             setInputValues({
                 ...inputValues,
                 value: value,
-                code: CommonUtils.replaceCode(value)
+                code: isActionADD ? CommonUtils.replaceCode(value) : inputValues.code
             })
         }
         else {
@@ -82,7 +82,7 @@ const AddSalaryType = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Thêm khoảng lương thất bại")
-            }, 1000);
+            }, 50);
         } else {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
@@ -98,7 +98,7 @@ const AddSalaryType = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Cập nhật khoảng lương thất bại")
-            }, 1000);
+            }, 50);
         }
     }
     const history = useHistory()

@@ -87,10 +87,10 @@ const ManageCv = () => {
                                             Số điện thoại
                                         </th>
                                         <th>
-                                            Địa chỉ
+                                            Tỉ lệ phù hợp
                                         </th>
                                         <th>
-                                            Tỉ lệ phù hợp
+                                            Đánh giá
                                         </th>
                                         <th>
                                             Trạng thái
@@ -109,8 +109,8 @@ const ManageCv = () => {
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.userCvData.firstName + " " + item.userCvData.lastName}</td>
                                                     <td>{item.userCvData.userAccountData.phonenumber}</td>
-                                                    <td>{item.userCvData.address}</td>
                                                     <td>{item.file}</td>
+                                                    <td><label className={+item.file.split('%')[0] >= 70 ? 'badge badge-success' : (+item.file.split('%')[0] > 30 ? 'badge badge-warning'  : 'badge badge-danger')}>{+item.file.split('%')[0] >= 70 ? 'Tốt' : (+item.file.split('%')[0] ? 'Tạm chấp nhận'  : 'Tệ')}</label></td>
                                                     <td>{item.isChecked === 0 ? 'Chưa xem' : 'Đã xem'}</td>
                                                     <td>
                                                         <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/admin/user-cv/${item.id}/`}>Xem CV</Link>

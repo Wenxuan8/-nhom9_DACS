@@ -38,7 +38,7 @@ const AddJobLevel = () => {
                 ...inputValues,
                 value: CommonUtils.removeSpace(inputValues.value)
             })
-        }, 1000)
+        }, 50)
     
         return () => clearTimeout(delayDebounceFn)
       }, [inputValues.value])
@@ -49,7 +49,7 @@ const AddJobLevel = () => {
             setInputValues({
                 ...inputValues,
                 value: value,
-                code: CommonUtils.replaceCode(value)
+                code: isActionADD ? CommonUtils.replaceCode(value) : inputValues.code
             })
         }
         else {
@@ -81,7 +81,7 @@ const AddJobLevel = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Thêm cấp bậc thất bại")
-            }, 1000);
+            }, 50);
         } else {
             let res = await UpdateAllcodeService({
                 value: inputValues.value,
@@ -97,7 +97,7 @@ const AddJobLevel = () => {
                     toast.error(res.errMessage)
                 }
                 else toast.error("Cập nhật cấp bậc thất bại")
-            }, 1000);
+            }, 50);
         }
     }
     const history = useHistory()

@@ -81,7 +81,7 @@ const ManageSalaryType = () => {
     }
     const confirmDelete = (id) => {
         confirm({
-            title: 'Bạn có chắc muốn xóa khoảng kinh nghiệm này?',
+            title: 'Bạn có chắc muốn xóa khoảng lương này này?',
             icon: <ExclamationCircleOutlined />,    
             onOk() {
                 handleDeleteSalaryType(id)

@@ -276,14 +276,16 @@ const FilterCv = () => {
                                         <th>
                                             Lĩnh vực
                                         </th>
-                                        <th>
-                                            Kinh nghiệm
-                                        </th>
                                         {
                                             !isHiddenPercent &&
+                                            <>
                                             <th>
                                                 Tỉ lệ phù hợp
                                             </th>
+                                            <th>
+                                                Đánh giá
+                                            </th>
+                                            </>
                                         }
                                         <th>
                                             Thao tác
@@ -299,10 +301,12 @@ const FilterCv = () => {
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{item.userSettingData.firstName + " " + item.userSettingData.lastName}</td>
                                                     <td>{item.jobTypeSettingData.value}</td>
-                                                    <td>{item.expTypeSettingData.value}</td>
                                                     {
                                                         !isHiddenPercent &&
+                                                        <>
                                                         <td>{item.file}</td>
+                                                        <td><label className={+item.file.split('%')[0] >= 70 ? 'badge badge-success' : (+item.file.split('%')[0] > 30 ? 'badge badge-warning'  : 'badge badge-danger')}>{+item.file.split('%')[0] >= 70 ? 'Tốt' : (+item.file.split('%')[0] > 30 ? 'Tạm chấp nhận'  : 'Tệ')}</label></td>
+                                                        </>
                                                     }
                                                     <td>
                                                         <span style={{ color: '#4B49AC', cursor: 'pointer' }} onClick={()=>confirmSeeCandiate(item.userId)}>Xem chi tiết ứng viên</span>

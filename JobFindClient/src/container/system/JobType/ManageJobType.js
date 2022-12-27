@@ -82,7 +82,7 @@ const ManageJobType = () => {
     }
     const confirmDelete = (id) => {
         confirm({
-            title: 'Bạn có chắc muốn xóa khoảng kinh nghiệm này?',
+            title: 'Bạn có chắc muốn xóa lĩnh vực này này?',
             icon: <ExclamationCircleOutlined />,    
             onOk() {
                 handleDeleteJobType(id)

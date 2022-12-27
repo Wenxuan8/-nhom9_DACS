@@ -10,7 +10,7 @@ const Footer = () => {
                                 <div className="col-xl-10 col-lg-10 ">
                                     <div className="footer-copy-right">
                                         <p>
-                                            Bản quyền &copy;<script>document.write(new Date().getFullYear());</script> được sản xuất <i className="fa fa-heart" aria-hidden="true"></i> từ <a href="https://www.linkedin.com/in/nguyenletantai" target="_blank">Tấn Tài</a>
+                                            Bản quyền &copy;<script>document.write(new Date().getFullYear());</script><i className="fa fa-heart" aria-hidden="true"></i> từ <a href="https://www.linkedin.com/in/nguyenletantai" target="_blank">Tấn Tài</a>
                                         </p>
                                     </div>
                                 </div>

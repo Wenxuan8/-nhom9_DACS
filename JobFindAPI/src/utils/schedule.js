@@ -41,7 +41,7 @@ let getTemplateMail = async (infoUser) => {
         const timeStampOfMonthAgo = 2592000000
         let listpost = await db.Post.findAll({
             limit: 5,
-            offset: 0,
+            // offset: 0,
             where: {
                 timePost: {
                     [Op.gte] : new Date().getTime() - timeStampOfMonthAgo,
@@ -51,15 +51,15 @@ let getTemplateMail = async (infoUser) => {
                     db.Sequelize.where(db.sequelize.col('postDetailData.jobTypePostData.code'), {
                         [Op.like]: `%${infoUser.categoryJobCode}%`
                     }),
-                    db.Sequelize.where(db.sequelize.col('postDetailData.provincePostData.code'), {
-                        [Op.like]: `%${infoUser.addressCode}%`
-                    }),
-                    db.Sequelize.where(db.sequelize.col('postDetailData.salaryTypePostData.code'), {
-                        [Op.like]: `%${infoUser.salaryJobCode}%`
-                    }),
-                    db.Sequelize.where(db.sequelize.col('postDetailData.expTypePostData.code'), {
-                        [Op.like]: `%${infoUser.experienceJobCode}%`
-                    }),
+                    // db.Sequelize.where(db.sequelize.col('postDetailData.provincePostData.code'), {
+                    //     [Op.like]: `%${infoUser.addressCode}%`
+                    // }),
+                    // db.Sequelize.where(db.sequelize.col('postDetailData.salaryTypePostData.code'), {
+                    //     [Op.like]: `%${infoUser.salaryJobCode}%`
+                    // }),
+                    // db.Sequelize.where(db.sequelize.col('postDetailData.expTypePostData.code'), {
+                    //     [Op.like]: `%${infoUser.experienceJobCode}%`
+                    // }),
                     db.Sequelize.where(db.sequelize.col('postDetailData.descriptionHTML'), {
                         [Op.or]: infoUser.listSkills
                     }),
@@ -81,7 +81,7 @@ let getTemplateMail = async (infoUser) => {
                     ],
                 },
             ],
-            order: [['updatedAt', 'DESC']],
+            order:  db.sequelize.literal('rand()'),
             raw: true,
             nest: true,
         })

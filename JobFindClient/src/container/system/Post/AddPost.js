@@ -14,6 +14,7 @@ import moment from 'moment';
 import '../../../components/modal/modal.css'
 import ReupPostModal from '../../../components/modal/ReupPostModal';
 const AddPost = () => {
+    const today = new Date();
     const mdParser = new MarkdownIt();
     const [user, setUser] = useState({})
     const [timeEnd, settimeEnd] = useState('');
@@ -134,7 +135,7 @@ const AddPost = () => {
         setIsLoading(true)
         if (inputValues.isActionADD === true) {
 
-            if (new Date().getTime() >= new Date(timeEnd).getTime()) {
+            if (new Date().getTime() > new Date(timeEnd).getTime()) {
                 toast.error("Ngày kết thúc phải hơn ngày hiện tại")
             }
             else {
@@ -426,7 +427,7 @@ const AddPost = () => {
                                         </>
                                 }
                                 {
-                                    id && user.roleCode !== "ADMIN" &&
+                                    id && user.roleCode !== "ADMIN" && new Date().getTime() > new Date(timeEnd).getTime() &&
                                     <>
                                         <button onClick={() => setPropsModal({
                                             ...propsModal,

@@ -252,7 +252,7 @@ const ManagePost = () => {
     }
     const confirmPost = (id) => {
         confirm({
-            title: 'Bạn có chắc muốn duyệt công ty này?',
+            title: 'Bạn có chắc muốn duyệt bài viết này?',
             icon: <ExclamationCircleOutlined />,    
             onOk() {
                 handleAccecptPost(id, '', 'PS1')

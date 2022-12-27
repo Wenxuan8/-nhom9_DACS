@@ -80,7 +80,7 @@ const ManageJobLevel = () => {
     }
     const confirmDelete = (id) => {
         confirm({
-            title: 'Bạn có chắc muốn xóa khoảng kinh nghiệm này?',
+            title: 'Bạn có chắc muốn xóa trình độ này này?',
             icon: <ExclamationCircleOutlined />,    
             onOk() {
                 handleDeleteJobLevel(id)
