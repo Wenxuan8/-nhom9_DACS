@@ -75,7 +75,7 @@ const Register = () => {
                                 <div className="col-lg-4 mx-auto">
                                     <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                                         <div className="brand-logo">
-                                            <img src="/assets/img/logo/logo.png" alt="logo" />
+                                            <img src="/assets/img/logo/logo-cto5pm.png" alt="logo" />
                                         </div>
                                         <h4>Người mới?</h4>
                                         <h6 className="font-weight-light">Đăng ký dễ dàng chỉ vài bước đơn giản</h6>

@@ -41,22 +41,25 @@ const About = () => {
                         <div class="right-caption">
                             {/* <!-- Section Tittle --> */}
                             <div class="section-tittle section-tittle2">
-                                <span>What we are doing</span>
-                                <h2>24k Talented people are getting Jobs</h2>
+                                <span>Chúng tôi đang làm gì</span>
+                                <h2>24k người đang được nhận việc làm</h2>
                             </div>
                             <div class="support-caption">
-                                <p class="pera-top">Mollit anim laborum duis au dolor in voluptate velit ess cillum dolore eu lore dsu quality mollit anim laborumuis au dolor in voluptate velit cillum.</p>
-                                <p>Mollit anim laborum.Duis aute irufg dhjkolohr in re voluptate velit esscillumlore eu quife nrulla parihatur. Excghcepteur signjnt occa cupidatat non inulpadeserunt mollit aboru. temnthp incididbnt ut labore mollit anim laborum suis aute.</p>
+                                <p class="pera-top">Chào mừng bạn đến với [CT05PM], nơi kết nối hàng ngàn người tìm việc với các nhà tuyển dụng hàng đầu. Với hơn 24,000 người đang nhận được việc làm thông qua nền tảng của chúng tôi, chúng tôi tự hào là cầu nối giữa tài năng và cơ hội.</p>
+                                <p><strong><h3>TẦM NHÌN & SỨ MỆNH</h3></strong></p>
+                                <p><strong>Tầm Nhìn:</strong> Trở thành nền tảng việc làm hàng đầu, giúp mọi người tìm thấy công việc phù hợp và các nhà tuyển dụng tìm thấy những ứng viên xuất sắc</p>
+                                <p><strong>Sứ Mệnh:</strong> Hỗ trợ người tìm việc bằng cách cung cấp các công cụ và tài nguyên hữu ích.
+                                Giúp nhà tuyển dụng tìm kiếm và tuyển dụng nhân tài một cách nhanh chóng và hiệu quả.</p>
                                 <Link to={'/login'} class="btn post-btn">Tham gia ngay</Link>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-6">
                         <div class="support-location-img">
-                            <img src="assets/img/283498863_1685506338469992_1561922105950617700_n.jpg" alt="" />
+                            <img src="assets/img/NguyenThuVi.jpg" alt="" />
                             <div class="support-img-cap text-center">
                                 <p>Since</p>
-                                <span>2022</span>
+                                <span>2024</span>
                             </div>
                         </div>
                     </div>
@@ -73,8 +76,8 @@ const About = () => {
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-tittle white-text text-center">
-                            <span>Apply process</span>
-                            <h2> How it works</h2>
+                            <span>QUY TRÌNH NỘP ĐƠN</span>
+                            <h2> Cách thức hoạt động</h2>
                         </div>
                     </div>
                 </div>
@@ -86,8 +89,8 @@ const About = () => {
                                 <span class="flaticon-search"></span>
                             </div>
                             <div class="process-cap">
-                                <h5>1. Search a job</h5>
-                            <p>Sorem spsum dolor sit amsectetur adipisclit, seddo eiusmod tempor incididunt ut laborea.</p>
+                                <h5>1. Tìm kiếm việc làm</h5>
+                            <p>Sử dụng thanh tìm kiếm để nhập từ khóa liên quan đến công việc mà bạn quan tâm, ví dụ như "kế toán", "kỹ sư phần mềm", "nhân viên bán hàng", v.v.</p>
                             </div>
                         </div>
                     </div>
@@ -97,8 +100,8 @@ const About = () => {
                                 <span class="flaticon-curriculum-vitae"></span>
                             </div>
                             <div class="process-cap">
-                                <h5>2. Apply for job</h5>
-                            <p>Sorem spsum dolor sit amsectetur adipisclit, seddo eiusmod tempor incididunt ut laborea.</p>
+                                <h5>2. Nộp đơn xin việc</h5>
+                                <p> Nhấp vào nút "Nộp đơn" hoặc "Ứng tuyển ngay" trên trang chi tiết công việc, điền các thông tin cần thiết và đính kèm hồ sơ của bạn.</p>
                             </div>
                         </div>
                     </div>
@@ -108,8 +111,8 @@ const About = () => {
                                 <span class="flaticon-tour"></span>
                             </div>
                             <div class="process-cap">
-                                <h5>3. Get your job</h5>
-                            <p>Sorem spsum dolor sit amsectetur adipisclit, seddo eiusmod tempor incididunt ut laborea.</p>
+                                <h5>3. Nhận công việc của bạn </h5>
+                            <p>Kiểm tra email và trang quản lý đơn xin việc thường xuyên để nhận phản hồi từ nhà tuyển dụng.</p>
                             </div>
                         </div>
                     </div>
@@ -131,13 +134,13 @@ const About = () => {
                                     {/* <!-- founder --> */}
                                     <div class="testimonial-founder  ">
                                         <div class="founder-img mb-30">
-                                            <img src="assets/img/testmonial/testimonial-founder.png" alt=""/>
-                                            <span>Margaret Lawson</span>
-                                            <p>Creative Director</p>
+                                            <img src="#" alt=""/>
+                                            <span>Nguyễn Thư Vi</span>
+                                            <p>Giám đốc sáng tạo</p>
                                         </div>
                                     </div>
                                     <div class="testimonial-top-cap">
-                                        <p>“I am at an age where I just want to be fit and healthy our bodies are our responsibility! So start caring for your body and it will care for you. Eat clean it will care for you and workout hard.”</p>
+                                        <p>"Tôi đang ở độ tuổi mà tôi chỉ muốn khỏe mạnh và cơ thể là trách nhiệm của chúng tôi! Vì vậy, hãy bắt đầu chăm sóc cơ thể của bạn và nó sẽ chăm sóc cho bạn. Ăn sạch sẽ nó sẽ chăm sóc bạn và tập luyện chăm chỉ."</p>
                                     </div>
                                 </div>
                             </div>
@@ -159,22 +162,7 @@ const About = () => {
                                 </div>
                             </div>
                             {/* <!-- Single Testimonial --> */}
-                            <div class="single-testimonial text-center">
-                                {/* <!-- Testimonial Content --> */}
-                                <div class="testimonial-caption ">
-                                    {/* <!-- founder --> */}
-                                    <div class="testimonial-founder  ">
-                                        <div class="founder-img mb-30">
-                                            <img src="assets/img/testmonial/testimonial-founder.png" alt=""/>
-                                            <span>Margaret Lawson</span>
-                                            <p>Creative Director</p>
-                                        </div>
-                                    </div>
-                                    <div class="testimonial-top-cap">
-                                        <p>“I am at an age where I just want to be fit and healthy our bodies are our responsibility! So start caring for your body and it will care for you. Eat clean it will care for you and workout hard.”</p>
-                                    </div>
-                                </div>
-                            </div>
+                        
                         </div>
                     </div>
                 </div>
@@ -190,8 +178,8 @@ const About = () => {
                     <div class="col-xl-10">
                         <div class="cv-caption text-center">
                             <p class="pera1">FEATURED TOURS Packages</p>
-                            <p class="pera2"> Make a Difference with Your Online Resume!</p>
-                            <a href="#" class="border-btn2 border-btn4">Upload your cv</a>
+                            <p class="pera2"> Tạo sự khác biệt với sơ yếu lý lịch trực tuyến của bạn!</p>
+                            <a href="#" class="border-btn2 border-btn4">Tải lên cv của bạn</a>
                         </div>
                     </div>
                 </div>

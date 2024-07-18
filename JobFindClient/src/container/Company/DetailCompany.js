@@ -111,7 +111,7 @@ const DetailCompany = () => {
                                                             <div className="label-content ml-auto">
                                                                 <label className="salary">{item.postDetailData.salaryTypePostData.value}</label>
                                                                 <label style={{margin:"0px 10px"}} className="address" data-toggle="tooltip" title data-placement="top" data-container="body" data-original-title="Hà Nam">{item.postDetailData.provincePostData.value}</label>
-                                                                <label className="time">{moment(item.createdAt).fromNow()}</label>
+                                                                -<label className="time">{moment(item.createdAt).fromNow()}</label>
                                                             </div>
                                                             {/* <div className="icon mr-auto">
                                                                 <div id="box-save-job-589972" className="box-save-job  box-save-job-hover   job-notsave " style={{ width: '23px' }}>

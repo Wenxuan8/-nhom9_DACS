@@ -102,7 +102,7 @@ const ForgetPassword = () => {
                                 <div className="col-lg-4 mx-auto">
                                     <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                                         <div className="brand-logo">
-                                            <img src="/assets/img/logo/logo.png" alt="logo" />
+                                            <img src="./assets/img/logo/logo-cto5pm.png" alt="logo" style="width: 80px;" />
                                         </div>
                                         <h4>Quên mật khẩu?</h4>
                                         <h6 className="font-weight-light">Đừng lo! Khôi phục trong vài giây</h6>

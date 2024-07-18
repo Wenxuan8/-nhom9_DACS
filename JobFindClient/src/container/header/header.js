@@ -45,7 +45,7 @@ const Header = () => {
                                 <div className="col-lg-3 col-md-2">
                                     {/* <!-- Logo --> */}
                                     <div className="logo" style={{ zIndex: 1 }}>
-                                        <NavLink to="/"><img src="/assets/img/logo/logo.png" alt="" /></NavLink>
+                                        <NavLink to="/"><img src="./assets/img/logo/logo-cto5pm.png" alt="" /></NavLink>
                                     </div>
                                 </div>
                                 <div className="col-lg-9 col-md-9">
