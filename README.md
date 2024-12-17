@@ -1,36 +1,76 @@
-Đối tượng sử dụng
-Quản trị viên
-Nhà tuyển dụng
-Ứng viên
-Chức năng từng đối tượng
-A. Quản trị viên
+#Xây dựng website có 4 nhóm đối tượng người dùng với các chức năng cụ thể như sau:
 
-Quản lý trang thông tin: banner, giới thiệu,…
-Quản lý người dùng
-Quản lý file: JD, CV
-Quản lý bài đăng công việc
-Quản lý báo cáo
-B. Nhà tuyển dụng
+#1. Chức năng chung:
 
-Quản lý bài tuyển dụng
-Tìm kiếm CV
-Chỉnh sửa thông tin cá nhân (thuộc công ty nào, thông tin liên hệ)
-C. Ứng viên
+Đăng ký, đăng nhập, đăng xuất
 
-Tìm kiếm công việc (công ty, vị trí, mức lương, địa điểm, ngôn ngữ, trình độ, yêu cầu bằng cấp - chứng chỉ, số lượng)
-Đăng CV
-Xem danh sách công việc (có thể ghim và còn lại sắp xếp ngẫu nhiên)
-Báo cáo vi phạm: công ty, cá nhân (lừa đảo, spam, không liên hệ được, thông tin bài tuyển dụng sai)
-Phân tích chức năng
-Đăng bài tuyển dụng
-Các tác nhân	Nhà tuyển dụng
-Mô tả	Đăng bài tuyển dụng
-Kích hoạt	Người dùng ấn vào nút “Đăng bài tuyển dụng” trên thanh menu
-Đầu vào	Tên công ty
-Tên công việc
-Địa điểm: thành phố - quận (select2 - load về local)
-Remote
-Trình tự xử lý	
-Đầu ra	Đúng: Hiển thị trang người dùng và thông báo thành công
-Sai: Hiển thị trang đăng nhập và thông báo thất bại
-Lưu ý	Kiểm tra ô nhập không được để trống bằng JavaScript
+Yêu cầu cấp lại mật khẩu
+
+Xem thông tin cá nhân
+
+Thay đổi thông tin cá nhân
+
+Tìm kiếm
+
+#2. Nhóm công ty:
+
+Tạo công ty và quản lý thông tin công ty
+
+Tạo các nhà tuyển dụng của công ty
+
+Đăng ký quảng cáo tin tuyển dụng
+
+Đăng ký để mua thêm lượt đăng bài
+
+Xem các báo cáo, thống kê liên quan.
+
+#2. Nhóm nhà tuyển dụng:
+
+Quản lý bài viết tuyển dụng
+
+Xem danh sách CV, preview CV nộp vào công ty
+
+Xem thông tin của ứng viên đã nộp CV vào công ty
+
+Thanh toán để mua thêm lượt đăng bài
+
+Xem, tìm kiếm CV theo lĩnh vực, ngành nghề, kỹ năng
+
+Mua thêm số lượt xem CV tự do.
+
+Xem tỉ lệ % phù hợp của CV với thông tin tuyển dụng của mình.
+
+Xem các báo cáo, thống kê liên quan.
+
+#3. Nhóm ứng viên:
+
+Cân nhật thông tin chi tiết của cá nhân
+
+Chọn lưu trừ CV trên website
+
+Bật chế độ đang tìm việc (cho phép chia sẻ CV đã lưu trữ đến nhà tuyển dụng)
+
+Xem thông tin các công ty
+
+Xem các bài tuyển dụng
+
+Nộp CV
+
+Đăng ký nhận danh sách công việc nổi bật liên quan đến nhu cầu tìm kiếm qua email.
+#4. Nhóm quản trị viên:
+
+Quản lý tài khoản người dùng
+
+Quản lý các danh mục hiển thị
+
+Quản lý xác thực công ty đã đăng ký
+
+Duyệt Từ chối bài đăng của nhà tuyển dụng
+
+Xem báo cáo, thống kê liên quan.
+
+Documentation
+https://drive.google.com/drive/folders/1jHacjXT6H2iyPJNqQl1MrrLMRoRWOM0O?usp=drive_link
+
+Ảnh chụp giap diện
+https://drive.google.com/file/d/14MgylqjP0e04x2D2w9wWJDkG_-TjGBOF/view?usp=drive_link
